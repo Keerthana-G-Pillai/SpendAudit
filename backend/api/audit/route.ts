@@ -1,0 +1,80 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { nanoid } from 'nanoid'
+import { analyzeSpend } from '../../lib/audit'
+import { buildAuditSummaryPrompt } from '../../lib/prompts'
+import { getServiceClient } from '../../lib/supabase'
+import type { SpendInput, AuditResult } from '../../lib/types'
+
+export async function POST(req: NextRequest) {
+  try {
+    const body: SpendInput = await req.json()
+
+    // Step 1: Run the deterministic audit engine
+    const auditResult: AuditResult = analyzeSpend(body)
+
+    // Step 2: Generate AI summary with graceful fallback
+    const aiSummary = await generateSummary(body, auditResult)
+
+    // Step 3: Save to Supabase with a unique slug
+    const slug = nanoid(10)
+    const supabase = getServiceClient()
+
+    const { error } = await supabase.from('audits').insert({
+      slug,
+      spend_data: body,
+      audit_result: auditResult,
+      ai_summary: aiSummary,
+    })
+
+    if (error) throw new Error(`Supabase insert failed: ${error.message}`)
+
+    return NextResponse.json({ slug })
+  } catch (err) {
+    console.error('Audit API error:', err)
+    return NextResponse.json({ error: 'Failed to create audit' }, { status: 500 })
+  }
+}
+
+async function generateSummary(input: SpendInput, result: AuditResult): Promise<string> {
+  try {
+    const prompt = buildAuditSummaryPrompt(input, result)
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        max_tokens: 200,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+      signal: AbortSignal.timeout(8000), // 8 second timeout
+    })
+
+    if (!response.ok) throw new Error(`Groq API returned ${response.status}`)
+
+    const data = await response.json()
+    const content = data.choices?.[0]?.message?.content
+
+    if (!content) throw new Error('Empty response from Groq')
+
+    return content
+  } catch (err) {
+    // Always fall back gracefully — never let AI failure block the audit result
+    console.warn('AI summary failed, using fallback:', err)
+    return buildFallbackSummary(result)
+  }
+}
+
+function buildFallbackSummary(result: AuditResult): string {
+  const topRec = result.recommendations.find((r) => r.estimatedMonthlySaving > 0)
+  const count = result.recommendations.filter((r) => r.estimatedMonthlySaving > 0).length
+
+  if (result.totalMonthlySavings === 0) {
+    return `Based on your current AI tool stack of $${result.totalCurrentSpend}/month, our analysis found no significant optimization opportunities. Your current plan selections appear well-matched to your team size and use case. We will notify you as pricing changes or new alternatives emerge that could benefit your stack.`
+  }
+
+  return `Based on your current AI tool stack of $${result.totalCurrentSpend}/month, our analysis found ${count} optimization ${count === 1 ? 'opportunity' : 'opportunities'} totaling $${result.totalMonthlySavings} in potential monthly savings — $${result.totalAnnualSavings} annually. ${topRec ? `Your biggest opportunity is: ${topRec.recommendedAction}.` : ''} Switching to the recommended configuration is straightforward and could free up meaningful budget for other growth initiatives.`
+}
