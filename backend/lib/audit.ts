@@ -19,6 +19,12 @@ export const PRICING = {
   'openai-api': { 'pay-as-you-go': 0 },
 } as const
 
+// ─── Credex credits discount ──────────────────────────────────────────────────
+// Credex sells discounted AI credits at up to 40% off retail.
+// Conservative estimate: 30% savings for audit recommendations.
+const CREDEX_DISCOUNT_RATE = 0.30
+const CREDEX_MIN_SPEND_THRESHOLD = 50 // Only recommend Credex for $50+/mo API spend
+
 // ─── Thresholds ───────────────────────────────────────────────────────────────
 const TEAM_SIZE_THRESHOLDS = {
   chatgptTeamJustified: 5,    // Team plan justified at 5+ users
@@ -94,8 +100,12 @@ function analyzeChatGPT(entry: ToolEntry, input: SpendInput): ToolRecommendation
     }
   }
 
-  // Rule 2: API direct users — remind them to monitor usage vs subscription
-  if (entry.plan === 'api-direct' && entry.monthlySpend > PRICING.chatgpt.plus) {
+  // Rule 2: API direct for interactive use cases — subscription may be cheaper
+  if (
+    entry.plan === 'api-direct' &&
+    entry.monthlySpend > PRICING.chatgpt.plus &&
+    (input.useCase === 'writing' || input.useCase === 'research')
+  ) {
     const saving = Math.round(entry.monthlySpend - PRICING.chatgpt.plus)
     return {
       tool: entry.tool,
@@ -104,6 +114,15 @@ function analyzeChatGPT(entry: ToolEntry, input: SpendInput): ToolRecommendation
       estimatedMonthlySaving: saving,
       reasoning: `At $${entry.monthlySpend}/mo on API direct, a ChatGPT Plus subscription ($${PRICING.chatgpt.plus}/mo flat) may be cheaper for regular conversational use. API direct is cost-effective for high-volume automated tasks, not interactive daily use.`,
     }
+  }
+
+  // Rule 3: Paying retail API rates when Credex credits are available
+  if (
+    entry.plan === 'api-direct' &&
+    entry.monthlySpend >= CREDEX_MIN_SPEND_THRESHOLD &&
+    isCredexEligibleUseCase(input.useCase)
+  ) {
+    return recommendCredexCredits(entry, 'OpenAI')
   }
 
   return noSavingsFound(entry)
@@ -263,6 +282,15 @@ function analyzeGemini(entry: ToolEntry, input: SpendInput): ToolRecommendation 
     }
   }
 
+  // Rule 3: Paying retail Gemini API rates when Credex credits are available
+  if (
+    entry.plan === 'api' &&
+    entry.monthlySpend >= CREDEX_MIN_SPEND_THRESHOLD &&
+    isCredexEligibleUseCase(input.useCase)
+  ) {
+    return recommendCredexCredits(entry, 'Google AI')
+  }
+
   return noSavingsFound(entry)
 }
 
@@ -282,6 +310,11 @@ function analyzeAnthropicAPI(entry: ToolEntry, input: SpendInput): ToolRecommend
     }
   }
 
+  // Rule 2: Paying retail API rates when Credex credits are available
+  if (entry.monthlySpend >= CREDEX_MIN_SPEND_THRESHOLD) {
+    return recommendCredexCredits(entry, 'Anthropic')
+  }
+
   return noSavingsFound(entry)
 }
 
@@ -299,6 +332,11 @@ function analyzeOpenAIAPI(entry: ToolEntry, input: SpendInput): ToolRecommendati
       estimatedMonthlySaving: saving,
       reasoning: `At $${entry.monthlySpend}/mo on OpenAI API for ${input.useCase} tasks, a ChatGPT Plus subscription ($${PRICING.chatgpt.plus}/mo flat) delivers GPT-4o access at a fixed predictable cost. API pricing scales with volume — for human interactive use, the Plus plan is almost always cheaper. Saves $${saving}/mo ($${saving * 12}/yr).`,
     }
+  }
+
+  // Rule 2: Paying retail API rates when Credex credits are available
+  if (entry.monthlySpend >= CREDEX_MIN_SPEND_THRESHOLD) {
+    return recommendCredexCredits(entry, 'OpenAI')
   }
 
   return noSavingsFound(entry)
@@ -345,6 +383,26 @@ export function detectOverlaps(input: SpendInput): string[] {
   }
 
   return warnings
+}
+
+// ─── Credex credits (4th evaluation criterion) ───────────────────────────────
+// Paying retail API rates when discounted Credex credits are available.
+function recommendCredexCredits(
+  entry: ToolEntry,
+  providerLabel: string
+): ToolRecommendation {
+  const saving = Math.round(entry.monthlySpend * CREDEX_DISCOUNT_RATE)
+  return {
+    tool: entry.tool,
+    currentSpend: entry.monthlySpend,
+    recommendedAction: `Purchase ${providerLabel} API credits through Credex at up to 30% off retail`,
+    estimatedMonthlySaving: saving,
+    reasoning: `You are spending $${entry.monthlySpend}/mo on ${providerLabel} at retail pay-as-you-go rates. Credex sells discounted AI credits sourced from companies that overforecast — same API access, up to 30% cheaper. At your current usage, that is ~$${saving}/mo ($${saving * 12}/yr) with no workflow changes.`,
+  }
+}
+
+function isCredexEligibleUseCase(useCase: SpendInput['useCase']): boolean {
+  return useCase === 'coding' || useCase === 'data' || useCase === 'mixed'
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────

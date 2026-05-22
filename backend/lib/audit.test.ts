@@ -293,3 +293,78 @@ describe('detectOverlaps', () => {
     expect(warnings).toHaveLength(0)
   })
 })
+
+// ─── Credex credits rules ─────────────────────────────────────────────────────
+describe('Credex credits recommendation', () => {
+  it('recommends Credex for Anthropic API spend of $50+/mo (coding use case)', () => {
+    const result = analyzeSpend(
+      makeInput({
+        tools: [{ tool: 'anthropic-api', plan: 'pay-as-you-go', monthlySpend: 100, seats: 1 }],
+        useCase: 'coding',
+      })
+    )
+    const rec = result.recommendations[0]
+    expect(rec.estimatedMonthlySaving).toBe(30) // 100 * 0.30
+    expect(rec.recommendedAction).toContain('Credex')
+  })
+
+  it('recommends Credex for OpenAI API spend of $50+/mo (coding use case)', () => {
+    const result = analyzeSpend(
+      makeInput({
+        tools: [{ tool: 'openai-api', plan: 'pay-as-you-go', monthlySpend: 200, seats: 1 }],
+        useCase: 'coding',
+      })
+    )
+    const rec = result.recommendations[0]
+    expect(rec.estimatedMonthlySaving).toBe(60) // 200 * 0.30
+    expect(rec.recommendedAction).toContain('Credex')
+  })
+
+  it('does NOT recommend Credex for API spend under $50/mo', () => {
+    const result = analyzeSpend(
+      makeInput({
+        tools: [{ tool: 'anthropic-api', plan: 'pay-as-you-go', monthlySpend: 30, seats: 1 }],
+        useCase: 'coding',
+      })
+    )
+    expect(result.recommendations[0].estimatedMonthlySaving).toBe(0)
+  })
+
+  it('recommends Credex for ChatGPT API direct at $50+/mo (coding use case)', () => {
+    const result = analyzeSpend(
+      makeInput({
+        tools: [{ tool: 'chatgpt', plan: 'api-direct', monthlySpend: 80, seats: 1 }],
+        useCase: 'coding',
+      })
+    )
+    const rec = result.recommendations[0]
+    expect(rec.recommendedAction).toContain('Credex')
+    expect(rec.estimatedMonthlySaving).toBe(24)
+  })
+
+  it('recommends Credex for Gemini API at $50+/mo (data use case)', () => {
+    const result = analyzeSpend(
+      makeInput({
+        tools: [{ tool: 'gemini', plan: 'api', monthlySpend: 100, seats: 1 }],
+        useCase: 'data',
+      })
+    )
+    const rec = result.recommendations[0]
+    expect(rec.recommendedAction).toContain('Credex')
+    expect(rec.estimatedMonthlySaving).toBe(30)
+  })
+
+  it('prefers subscription switch over Credex for writing/research use cases with high API spend', () => {
+    // For writing use case with high Anthropic API spend, Rule 1 (subscription switch)
+    // should fire before Rule 2 (Credex credits)
+    const result = analyzeSpend(
+      makeInput({
+        tools: [{ tool: 'anthropic-api', plan: 'pay-as-you-go', monthlySpend: 100, seats: 1 }],
+        useCase: 'writing',
+      })
+    )
+    const rec = result.recommendations[0]
+    expect(rec.recommendedAction).toContain('Claude Pro')
+    expect(rec.recommendedAction).not.toContain('Credex')
+  })
+})

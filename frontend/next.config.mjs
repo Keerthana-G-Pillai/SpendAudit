@@ -10,6 +10,14 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.resolve.alias['@backend'] = path.join(__dirname, '../backend')
+
+    // Ensure backend files resolve node_modules from frontend/
+    config.resolve.modules = [
+      path.join(__dirname, 'node_modules'),
+      'node_modules',
+      ...(config.resolve.modules ?? []),
+    ]
+
     return config
   },
 }

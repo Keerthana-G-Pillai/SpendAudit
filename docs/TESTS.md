@@ -74,4 +74,13 @@ All tests cover the core audit engine (`lib/audit.ts`) in isolation — no API c
 | flags Anthropic API + Claude subscription as potential double-payment | Detects API + subscription redundancy |
 | returns empty array when no overlaps exist | No false positives for non-overlapping stacks |
 
-**Total: 24 tests across 8 test groups**
+### Credex credits recommendation (4 tests)
+
+| Test | What it covers |
+|------|----------------|
+| recommends Credex for Anthropic API spend of $50+/mo (coding) | Verifies 30% discount calculation ($100 → $30 saving) |
+| recommends Credex for OpenAI API spend of $50+/mo (coding) | Verifies 30% discount for OpenAI ($200 → $60 saving) |
+| does NOT recommend Credex for API spend under $50/mo | Threshold guard — no recommendation below minimum |
+| prefers subscription switch over Credex for writing/research | Ensures Rule 1 (subscription switch) fires before Rule 2 (Credex credits) |
+
+**Total: 28 tests across 9 test groups**
