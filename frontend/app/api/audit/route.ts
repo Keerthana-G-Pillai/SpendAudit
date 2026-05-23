@@ -4,6 +4,7 @@ import { analyzeSpend } from '@backend/lib/audit'
 import { buildAuditSummaryPrompt } from '@backend/lib/prompts'
 import { getServiceClient } from '@/lib/supabase'
 import { spendInputSchema } from '@/lib/schemas'
+import { spendInputSchema } from '@/lib/schemas'
 import type { AuditResult, SpendInput } from '@backend/lib/types'
 
 export async function POST(req: NextRequest) {

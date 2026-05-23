@@ -3,6 +3,25 @@
 A free web app that audits AI tool subscriptions for startup founders and engineering managers, surfacing overspend and recommending cheaper alternatives. Built as a lead generation tool for Credex, which sells discounted AI infrastructure credits. No login required — get your audit in under 2 minutes.
 
 
+## Live Demo
+[Your Vercel URL here]
+
+## Screenshots
+[Add 3+ screenshots or a 30-second Loom link here]
+
+## Quick Start
+
+```bash
+git clone [your repo URL]
+cd credex_
+npm install --prefix frontend
+cp frontend/.env.example frontend/.env.local
+# Fill in your environment variables in frontend/.env.local
+npm run dev
+```
+
+Runs the Next.js app from the repo root (delegates to `frontend/`). Open the URL shown in the terminal (usually http://localhost:3000).
+
 ## Project Structure
 
 ```
@@ -12,6 +31,17 @@ credex_/
 └── docs/         # Product and architecture documentation
 ```
 
+## Environment Variables
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+GROQ_API_KEY=your_groq_api_key
+RESEND_API_KEY=your_resend_api_key
+RESEND_FROM_EMAIL=onboarding@resend.dev
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
 ## Abuse protection (lead capture)
 
@@ -33,6 +63,12 @@ Lead submissions use **two layers**:
 | Supabase leads | `leads` table: email, company, role, team_size, audit_id |
 | Resend confirmation | `POST /api/lead` after DB insert; if savings > $500/mo, email notes Credex will reach out |
 
+## Deploy to Vercel
+
+1. Push repo to GitHub
+2. Import to Vercel at vercel.com/new
+3. Add all environment variables in the Vercel dashboard
+4. Deploy — done
 
 ## Running Tests
 
