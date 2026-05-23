@@ -7,6 +7,7 @@ import PdfExportButton from './PdfExportButton'
 import ToolIcon from './ToolIcon'
 import LeadCapture from './LeadCapture'
 import ShareButton from './ShareButton'
+import { FlickeringGrid } from '@/components/ui/flickering-grid'
 import {
   Card,
   CardContent,
@@ -34,6 +35,17 @@ export default function AuditResults({ data }: Props) {
 
         {/* ── Screenshot-friendly hero section with Credex watermark ── */}
         <div className="rounded-2xl border border-border bg-card p-6 sm:p-10 relative overflow-hidden">
+          {/* Subtle Flickering Grid overlay */}
+          <div className="absolute inset-0 -z-10 opacity-[0.08] pointer-events-none">
+            <FlickeringGrid
+              squareSize={4}
+              gridGap={5}
+              flickerChance={0.2}
+              color="rgb(59, 130, 246)"
+              maxOpacity={0.3}
+            />
+          </div>
+
           {/* Subtle Credex watermark */}
           <span className="absolute top-4 right-4 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/40 select-none" aria-hidden="true">
             credex.rocks

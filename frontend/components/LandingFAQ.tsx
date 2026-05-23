@@ -1,3 +1,5 @@
+import { KineticText } from './ui/kinetic-text'
+
 const FAQS = [
   {
     q: 'Is this actually free? What is the catch?',
@@ -24,9 +26,12 @@ const FAQS = [
 export default function LandingFAQ() {
   return (
     <section className="mt-16" aria-labelledby="faq-heading">
-      <h2 id="faq-heading" className="text-lg font-semibold text-gray-900 mb-4">
-        Frequently asked questions
-      </h2>
+      <KineticText
+        text="Frequently asked questions"
+        as="h2"
+        id="faq-heading"
+        className="text-lg font-semibold text-gray-900 mb-4 cursor-default select-none"
+      />
       <dl className="space-y-4">
         {FAQS.map((item) => (
           <div key={item.q} className="border-b border-gray-100 pb-4 last:border-0">
