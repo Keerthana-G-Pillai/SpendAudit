@@ -8,17 +8,92 @@ import { spendInputSchema, type SpendInputSchema } from '@/lib/schemas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import SubmitProgress from './SubmitProgress'
 import type { ToolName, UseCase } from '@backend/lib/types'
 
-const TOOLS: { id: ToolName; label: string; plans: string[] }[] = [
-  { id: 'cursor', label: 'Cursor', plans: ['hobby', 'pro', 'business', 'enterprise'] },
-  { id: 'github-copilot', label: 'GitHub Copilot', plans: ['individual', 'business', 'enterprise'] },
-  { id: 'claude', label: 'Claude', plans: ['free', 'pro', 'max', 'team', 'enterprise', 'api-direct'] },
-  { id: 'chatgpt', label: 'ChatGPT', plans: ['plus', 'team', 'enterprise', 'api-direct'] },
-  { id: 'anthropic-api', label: 'Anthropic API Direct', plans: ['pay-as-you-go'] },
-  { id: 'openai-api', label: 'OpenAI API Direct', plans: ['pay-as-you-go'] },
-  { id: 'gemini', label: 'Gemini', plans: ['pro', 'ultra', 'api'] },
-  { id: 'windsurf', label: 'Windsurf', plans: ['free', 'pro', 'teams'] },
+interface PlanInfo {
+  value: string
+  label: string
+  pricePerSeat: number
+}
+
+interface ToolConfig {
+  id: ToolName
+  label: string
+  plans: PlanInfo[]
+}
+
+const TOOLS: ToolConfig[] = [
+  {
+    id: 'cursor',
+    label: 'Cursor',
+    plans: [
+      { value: 'hobby', label: 'Hobby (Free)', pricePerSeat: 0 },
+      { value: 'pro', label: 'Pro ($20/mo)', pricePerSeat: 20 },
+      { value: 'business', label: 'Business ($40/mo)', pricePerSeat: 40 },
+    ],
+  },
+  {
+    id: 'github-copilot',
+    label: 'GitHub Copilot',
+    plans: [
+      { value: 'individual', label: 'Individual ($10/mo)', pricePerSeat: 10 },
+      { value: 'business', label: 'Business ($19/mo)', pricePerSeat: 19 },
+      { value: 'enterprise', label: 'Enterprise ($39/mo)', pricePerSeat: 39 },
+    ],
+  },
+  {
+    id: 'claude',
+    label: 'Claude',
+    plans: [
+      { value: 'free', label: 'Free', pricePerSeat: 0 },
+      { value: 'pro', label: 'Pro ($20/mo)', pricePerSeat: 20 },
+      { value: 'max', label: 'Max ($100/mo)', pricePerSeat: 100 },
+      { value: 'team', label: 'Team ($30/mo)', pricePerSeat: 30 },
+      { value: 'api-direct', label: 'API Direct (Pay-as-you-go)', pricePerSeat: 0 },
+    ],
+  },
+  {
+    id: 'chatgpt',
+    label: 'ChatGPT',
+    plans: [
+      { value: 'plus', label: 'Plus ($20/mo)', pricePerSeat: 20 },
+      { value: 'team', label: 'Team ($30/mo)', pricePerSeat: 30 },
+      { value: 'api-direct', label: 'API Direct (Pay-as-you-go)', pricePerSeat: 0 },
+    ],
+  },
+  {
+    id: 'anthropic-api',
+    label: 'Anthropic API Direct',
+    plans: [
+      { value: 'pay-as-you-go', label: 'Pay-as-you-go', pricePerSeat: 0 },
+    ],
+  },
+  {
+    id: 'openai-api',
+    label: 'OpenAI API Direct',
+    plans: [
+      { value: 'pay-as-you-go', label: 'Pay-as-you-go', pricePerSeat: 0 },
+    ],
+  },
+  {
+    id: 'gemini',
+    label: 'Gemini',
+    plans: [
+      { value: 'pro', label: 'Pro (Free)', pricePerSeat: 0 },
+      { value: 'ultra', label: 'Ultra ($19.99/mo)', pricePerSeat: 19.99 },
+      { value: 'api', label: 'API (Pay-as-you-go)', pricePerSeat: 0 },
+    ],
+  },
+  {
+    id: 'windsurf',
+    label: 'Windsurf',
+    plans: [
+      { value: 'free', label: 'Free', pricePerSeat: 0 },
+      { value: 'pro', label: 'Pro ($15/mo)', pricePerSeat: 15 },
+      { value: 'teams', label: 'Teams ($35/mo)', pricePerSeat: 35 },
+    ],
+  },
 ]
 
 const USE_CASES: { value: UseCase; label: string }[] = [
@@ -77,6 +152,16 @@ export default function SpendForm() {
 
   const watchedTools = watch('tools')
 
+  const updateSpend = (index: number, toolName: ToolName | '', planValue: string, numSeats: number) => {
+    if (!toolName || !planValue) return
+    const config = TOOLS.find((t) => t.id === toolName)
+    const planObj = config?.plans.find((p) => p.value === planValue)
+    if (planObj) {
+      const calculatedSpend = planObj.pricePerSeat * numSeats
+      setValue(`tools.${index}.monthlySpend`, calculatedSpend)
+    }
+  }
+
   const onSubmit = async (data: SpendInputSchema) => {
     setLoading(true)
     setSubmitError(null)
@@ -88,6 +173,8 @@ export default function SpendForm() {
       })
       if (!res.ok) throw new Error('Audit failed')
       const { slug } = (await res.json()) as { slug: string }
+      // Ensure progress bar animation completes before navigating
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       router.push(`/audit/${slug}`)
     } catch {
       setSubmitError('Something went wrong. Please try again.')
@@ -151,8 +238,22 @@ export default function SpendForm() {
                   <select
                     id={`${baseId}-name`}
                     className="mt-1 flex min-h-[44px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    {...register(`tools.${index}.tool`)}
+                    defaultValue=""
+                    {...register(`tools.${index}.tool`, {
+                      onChange: (e) => {
+                        const val = e.target.value as ToolName
+                        const config = TOOLS.find((t) => t.id === val)
+                        if (config && config.plans.length > 0) {
+                          const firstPlan = config.plans[0]?.value
+                          if (firstPlan) {
+                            setValue(`tools.${index}.plan`, firstPlan)
+                            updateSpend(index, val, firstPlan, watchedTools?.[index]?.seats ?? 1)
+                          }
+                        }
+                      }
+                    })}
                   >
+                    <option value="" disabled>Select tool</option>
                     {TOOLS.map((t) => (
                       <option key={t.id} value={t.id}>
                         {t.label}
@@ -168,11 +269,18 @@ export default function SpendForm() {
                   <select
                     id={`${baseId}-plan`}
                     className="mt-1 flex min-h-[44px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    {...register(`tools.${index}.plan`)}
+                    disabled={!selectedTool}
+                    defaultValue=""
+                    {...register(`tools.${index}.plan`, {
+                      onChange: (e) => {
+                        updateSpend(index, selectedTool || '', e.target.value, watchedTools?.[index]?.seats ?? 1)
+                      }
+                    })}
                   >
+                    <option value="" disabled>Select plan</option>
                     {(toolConfig?.plans ?? []).map((p) => (
-                      <option key={p} value={p}>
-                        {p}
+                      <option key={p.value} value={p.value}>
+                        {p.label}
                       </option>
                     ))}
                   </select>
@@ -212,7 +320,13 @@ export default function SpendForm() {
                     min={1}
                     inputMode="numeric"
                     className="mt-1 min-h-[44px]"
-                    {...register(`tools.${index}.seats`, { valueAsNumber: true })}
+                    {...register(`tools.${index}.seats`, {
+                      valueAsNumber: true,
+                      onChange: (e) => {
+                        const sVal = parseInt(e.target.value) || 1
+                        updateSpend(index, selectedTool || '', watchedTools?.[index]?.plan || '', sVal)
+                      }
+                    })}
                   />
                   {toolErrors?.seats && (
                     <p role="alert" className="text-xs text-destructive mt-0.5">
@@ -259,6 +373,8 @@ export default function SpendForm() {
           {submitError}
         </p>
       )}
+
+      <SubmitProgress active={loading} />
 
       <Button type="submit" disabled={loading} aria-busy={loading} className="w-full min-h-[48px]">
         {loading ? 'Running audit...' : 'Get my free audit →'}

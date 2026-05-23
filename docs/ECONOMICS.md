@@ -55,4 +55,25 @@ At $2,000 average purchase and 40% repeat within 12 months, you need roughly **4
 2. Credex customer email + one HN hit drive **months 1–6**; SEO + shares compound **months 7–18**.
 3. Audit → email → consult automation stays **< 48hr** follow-up for high-savings leads.
 
+## Sensitivity analysis — what breaks?
+
+Holding all other assumptions constant, this table shows margin per 1,000 visitors at different consultation→purchase conversion rates:
+
+| Consult → Purchase rate | Purchases / 1k visitors | Contribution / 1k visitors | Viable? |
+|-------------------------|------------------------|---------------------------|---------|
+| 60% | 9 | $3,600 | ✅ Strong |
+| 50% (base case) | 7.5 | $3,000 | ✅ Base |
+| 40% | 6 | $2,400 | ✅ Healthy |
+| 30% | 4.5 | $1,800 | ⚠️ Marginal |
+| 20% | 3 | $1,200 | ⚠️ Need higher ACV |
+| 10% | 1.5 | $600 | ❌ Unprofitable |
+| 5% | 0.75 | $300 | ❌ Shut down |
+
+**Key insight:** The model stays profitable down to ~25% conversion. Below 20%, Credex would need to either:
+- Raise the average credit purchase from $2k to $3k+ (upselling annual commitments)
+- Improve top-of-funnel volume through SEO compounding and referral loops
+- Add a self-serve checkout to bypass the consultation bottleneck entirely
+
+If email→consult conversion drops from 20% to 10%, the funnel effectively halves. The mitigation is automated follow-up sequences: leads who don't book within 48 hours get a 3-email drip over 14 days with personalized savings reminders. Industry benchmarks suggest this recovers 15–25% of lapsed leads.
+
 **Break scenario:** consultation conversion drops to 20% → need ~10,000 visitors/month instead of 6,000, or raise average purchase to $3k+.

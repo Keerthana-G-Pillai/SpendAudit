@@ -1,6 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import AnimatedCounter from './AnimatedCounter'
+import CopyResultsButton from './CopyResultsButton'
+import PdfExportButton from './PdfExportButton'
+import ToolIcon from './ToolIcon'
 import LeadCapture from './LeadCapture'
 import ShareButton from './ShareButton'
 import {
@@ -28,32 +32,55 @@ export default function AuditResults({ data }: Props) {
     <div className="min-h-screen bg-background">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6 sm:space-y-8">
 
-        <header className="text-center space-y-2">
-          {isOptimal ? (
-            <>
-              <p className="text-3xl sm:text-4xl mb-2" aria-hidden="true">
-                ✓
-              </p>
-              <h1 className="text-2xl sm:text-3xl font-bold">You are spending well</h1>
-              <p className="text-muted-foreground text-sm sm:text-base">
-                Your AI tool stack looks well-optimized for your team size and use case.
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
-                Potential savings found
-              </p>
-              <h1 className="text-4xl sm:text-6xl font-bold tabular-nums">
-                ${auditResult.totalMonthlySavings}
-                <span className="text-xl sm:text-2xl font-normal text-muted-foreground">/month</span>
-              </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground">
-                ${auditResult.totalAnnualSavings.toLocaleString()} per year
-              </p>
-            </>
-          )}
-        </header>
+        {/* ── Screenshot-friendly hero section with Credex watermark ── */}
+        <div className="rounded-2xl border border-border bg-card p-6 sm:p-10 relative overflow-hidden">
+          {/* Subtle Credex watermark */}
+          <span className="absolute top-4 right-4 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/40 select-none" aria-hidden="true">
+            credex.rocks
+          </span>
+
+          <header className="text-center space-y-2">
+            {isOptimal ? (
+              <>
+                <p className="text-3xl sm:text-4xl mb-2" aria-hidden="true">
+                  ✓
+                </p>
+                <h1 className="text-2xl sm:text-3xl font-bold">You are spending well</h1>
+                <p className="text-muted-foreground text-sm sm:text-base">
+                  Your AI tool stack looks well-optimized for your team size and use case.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
+                  Potential savings found
+                </p>
+                <h1 className="text-4xl sm:text-6xl font-bold tabular-nums">
+                  <AnimatedCounter
+                    target={auditResult.totalMonthlySavings}
+                    prefix="$"
+                    duration={1500}
+                  />
+                  <span className="text-xl sm:text-2xl font-normal text-muted-foreground">/month</span>
+                </h1>
+                <p className="text-lg sm:text-xl text-muted-foreground">
+                  <AnimatedCounter
+                    target={auditResult.totalAnnualSavings}
+                    prefix="$"
+                    suffix=" per year"
+                    duration={1800}
+                  />
+                </p>
+              </>
+            )}
+          </header>
+
+          {/* Bottom branding bar for screenshot sharing */}
+          <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+            <span>AI Spend Audit</span>
+            <span className="font-medium">Powered by Credex</span>
+          </div>
+        </div>
 
         {isHighSavings && (
           <Card className="bg-primary text-primary-foreground ring-primary">
@@ -100,13 +127,16 @@ export default function AuditResults({ data }: Props) {
                 <Card size="sm">
                   <CardHeader className="pb-2">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                      <div>
-                        <CardTitle className="capitalize text-base">
-                          {rec.tool.replace(/-/g, ' ')}
-                        </CardTitle>
-                        <CardDescription className="text-base font-medium text-foreground mt-1">
-                          Current spend: ${rec.currentSpend}/mo
-                        </CardDescription>
+                      <div className="flex items-start gap-3">
+                        <ToolIcon tool={rec.tool} />
+                        <div>
+                          <CardTitle className="capitalize text-base">
+                            {rec.tool.replace(/-/g, ' ')}
+                          </CardTitle>
+                          <CardDescription className="text-base font-medium text-foreground mt-1">
+                            Current spend: ${rec.currentSpend}/mo
+                          </CardDescription>
+                        </div>
                       </div>
                       {rec.estimatedMonthlySaving > 0 ? (
                         <span className="text-green-600 font-semibold text-sm shrink-0">
@@ -129,7 +159,12 @@ export default function AuditResults({ data }: Props) {
           </ul>
         </section>
 
-        <ShareButton slug={slug} />
+        {/* Action buttons */}
+        <div className="space-y-3">
+          <ShareButton slug={slug} />
+          <CopyResultsButton auditResult={auditResult} />
+          <PdfExportButton auditResult={auditResult} aiSummary={aiSummary} />
+        </div>
 
         {!leadCaptured ? (
           <LeadCapture

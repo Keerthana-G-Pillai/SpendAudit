@@ -4,25 +4,30 @@ import { analyzeSpend } from '@backend/lib/audit'
 import { buildAuditSummaryPrompt } from '@backend/lib/prompts'
 import { getServiceClient } from '@/lib/supabase'
 import { spendInputSchema } from '@/lib/schemas'
-import { spendInputSchema } from '@/lib/schemas'
 import type { AuditResult, SpendInput } from '@backend/lib/types'
 
 export async function POST(req: NextRequest) {
   try {
     const parsed = spendInputSchema.safeParse(await req.json())
     if (!parsed.success) {
+      console.error('[audit] Validation failed:', parsed.error.flatten())
       return NextResponse.json(
         { error: 'Invalid input', details: parsed.error.flatten() },
         { status: 400 }
       )
     }
     const body = parsed.data
+    console.log('[audit] Input valid. Tools:', body.tools.length)
 
     const auditResult: AuditResult = analyzeSpend(body)
+    console.log('[audit] Audit engine done. Savings:', auditResult.totalMonthlySavings)
+
     const aiSummary = await generateSummary(body, auditResult)
+    console.log('[audit] AI summary done. Length:', aiSummary.length)
 
     const slug = nanoid(10)
     const supabase = getServiceClient()
+    console.log('[audit] Inserting to Supabase. Slug:', slug)
 
     const { error } = await supabase.from('audits').insert({
       slug,
@@ -31,11 +36,15 @@ export async function POST(req: NextRequest) {
       ai_summary: aiSummary,
     })
 
-    if (error) throw new Error(`Supabase insert failed: ${error.message}`)
+    if (error) {
+      console.error('[audit] Supabase insert failed:', error)
+      throw new Error(`Supabase insert failed: ${error.message}`)
+    }
 
+    console.log('[audit] Success. Slug:', slug)
     return NextResponse.json({ slug })
   } catch (err) {
-    console.error('Audit API error:', err)
+    console.error('[audit] FATAL error:', err)
     return NextResponse.json({ error: 'Failed to create audit' }, { status: 500 })
   }
 }
@@ -58,7 +67,11 @@ async function generateSummary(input: SpendInput, result: AuditResult): Promise<
       signal: AbortSignal.timeout(8000),
     })
 
-    if (!response.ok) throw new Error(`Groq API returned ${response.status}`)
+    if (!response.ok) {
+      const errText = await response.text()
+      console.error('[groq] Error response:', response.status, errText)
+      throw new Error(`Groq API returned ${response.status}`)
+    }
 
     const data = (await response.json()) as {
       choices?: Array<{ message?: { content?: string } }>

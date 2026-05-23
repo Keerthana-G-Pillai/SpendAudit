@@ -48,7 +48,9 @@ export default async function AuditPage({ params }: Props) {
     .eq('slug', params.slug)
     .single()
 
-  if (error || !data) notFound()
+  if (error || !data) {
+    notFound()
+  }
 
   const publicData: PublicAuditData = {
     auditId: data.id,
