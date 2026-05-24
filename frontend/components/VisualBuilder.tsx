@@ -113,25 +113,40 @@ export default function VisualBuilder() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-[560px]">
+    <div className="flex flex-col min-h-[560px]">
 
-      {/* ═══════════════════════ LEFT PANEL ════════════════════════════ */}
+      {/* ═══════════════════════ TOP PANEL (Step 1) ════════════════════════════ */}
       <div
-        className="lg:w-72 xl:w-80 shrink-0 flex flex-col gap-7 px-7 py-7
-                   border-b lg:border-b-0 lg:border-r border-purple-100"
+        className="flex flex-col md:grid md:grid-cols-3 gap-8 px-7 py-7 border-b border-purple-100"
         style={{ background: 'rgba(248,246,255,0.55)' }}
       >
-        {/* Intro */}
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400 mb-0.5">Step 1 of 2</p>
-          <h2 className="text-lg font-bold text-gray-800 leading-snug">Your team</h2>
-          <p className="text-sm text-gray-500 mt-1 leading-relaxed">
-            Set size and primary use case so we can tailor the savings analysis.
-          </p>
+        {/* Intro & Spend summary */}
+        <div className="flex flex-col justify-between gap-6">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400 mb-0.5">Step 1 of 2</p>
+            <h2 className="text-lg font-bold text-gray-800 leading-snug">Your team</h2>
+            <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+              Set size and primary use case so we can tailor the savings analysis.
+            </p>
+          </div>
+
+          {/* Spend summary */}
+          <div className={`rounded-2xl p-4 transition-all ${selected.length > 0 ? 'bg-purple-50 border border-purple-100' : 'bg-gray-50 border border-gray-100'}`}>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+              {selected.length > 0 ? 'Current spend' : 'Spend tracker'}
+            </p>
+            <p className="text-2xl font-black text-purple-700">
+              ${totalMonthly}
+              <span className="text-sm font-medium text-purple-400">/mo</span>
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {selected.length === 0 ? 'Select tools below' : `${selected.length} tool${selected.length > 1 ? 's' : ''} selected`}
+            </p>
+          </div>
         </div>
 
         {/* Team size slider */}
-        <div>
+        <div className="flex flex-col justify-center">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Team Size</span>
             <span className="text-sm font-bold text-purple-600 bg-purple-50 px-3 py-0.5 rounded-full border border-purple-100">
@@ -164,11 +179,11 @@ export default function VisualBuilder() {
         {/* Use case pills */}
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Use Case</p>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-row flex-wrap md:flex-col gap-2">
             {USE_CASES.map(uc => (
               <button
                 key={uc.id} type="button"
-                className={`use-pill justify-start${useCase === uc.id ? ' active' : ''}`}
+                className={`use-pill justify-start ${useCase === uc.id ? 'active' : ''}`}
                 onClick={() => setUseCase(uc.id)}
               >
                 <span>{uc.emoji}</span>
@@ -177,23 +192,9 @@ export default function VisualBuilder() {
             ))}
           </div>
         </div>
-
-        {/* Spend summary */}
-        <div className={`mt-auto rounded-2xl p-4 transition-all ${selected.length > 0 ? 'bg-purple-50 border border-purple-100' : 'bg-gray-50 border border-gray-100'}`}>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">
-            {selected.length > 0 ? 'Current spend' : 'Spend tracker'}
-          </p>
-          <p className="text-2xl font-black text-purple-700">
-            ${totalMonthly}
-            <span className="text-sm font-medium text-purple-400">/mo</span>
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {selected.length === 0 ? 'Select tools →' : `${selected.length} tool${selected.length > 1 ? 's' : ''} selected`}
-          </p>
-        </div>
       </div>
 
-      {/* ═══════════════════════ RIGHT PANEL ═══════════════════════════ */}
+      {/* ═══════════════════════ BOTTOM PANEL (Step 2) ═══════════════════════════ */}
       <div className="flex-1 flex flex-col gap-5 px-7 py-7 min-w-0">
 
         {/* Header */}
@@ -209,7 +210,7 @@ export default function VisualBuilder() {
         </div>
 
         {/* Tool grid */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 flex-1">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
           {ALL_TOOLS.map(tool => {
             const sel = selected.find(s => s.toolId === tool.id)
             const isSelected = !!sel
