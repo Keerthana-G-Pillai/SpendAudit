@@ -17,6 +17,8 @@ export const PRICING = {
   gemini: { pro: 0, ultra: 19.99 },
   'anthropic-api': { 'pay-as-you-go': 0 },
   'openai-api': { 'pay-as-you-go': 0 },
+  figma: { starter: 0, professional: 15, organization: 45, enterprise: 75 },
+  notion: { free: 0, plus: 10, business: 15, enterprise: 25 },
 } as const
 
 // ─── Credex credits discount ──────────────────────────────────────────────────
@@ -77,6 +79,8 @@ function analyzeToolEntry(entry: ToolEntry, input: SpendInput): ToolRecommendati
     case 'gemini':       return analyzeGemini(entry, input)
     case 'anthropic-api': return analyzeAnthropicAPI(entry, input)
     case 'openai-api':   return analyzeOpenAIAPI(entry, input)
+    case 'figma':        return analyzeFigma(entry, input)
+    case 'notion':       return analyzeNotion(entry, input)
     default:             return noSavingsFound(entry)
   }
 }
@@ -403,6 +407,36 @@ function recommendCredexCredits(
 
 function isCredexEligibleUseCase(useCase: SpendInput['useCase']): boolean {
   return useCase === 'coding' || useCase === 'data' || useCase === 'mixed'
+}
+
+function analyzeFigma(entry: ToolEntry, input: SpendInput): ToolRecommendation {
+  const { seats } = entry
+  if (entry.plan === 'organization' && seats < 10) {
+    const saving = (PRICING.figma.organization - PRICING.figma.professional) * seats
+    return {
+      tool: entry.tool,
+      currentSpend: entry.monthlySpend,
+      recommendedAction: `Downgrade ${seats} Figma seat${seats > 1 ? 's' : ''} from Organization to Professional`,
+      estimatedMonthlySaving: saving,
+      reasoning: `Figma Organization ($${PRICING.figma.organization}/user/mo) adds custom libraries, SSO, and advanced security. For teams under 10, Figma Professional ($${PRICING.figma.professional}/user/mo) is typically sufficient. Saves $${saving}/mo ($${saving * 12}/yr).`,
+    }
+  }
+  return noSavingsFound(entry)
+}
+
+function analyzeNotion(entry: ToolEntry, input: SpendInput): ToolRecommendation {
+  const { seats } = entry
+  if (entry.plan === 'business' && seats < 5) {
+    const saving = (PRICING.notion.business - PRICING.notion.plus) * seats
+    return {
+      tool: entry.tool,
+      currentSpend: entry.monthlySpend,
+      recommendedAction: `Downgrade ${seats} Notion seat${seats > 1 ? 's' : ''} from Business to Plus`,
+      estimatedMonthlySaving: saving,
+      reasoning: `Notion Business ($${PRICING.notion.business}/user/mo) vs Plus ($${PRICING.notion.plus}/user/mo) — Business adds SAML SSO and private teamspaces. For small teams under 5, Plus is typically sufficient. Saves $${saving}/mo ($${saving * 12}/yr).`,
+    }
+  }
+  return noSavingsFound(entry)
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────

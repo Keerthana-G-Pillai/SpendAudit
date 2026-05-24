@@ -83,4 +83,11 @@ All tests cover the core audit engine (`lib/audit.ts`) in isolation — no API c
 | does NOT recommend Credex for API spend under $50/mo | Threshold guard — no recommendation below minimum |
 | prefers subscription switch over Credex for writing/research | Ensures Rule 1 (subscription switch) fires before Rule 2 (Credex credits) |
 
-**Total: 28 tests across 9 test groups**
+### Figma & Notion analysis (2 tests)
+
+| Test | What it covers |
+|------|----------------|
+| analyzeFigma flags organization plan for teams under 10 | Verifies $270 saving for downgrade from Organization ($45/mo) to Professional ($15/mo) |
+| analyzeNotion flags business plan for teams under 5 | Verifies $20 saving for downgrade from Business ($15/mo) to Plus ($10/mo) |
+
+**Total: 30 tests across 10 test groups**

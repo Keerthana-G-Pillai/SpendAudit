@@ -9,6 +9,8 @@ export type ToolName =
   | 'openai-api'
   | 'gemini'
   | 'windsurf'
+  | 'figma'
+  | 'notion'
 
 export type UseCase = 'coding' | 'writing' | 'data' | 'research' | 'mixed'
 

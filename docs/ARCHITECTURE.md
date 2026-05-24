@@ -20,6 +20,12 @@ graph TD
     L --> N[Resend — Confirmation Email]
 ```
 
+## Monorepo Structure
+
+The project is structured as a monorepo containing two main folders:
+- **`frontend/`**: Next.js 14 App Router application handling UI components (including the visual stack builder), page routing, and Next.js API routes (e.g. `/api/audit`, `/api/lead`).
+- **`backend/`**: A lightweight TypeScript package containing the core spend audit engine (`lib/audit.ts`) and associated Vitest unit tests. The frontend imports this engine logic directly using path alias mapping (`@backend/*` pointing to `../backend/*`).
+
 ## Data Flow
 
 1. User fills spend input form on the landing page (form state persists in localStorage)

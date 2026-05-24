@@ -10,6 +10,8 @@ export const toolEntrySchema = z.object({
     'openai-api',
     'gemini',
     'windsurf',
+    'figma',
+    'notion',
   ]),
   plan: z.string().min(1),
   monthlySpend: z.number().min(0, 'Spend cannot be negative'),

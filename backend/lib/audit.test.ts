@@ -368,3 +368,30 @@ describe('Credex credits recommendation', () => {
     expect(rec.recommendedAction).not.toContain('Credex')
   })
 })
+
+// ─── Figma & Notion rules ────────────────────────────────────────────────────
+describe('Figma and Notion analysis', () => {
+  it('analyzeFigma flags organization plan for teams under 10', () => {
+    const result = analyzeSpend(
+      makeInput({
+        tools: [{ tool: 'figma', plan: 'organization', monthlySpend: 405, seats: 9 }],
+        teamSize: 9,
+      })
+    )
+    const rec = result.recommendations[0]
+    expect(rec.estimatedMonthlySaving).toBe(270) // (45-15)*9 = 270
+    expect(rec.recommendedAction).toContain('Professional')
+  })
+
+  it('analyzeNotion flags business plan for teams under 5', () => {
+    const result = analyzeSpend(
+      makeInput({
+        tools: [{ tool: 'notion', plan: 'business', monthlySpend: 60, seats: 4 }],
+        teamSize: 4,
+      })
+    )
+    const rec = result.recommendations[0]
+    expect(rec.estimatedMonthlySaving).toBe(20) // (15-10)*4 = 20
+    expect(rec.recommendedAction).toContain('Plus')
+  })
+})
