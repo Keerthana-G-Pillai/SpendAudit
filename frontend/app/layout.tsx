@@ -1,9 +1,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Outfit } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import { cn } from '@/lib/utils'
 
-const fontSans = Outfit({
+const fontSans = Montserrat({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
