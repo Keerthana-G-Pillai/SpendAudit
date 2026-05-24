@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-50 relative">
+    <main className="min-h-screen bg-slate-50 relative fade-in">
       <HexagonBackground
         className="min-h-screen bg-slate-50 dark:bg-neutral-900"
         hexagonSize={55}
