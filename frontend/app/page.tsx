@@ -1,4 +1,4 @@
-import SpendForm from '@/components/SpendForm'
+import VisualBuilder from '@/components/VisualBuilder'
 import LandingFAQ from '@/components/LandingFAQ'
 import SocialProof from '@/components/SocialProof'
 import type { Metadata } from 'next'
@@ -16,37 +16,42 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen py-10 sm:py-16 px-4">
-      <div className="max-w-lg mx-auto">
+    <main className="min-h-screen py-10 sm:py-16 px-4 sm:px-8">
+      <div className="max-w-6xl mx-auto">
 
         {/* Badge */}
-        <div className="flex justify-center mb-5 anim-1">
+        <div className="flex justify-center mb-6 anim-1">
           <span className="inline-flex items-center gap-1.5 bg-white/70 backdrop-blur border border-purple-100 rounded-full px-4 py-1.5 text-sm text-purple-700 font-medium shadow-sm">
             <CheckCircle className="w-3.5 h-3.5 text-purple-500" />
             AI spend intelligence for startups
           </span>
         </div>
 
-        {/* Main card */}
+        {/* Main wide card */}
         <div
           className="anim-2 rounded-3xl overflow-hidden shadow-2xl"
-          style={{ background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)' }}
+          style={{
+            background: 'rgba(255,255,255,0.84)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255,255,255,0.95)',
+          }}
         >
-          {/* Card header */}
-          <div className="px-6 pt-6 pb-4 text-center border-b border-purple-50">
-            <h1 className="text-xl font-bold text-gray-900 tracking-tight">
+          {/* Title bar */}
+          <div className="px-8 pt-6 pb-4 text-center border-b border-purple-50">
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
               Visual AI Stack Builder
             </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Select your tools, set team size, and get an instant spend audit.
+            </p>
           </div>
 
-          {/* Form */}
-          <div className="px-6 py-5">
-            <SpendForm />
-          </div>
+          {/* Single unified component — handles its own two-column layout */}
+          <VisualBuilder />
         </div>
 
         {/* Below-card extras */}
-        <div className="mt-8">
+        <div className="mt-10 max-w-3xl mx-auto">
           <SocialProof />
           <LandingFAQ />
         </div>
