@@ -22,16 +22,18 @@ export default function AuditResults({ data }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="border-b border-accent/80 bg-white">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6 py-3 flex items-center justify-between">
-          <span className="text-[13px] font-semibold text-primary tracking-[-0.02em]">
+      <nav className="border-b border-[#C8D9E6] bg-[#C8D9E6]/40">
+        <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 py-3.5 flex items-center justify-between">
+          <span className="text-[14px] font-bold text-[#2F4156] tracking-tight">
             Credex
           </span>
-          <span className="text-[11px] text-secondary">Audit results</span>
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-[#567C8D]">
+            Audit Results
+          </span>
         </div>
-      </div>
+      </nav>
 
-      <div className="max-w-5xl mx-auto px-5 sm:px-6 py-10 sm:py-12 space-y-4">
+      <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 py-10 sm:py-12 space-y-4">
         <section className="ui-section p-6 sm:p-8">
           <p className="ui-label mb-3">Summary</p>
           {isOptimal ? (
@@ -69,9 +71,9 @@ export default function AuditResults({ data }: Props) {
         </section>
 
         {isHighSavings && (
-          <section className="ui-section p-5 border-primary bg-primary text-white">
-            <h2 className="text-[15px] font-semibold">Credex institutional credits</h2>
-            <p className="text-[13px] text-accent mt-1.5 leading-relaxed">
+          <section className="ui-section p-5" style={{backgroundColor:'#2F4156', borderColor:'#2F4156'}}>
+            <h2 className="text-[15px] font-semibold text-white">Credex institutional credits</h2>
+            <p className="text-[13px] mt-1.5 leading-relaxed" style={{color:'#C8D9E6'}}>
               Savings exceed $500/mo. Credex offers discounted AI credits at up to 40% off
               retail.
             </p>
@@ -79,7 +81,8 @@ export default function AuditResults({ data }: Props) {
               href="https://credex.rocks"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex mt-4 h-9 items-center px-4 text-[13px] font-medium bg-white text-primary rounded-md hover:bg-accent/50 transition-colors"
+              className="inline-flex mt-4 h-9 items-center px-4 text-[13px] font-medium rounded-md transition-colors"
+              style={{backgroundColor:'#F5EFEB', color:'#2F4156'}}
             >
               Book consultation
             </a>

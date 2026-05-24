@@ -16,34 +16,41 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
-      <div className="border-b border-accent/80 bg-white">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6 py-3 flex items-center justify-between">
-          <span className="text-[13px] font-semibold text-primary tracking-[-0.02em]">
+      {/* ── Nav bar: Sky Blue surface for breathing room ── */}
+      <nav className="border-b border-[#C8D9E6] bg-[#C8D9E6]/40">
+        <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 py-3.5 flex items-center justify-between">
+          <span className="text-[14px] font-bold text-[#2F4156] tracking-tight">
             Credex
           </span>
-          <span className="text-[11px] text-secondary">AI spend audit</span>
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-[#567C8D]">
+            AI Spend Audit
+          </span>
         </div>
-      </div>
+      </nav>
 
-      <div className="max-w-5xl mx-auto px-5 sm:px-6 py-10 sm:py-14">
+      {/* ── Hero ── */}
+      <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 pt-12 sm:pt-16 pb-10">
         <header className="mb-10">
-          <h1 className="text-[24px] sm:text-[26px] font-semibold text-primary tracking-[-0.025em] leading-[1.2]">
+          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#567C8D] mb-3">
+            Free · No account required
+          </p>
+          <h1 className="text-[28px] sm:text-[34px] font-bold text-[#2F4156] tracking-tight leading-[1.15] max-w-2xl">
             Audit your AI tool spend
           </h1>
-          <p className="mt-2 text-[14px] text-secondary leading-relaxed max-w-[460px]">
-            Configure your team and stack below. You will get a savings breakdown in
-            under two minutes — no account required.
+          <p className="mt-3 text-[15px] text-[#567C8D] leading-relaxed max-w-xl">
+            Configure your team and stack below. You&apos;ll get a savings
+            breakdown in under two minutes.
           </p>
         </header>
 
         <VisualBuilder />
 
-        <footer className="mt-16 pt-10 border-t border-accent">
+        <footer className="mt-16 pt-10 border-t border-[#C8D9E6]">
           <SocialProof />
           <div className="mt-12">
             <LandingFAQ />
           </div>
-          <p className="mt-10 text-center text-[11px] text-secondary/80">
+          <p className="mt-10 text-center text-[11px] text-[#567C8D]/70">
             Email is only requested after you view your results.
           </p>
         </footer>

@@ -2,35 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Colour Palette ──────────────────────────────────────────
+   Navy    #2F4156  → primary        authority, headings, UI chrome
+   Teal    #567C8D  → secondary      accents, icons, active states
+   SkyBlue #C8D9E6  → accent / muted soft surfaces, borders, hover fills
+   Beige   #F5EFEB  → background     warm large areas
+   White   #FFFFFF  → card           elevated containers
+──────────────────────────────────────────────────────────── */
+
 @layer base {
   :root {
-    --background: 24 38% 95%; /* Beige */
-    --foreground: 212 29% 26%; /* Navy */
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 212 29% 26%; /* Navy */
-    --popover: 0 0% 100%;
-    --popover-foreground: 212 29% 26%; /* Navy */
-    --primary: 212 29% 26%; /* Navy */
-    --primary-foreground: 0 0% 100%; /* White */
-    --secondary: 198 24% 45%; /* Teal */
-    --secondary-foreground: 0 0% 100%; /* White */
-    --muted: 206 38% 84%; /* Sky Blue */
-    --muted-foreground: 212 29% 26%; /* Navy */
-    --accent: 206 38% 84%; /* Sky Blue */
-    --accent-foreground: 212 29% 26%; /* Navy */
-    --destructive: 0 72% 51%;
+    --navy:       212 29% 26%;   /* #2F4156 */
+    --teal:       198 24% 45%;   /* #567C8D */
+    --sky:        206 38% 84%;   /* #C8D9E6 */
+    --beige:       24 38% 95%;   /* #F5EFEB */
+
+    --background:          var(--beige);
+    --foreground:          var(--navy);
+    --card:           0 0% 100%;
+    --card-foreground:     var(--navy);
+    --popover:        0 0% 100%;
+    --popover-foreground:  var(--navy);
+    --primary:             var(--navy);
+    --primary-foreground: 0 0% 100%;
+    --secondary:           var(--teal);
+    --secondary-foreground: 0 0% 100%;
+    --muted:               var(--sky);
+    --muted-foreground:    var(--navy);
+    --accent:              var(--sky);
+    --accent-foreground:   var(--navy);
+    --destructive:    0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 206 38% 84%; /* Sky Blue */
-    --input: 206 38% 84%; /* Sky Blue */
-    --ring: 212 29% 26%; /* Navy */
+    --border:              var(--sky);
+    --input:               var(--sky);
+    --ring:                var(--navy);
     --radius: 0.5rem;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
 
   body {
     @apply bg-background text-foreground antialiased;
@@ -41,99 +52,138 @@
 }
 
 @layer components {
+  /* Cards / sections — white elevated surfaces */
   .ui-section {
-    @apply bg-card border border-border shadow-sm;
+    background-color: #ffffff;
+    border: 1px solid #C8D9E6;
     border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(47, 65, 86, 0.06);
   }
 
+  /* Labels — teal caps */
   .ui-label {
-    @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-secondary;
+    @apply text-[11px] font-bold uppercase tracking-[0.1em];
+    color: #567C8D;
   }
 
+  /* Headings — navy */
   .ui-heading {
-    @apply text-[16px] font-bold text-primary tracking-tight leading-snug;
+    @apply text-[16px] font-bold tracking-tight leading-snug;
+    color: #2F4156;
   }
 
+  /* Body text — navy 80% */
   .ui-body {
-    @apply text-[13px] text-primary/80 leading-relaxed;
+    @apply text-[13px] leading-relaxed;
+    color: rgba(47, 65, 86, 0.80);
   }
 
+  /* Inputs — white card, sky border */
   .ui-input {
-    @apply w-full h-9 px-3 text-[13px] text-foreground bg-white border border-border rounded-md outline-none transition-colors;
-    @apply placeholder:text-muted-foreground focus:border-secondary focus:ring-2 focus:ring-secondary/20;
+    @apply w-full h-9 px-3 text-[13px] rounded-md outline-none transition-colors;
+    background: #ffffff;
+    border: 1px solid #C8D9E6;
+    color: #2F4156;
+  }
+  .ui-input::placeholder { color: #567C8D; opacity: 0.6; }
+  .ui-input:focus {
+    border-color: #567C8D;
+    box-shadow: 0 0 0 3px rgba(86, 124, 141, 0.15);
   }
 
   .ui-select {
     @apply ui-input appearance-none cursor-pointer pr-8;
   }
 
+  /* Primary button — navy */
   .ui-btn-primary {
-    @apply inline-flex items-center justify-center h-10 px-4 text-[13px] font-medium text-white bg-primary rounded-md;
-    @apply transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none;
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center h-10 px-5 text-[13px] font-semibold rounded-md transition-all;
+    background: #2F4156;
+    color: #ffffff;
+  }
+  .ui-btn-primary:hover  { background: #3d5470; }
+  .ui-btn-primary:disabled { opacity: 0.5; pointer-events: none; }
+  .ui-btn-primary:focus-visible {
+    outline: 2px solid #2F4156;
+    outline-offset: 2px;
   }
 
+  /* Secondary button — sky surface */
   .ui-btn-secondary {
-    @apply inline-flex items-center justify-center h-8 px-3 text-[12px] font-medium text-primary bg-white border border-border rounded-md;
-    @apply transition-colors hover:bg-accent hover:border-secondary;
+    @apply inline-flex items-center justify-center h-8 px-3 text-[12px] font-medium rounded-md transition-all;
+    background: #C8D9E6;
+    color: #2F4156;
+    border: 1px solid #C8D9E6;
   }
+  .ui-btn-secondary:hover { background: #b8ceda; border-color: #567C8D; }
 
+  /* Option rows */
   .ui-option {
-    @apply w-full flex items-start gap-3 p-3 text-left border border-border rounded-md bg-white transition-all;
-    @apply hover:border-secondary hover:bg-accent/30;
+    @apply w-full flex items-start gap-3 p-3 text-left rounded-md transition-all;
+    background: #ffffff;
+    border: 1px solid #C8D9E6;
   }
+  .ui-option:hover { border-color: #567C8D; background: rgba(200, 217, 230, 0.25); }
 
   .ui-option-selected {
-    @apply border-primary bg-accent/20 ring-1 ring-primary;
+    border-color: #2F4156 !important;
+    background: rgba(200, 217, 230, 0.30) !important;
+    box-shadow: 0 0 0 1px #2F4156;
   }
 
+  /* Tool tiles */
   .ui-tool-tile {
-    @apply relative flex flex-col items-center gap-2 p-3 border border-border rounded-md bg-white cursor-pointer transition-all;
-    @apply hover:border-secondary hover:bg-accent/30;
+    @apply relative flex flex-col items-center gap-2 p-3 rounded-md cursor-pointer transition-all;
+    background: #ffffff;
+    border: 1px solid #C8D9E6;
   }
+  .ui-tool-tile:hover { border-color: #567C8D; background: rgba(200, 217, 230, 0.25); }
 
   .ui-tool-tile-selected {
-    @apply border-primary bg-accent/20 ring-1 ring-primary;
+    border-color: #2F4156 !important;
+    box-shadow: 0 0 0 1px #2F4156;
   }
 
+  /* Step badge */
   .ui-step-badge {
-    @apply inline-flex items-center text-[11px] font-bold text-secondary uppercase tracking-widest tabular-nums;
+    @apply text-[10px] font-bold uppercase tracking-[0.14em];
+    color: #567C8D;
   }
 
-  .ui-divider {
-    @apply border-t border-border;
-  }
+  .ui-divider { border-top: 1px solid #C8D9E6; }
 }
 
-/* Neutral range slider */
+/* ── Range slider — teal thumb, sky track ── */
 input[type='range'].ui-range {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 4px;
-  border-radius: 2px;
-  background: hsl(var(--border));
+  height: 5px;
+  border-radius: 3px;
+  background: #C8D9E6;
   outline: none;
   cursor: pointer;
 }
 
 input[type='range'].ui-range::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: hsl(var(--primary));
-  border: 2px solid #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  background: #567C8D;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(47, 65, 86, 0.20);
   cursor: pointer;
+  transition: background 0.15s;
 }
+input[type='range'].ui-range::-webkit-slider-thumb:hover { background: #2F4156; }
 
 input[type='range'].ui-range::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: hsl(var(--primary));
-  border: 2px solid #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  background: #567C8D;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(47, 65, 86, 0.20);
   cursor: pointer;
 }
