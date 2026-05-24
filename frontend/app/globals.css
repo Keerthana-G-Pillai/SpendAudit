@@ -71,10 +71,10 @@
     color: #567C8D;
   }
 
-  /* Headings — navy */
+  /* Headings — teal for life */
   .ui-heading {
     @apply text-[16px] font-bold tracking-tight leading-snug;
-    color: #2F4156;
+    color: #567C8D;
   }
 
   /* Body text — navy 80% */
@@ -100,16 +100,16 @@
     @apply ui-input appearance-none cursor-pointer pr-8;
   }
 
-  /* Primary button — navy */
+  /* Primary button — teal */
   .ui-btn-primary {
     @apply inline-flex items-center justify-center h-10 px-5 text-[13px] font-semibold rounded-md transition-all;
-    background: #2F4156;
+    background: #567C8D;
     color: #ffffff;
   }
-  .ui-btn-primary:hover  { background: #3d5470; }
+  .ui-btn-primary:hover  { background: #466878; }
   .ui-btn-primary:disabled { opacity: 0.5; pointer-events: none; }
   .ui-btn-primary:focus-visible {
-    outline: 2px solid #2F4156;
+    outline: 2px solid #567C8D;
     outline-offset: 2px;
   }
 

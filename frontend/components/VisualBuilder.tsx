@@ -527,7 +527,7 @@ export default function VisualBuilder() {
                       {tool.label}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-secondary group-hover:text-primary transition-colors">
+                  <div className="flex items-center gap-2 bg-secondary text-white px-3 py-1.5 rounded-md group-hover:bg-[#466878] transition-colors">
                     <span className="text-[12px] font-semibold hidden sm:inline-block">Add</span>
                     <Plus size={16} strokeWidth={2.5} />
                   </div>
@@ -541,9 +541,9 @@ export default function VisualBuilder() {
       <div className="ui-section p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <p className="ui-label">Estimated monthly spend</p>
-          <p className="mt-1 text-[24px] font-semibold text-primary tracking-[-0.02em] tabular-nums">
+          <p className="mt-1 text-[28px] font-extrabold text-secondary tracking-tight tabular-nums">
             ${totalMonthly.toLocaleString()}
-            <span className="text-[14px] font-normal text-secondary">/mo</span>
+            <span className="text-[14px] font-bold text-secondary/70">/mo</span>
           </p>
           <p className="text-[12px] text-secondary mt-0.5">
             {selected.length} tool{selected.length === 1 ? '' : 's'} configured

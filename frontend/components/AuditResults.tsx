@@ -48,7 +48,7 @@ export default function AuditResults({ data }: Props) {
           ) : (
             <>
               <p className="text-[13px] text-secondary mb-1">Potential monthly savings</p>
-              <p className="text-[36px] sm:text-[40px] font-semibold text-primary tracking-[-0.03em] tabular-nums leading-none">
+              <p className="text-[36px] sm:text-[40px] font-extrabold text-secondary tracking-tight tabular-nums leading-none">
                 <AnimatedCounter
                   target={auditResult.totalMonthlySavings}
                   prefix="$"

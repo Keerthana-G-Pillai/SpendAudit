@@ -84,15 +84,6 @@ export default function Home() {
 
             {/* ── Left copy ── */}
             <div className="flex-1 max-w-2xl">
-              {/* Pill badge */}
-              <div
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest mb-6"
-                style={{ backgroundColor: 'rgba(200,217,230,0.15)', color: '#C8D9E6', border: '1px solid rgba(200,217,230,0.25)' }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#C8D9E6' }} />
-                Free · No account required
-              </div>
-
               <h1
                 className="text-[38px] sm:text-[52px] font-extrabold leading-[1.1] tracking-tight mb-6"
                 style={{ color: '#ffffff' }}
