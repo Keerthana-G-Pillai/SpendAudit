@@ -186,26 +186,26 @@ export default function SpendForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="teamSize">Team size</Label>
-          <Input
+          <label htmlFor="teamSize" className="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">Team Size</label>
+          <input
             id="teamSize"
             type="number"
             min={1}
             inputMode="numeric"
-            className="mt-1 min-h-[44px]"
+            className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[48px] focus:outline-none focus:ring-2 focus:ring-gray-600"
             {...register('teamSize', { valueAsNumber: true })}
           />
           {errors.teamSize && (
-            <p role="alert" className="text-sm text-destructive mt-1">
+            <p role="alert" className="text-sm text-red-500 mt-1">
               {errors.teamSize.message}
             </p>
           )}
         </div>
         <div>
-          <Label htmlFor="useCase">Primary use case</Label>
+          <label htmlFor="useCase" className="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">Primary Use Case</label>
           <select
             id="useCase"
-            className="mt-1 flex min-h-[44px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[48px] focus:outline-none focus:ring-2 focus:ring-gray-600"
             {...register('useCase')}
           >
             {USE_CASES.map((u) => (
@@ -218,8 +218,18 @@ export default function SpendForm() {
       </div>
 
       <fieldset>
-        <legend className="text-sm font-medium mb-3">AI tools you are paying for</legend>
-        <div className="space-y-3">
+        <legend className="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">Tools You Are Paying For</legend>
+        <div className="space-y-0">
+          {/* Column headers */}
+          {fields.length > 0 && (
+            <div className="hidden sm:grid sm:grid-cols-12 sm:gap-2 px-0 mb-1">
+              <div className="sm:col-span-4"><span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Tool</span></div>
+              <div className="sm:col-span-3"><span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Plan</span></div>
+              <div className="sm:col-span-2"><span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">$/mo</span></div>
+              <div className="sm:col-span-2"><span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Seats</span></div>
+            </div>
+          )}
+        <div className="space-y-2">
           {fields.map((field, index) => {
             const selectedTool = watchedTools?.[index]?.tool
             const toolConfig = TOOLS.find((t) => t.id === selectedTool)
@@ -229,15 +239,13 @@ export default function SpendForm() {
             return (
               <div
                 key={field.id}
-                className="flex flex-col gap-3 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-end border border-border rounded-xl p-4"
+                className="flex flex-col gap-2 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-center py-2"
               >
                 <div className="sm:col-span-4">
-                  <Label htmlFor={`${baseId}-name`} className="text-xs text-muted-foreground">
-                    Tool
-                  </Label>
+                  <label className="sm:hidden block text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Tool</label>
                   <select
                     id={`${baseId}-name`}
-                    className="mt-1 flex min-h-[44px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[44px] focus:outline-none"
                     defaultValue=""
                     {...register(`tools.${index}.tool`, {
                       onChange: (e) => {
@@ -263,12 +271,10 @@ export default function SpendForm() {
                 </div>
 
                 <div className="sm:col-span-3">
-                  <Label htmlFor={`${baseId}-plan`} className="text-xs text-muted-foreground">
-                    Plan
-                  </Label>
+                  <label className="sm:hidden block text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Plan</label>
                   <select
                     id={`${baseId}-plan`}
-                    className="mt-1 flex min-h-[44px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[44px] focus:outline-none disabled:opacity-40"
                     disabled={!selectedTool}
                     defaultValue=""
                     {...register(`tools.${index}.plan`, {
@@ -285,41 +291,37 @@ export default function SpendForm() {
                     ))}
                   </select>
                   {toolErrors?.plan && (
-                    <p role="alert" className="text-xs text-destructive mt-0.5">
+                    <p role="alert" className="text-xs text-red-500 mt-0.5">
                       {toolErrors.plan.message}
                     </p>
                   )}
                 </div>
 
                 <div className="sm:col-span-2">
-                  <Label htmlFor={`${baseId}-spend`} className="text-xs text-muted-foreground">
-                    $/month
-                  </Label>
-                  <Input
+                  <label className="sm:hidden block text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">$/mo</label>
+                  <input
                     id={`${baseId}-spend`}
                     type="number"
                     min={0}
                     inputMode="decimal"
-                    className="mt-1 min-h-[44px]"
+                    className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[44px] focus:outline-none"
                     {...register(`tools.${index}.monthlySpend`, { valueAsNumber: true })}
                   />
                   {toolErrors?.monthlySpend && (
-                    <p role="alert" className="text-xs text-destructive mt-0.5">
+                    <p role="alert" className="text-xs text-red-500 mt-0.5">
                       {toolErrors.monthlySpend.message}
                     </p>
                   )}
                 </div>
 
                 <div className="sm:col-span-2">
-                  <Label htmlFor={`${baseId}-seats`} className="text-xs text-muted-foreground">
-                    Seats
-                  </Label>
-                  <Input
+                  <label className="sm:hidden block text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Seats</label>
+                  <input
                     id={`${baseId}-seats`}
                     type="number"
                     min={1}
                     inputMode="numeric"
-                    className="mt-1 min-h-[44px]"
+                    className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[44px] focus:outline-none"
                     {...register(`tools.${index}.seats`, {
                       valueAsNumber: true,
                       onChange: (e) => {
@@ -329,56 +331,65 @@ export default function SpendForm() {
                     })}
                   />
                   {toolErrors?.seats && (
-                    <p role="alert" className="text-xs text-destructive mt-0.5">
+                    <p role="alert" className="text-xs text-red-500 mt-0.5">
                       {toolErrors.seats.message}
                     </p>
                   )}
                 </div>
 
                 <div className="sm:col-span-1 flex sm:justify-center">
-                  <Button
+                  <button
                     type="button"
-                    variant="ghost"
-                    size="icon"
                     onClick={() => remove(index)}
                     aria-label={`Remove tool ${index + 1}`}
+                    className="text-gray-400 hover:text-red-500 text-xl font-light transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50"
                   >
                     ×
-                  </Button>
+                  </button>
                 </div>
               </div>
             )
           })}
         </div>
+        </div>
 
-        <Button
+        <button
           type="button"
-          variant="outline"
-          className="mt-3"
+          className="mt-4 text-sm font-medium text-gray-500 hover:text-gray-900 border border-gray-200 hover:border-gray-400 rounded-lg px-4 py-2.5 transition-all"
           onClick={() =>
             append({ tool: 'cursor', plan: 'pro', monthlySpend: 20, seats: 1 })
           }
         >
           + Add a tool
-        </Button>
+        </button>
         {errors.tools?.message && (
-          <p role="alert" className="text-sm text-destructive mt-2">
+          <p role="alert" className="text-sm text-red-500 mt-2">
             {errors.tools.message}
           </p>
         )}
       </fieldset>
 
       {submitError && (
-        <p role="alert" className="text-sm text-destructive bg-destructive/10 px-4 py-3 rounded-lg">
+        <p role="alert" className="text-sm text-red-500 bg-red-50 px-4 py-3 rounded-lg">
           {submitError}
         </p>
       )}
 
       <SubmitProgress active={loading} />
 
-      <Button type="submit" disabled={loading} aria-busy={loading} className="w-full min-h-[48px]">
+      <button
+        type="submit"
+        disabled={loading}
+        aria-busy={loading}
+        className="w-full min-h-[52px] rounded-xl font-semibold text-base transition-all"
+        style={{
+          backgroundColor: loading ? '#555' : '#111',
+          color: '#fff',
+          cursor: loading ? 'not-allowed' : 'pointer',
+        }}
+      >
         {loading ? 'Running audit...' : 'Get my free audit →'}
-      </Button>
+      </button>
     </form>
   )
 }
