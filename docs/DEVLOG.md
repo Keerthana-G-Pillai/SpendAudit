@@ -82,15 +82,15 @@
 ## Day 4 — 2026-05-24
 **Hours worked:** 4
 **What I did:**
-- Completely redesigned the core experience, replacing the basic `SpendForm` with an interactive `VisualBuilder` component.
-- Implemented an animated team-size slider and a floating "glass pill" navbar.
-- Iterated through several typography options (Plus Jakarta Sans, Outfit, Montserrat) before finalizing on `Roboto_Mono` for a clean, developer-focused aesthetic.
-- Added `fontFamily: { sans: ['var(--font-sans)'] }` to `tailwind.config.ts` to properly wire up Next.js variable fonts.
-- Injected the Teal (`#567C8D`) accent color deeply into the app: active tool tiles glow with Teal borders, primary buttons and headings use Teal, and the massive `$ Estimated Spend` counters were updated for maximum visual impact.
-- Cleaned up the visual hierarchy by arranging use cases into a 3-column grid and stacking Available Tools into a vertical list.
+- Deployed the Next.js application, which required debugging a critical build failure in the production environment.
+- Encountered a Next.js `Unhandled Runtime Error` during deployment: "Event handlers cannot be passed to Client Component props."
+- Traced the error to inline `onMouseEnter` and `onMouseLeave` handlers used inside a Server Component (`page.tsx`).
+- Resolved the build crash by entirely removing the inline JavaScript handlers and reimplementing the interactive hover logic using Tailwind/CSS `:hover` states in `globals.css`.
+- Overhauled the user interface into a cohesive, interactive visual builder with refined typography and a semantic Teal color scheme.
 **What I learned:**
-- Google Fonts variable fonts require strict CSS variable wiring in Tailwind config (`extend: { fontFamily: { sans: ... } }`) to take effect globally, otherwise Tailwind silently falls back to system fonts.
+- Server Components in Next.js 14 are strictly static during rendering and will crash the production build if you attempt to pass functions (like event handlers) to them without explicitly defining a `"use client"` boundary. Moving interaction logic to CSS is often a safer and more performant fallback.
 **Blockers:**
-- None. The UI polish went smoothly.
+- The Vercel deployment was initially blocked by the event handler runtime error, requiring a pivot in how hover states were handled.
 **Plan for tomorrow:**
-- Finalize testing strategies and wrap up the repository documentation.
+- Implement the final test cases in `backend/lib/audit.test.ts`.
+- Update `TESTS.md` and `ARCHITECTURE.md` to reflect the final project structure.
