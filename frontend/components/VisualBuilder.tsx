@@ -349,7 +349,7 @@ export default function VisualBuilder() {
                   className={cn(
                     'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border mb-2 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3',
                     isSelected
-                      ? 'border-primary bg-primary text-white shadow-lg'
+                      ? 'border-secondary bg-secondary text-white shadow-lg'
                       : 'border-accent bg-background text-primary/70'
                   )}
                 >
@@ -364,7 +364,7 @@ export default function VisualBuilder() {
                   </span>
                 </span>
                 {isSelected && (
-                  <div className="absolute top-3 right-3 text-primary">
+                  <div className="absolute top-3 right-3 text-secondary">
                     <Check size={16} strokeWidth={2.5} />
                   </div>
                 )}

@@ -18,30 +18,32 @@ export default function Home() {
     <main className="min-h-screen" style={{ backgroundColor: '#F5EFEB' }}>
 
       {/* ════════════════════════ NAVBAR ════════════════════════ */}
-      <nav style={{ backgroundColor: '#2F4156' }}>
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-12 py-4 flex items-center justify-between">
-
+      <nav className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 pointer-events-none">
+        <div 
+          className="w-full max-w-5xl mx-auto px-5 py-3 flex items-center justify-between rounded-2xl shadow-lg backdrop-blur-md border pointer-events-auto transition-all"
+          style={{ backgroundColor: 'rgba(245, 239, 235, 0.85)', borderColor: '#C8D9E6' }}
+        >
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div
-              className="flex items-center justify-center w-8 h-8 rounded-lg font-extrabold text-[13px]"
-              style={{ backgroundColor: '#567C8D', color: '#ffffff' }}
+              className="flex items-center justify-center w-8 h-8 rounded-lg font-extrabold text-[13px] shadow-sm"
+              style={{ backgroundColor: '#2F4156', color: '#ffffff' }}
             >
               C
             </div>
-            <span className="text-[16px] font-bold tracking-tight" style={{ color: '#ffffff' }}>
+            <span className="text-[17px] font-extrabold tracking-tight" style={{ color: '#2F4156' }}>
               Credex
             </span>
           </div>
 
           {/* Nav links */}
-          <div className="hidden sm:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-8 bg-white/50 px-6 py-2 rounded-full border border-[#C8D9E6]/50">
             {['Features', 'Pricing', 'About'].map((item) => (
               <a
                 key={item}
                 href="#"
-                className="text-[13px] font-medium transition-colors"
-                style={{ color: '#C8D9E6' }}
+                className="text-[13px] font-bold transition-colors"
+                style={{ color: '#567C8D' }}
               >
                 {item}
               </a>
@@ -51,7 +53,7 @@ export default function Home() {
           {/* CTA */}
           <a
             href="#audit"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-semibold transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold transition-transform hover:scale-105 shadow-md"
             style={{ backgroundColor: '#567C8D', color: '#ffffff' }}
           >
             Free Audit

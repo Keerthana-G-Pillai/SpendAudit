@@ -131,9 +131,9 @@
   .ui-option:hover { border-color: #567C8D; background: rgba(200, 217, 230, 0.25); }
 
   .ui-option-selected {
-    border-color: #2F4156 !important;
-    background: rgba(200, 217, 230, 0.30) !important;
-    box-shadow: 0 0 0 1px #2F4156;
+    border-color: #567C8D !important;
+    background: rgba(86, 124, 141, 0.10) !important;
+    box-shadow: 0 0 0 1px #567C8D;
   }
 
   /* Tool tiles */
@@ -145,8 +145,9 @@
   .ui-tool-tile:hover { border-color: #567C8D; background: rgba(200, 217, 230, 0.25); }
 
   .ui-tool-tile-selected {
-    border-color: #2F4156 !important;
-    box-shadow: 0 0 0 1px #2F4156;
+    border-color: #567C8D !important;
+    background: rgba(86, 124, 141, 0.10) !important;
+    box-shadow: 0 0 0 1px #567C8D;
   }
 
   /* Step badge */
