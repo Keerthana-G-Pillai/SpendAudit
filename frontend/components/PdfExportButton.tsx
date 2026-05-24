@@ -125,7 +125,7 @@ export default function PdfExportButton({ auditResult, aiSummary }: Props) {
       onClick={handleExport}
       disabled={generating}
       aria-label="Download audit as PDF"
-      className="w-full min-h-[48px] border border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50"
+      className="ui-btn-secondary w-full h-10 gap-2 disabled:opacity-50"
     >
       <span aria-hidden="true">📄</span>
       <span>{generating ? 'Generating PDF...' : 'Download PDF report'}</span>

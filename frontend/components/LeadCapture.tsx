@@ -3,10 +3,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const leadFormSchema = z.object({
   email: z.string().email('Enter a valid email address'),
@@ -80,102 +76,96 @@ export default function LeadCapture({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {isOptimal
-            ? 'Get notified when new optimizations apply'
-            : 'Get this audit in your inbox'}
-        </CardTitle>
-        <CardDescription>
-          {isOptimal
-            ? 'We will alert you when pricing changes or better alternatives emerge.'
-            : 'One email with your full audit summary and recommendations.'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3" noValidate>
+    <section className="ui-section p-5 sm:p-6" aria-labelledby="lead-heading">
+      <h2 id="lead-heading" className="ui-heading">
+        {isOptimal ? 'Pricing alerts' : 'Email this audit'}
+      </h2>
+      <p className="ui-body mt-1 mb-5">
+        {isOptimal
+          ? 'Notify me when pricing changes affect my stack.'
+          : 'Receive a copy of this report and recommendations.'}
+      </p>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <input
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          className="sr-only"
+          aria-hidden="true"
+          {...register('website')}
+        />
+
+        <div>
+          <label htmlFor="lead-email" className="ui-label block mb-1.5">
+            Email
+          </label>
           <input
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            className="sr-only"
-            aria-hidden="true"
-            {...register('website')}
+            id="lead-email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@company.com"
+            className="ui-input"
+            {...register('email')}
           />
-
-          <div>
-            <Label htmlFor="lead-email">
-              Email <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="lead-email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@company.com"
-              className="mt-1 min-h-[44px]"
-              {...register('email')}
-            />
-            {errors.email && (
-              <p role="alert" className="text-sm text-destructive mt-1">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <Label htmlFor="lead-company">Company (optional)</Label>
-              <Input
-                id="lead-company"
-                autoComplete="organization"
-                className="mt-1 min-h-[44px]"
-                {...register('company')}
-              />
-            </div>
-            <div>
-              <Label htmlFor="lead-role">Role (optional)</Label>
-              <Input
-                id="lead-role"
-                autoComplete="organization-title"
-                className="mt-1 min-h-[44px]"
-                {...register('role')}
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="lead-team-size">Team size (optional)</Label>
-            <Input
-              id="lead-team-size"
-              type="number"
-              min={1}
-              inputMode="numeric"
-              className="mt-1 min-h-[44px]"
-              {...register('teamSize')}
-            />
-          </div>
-
-          {errors.root && (
-            <p role="alert" className="text-sm text-destructive">
-              {errors.root.message}
+          {errors.email && (
+            <p role="alert" className="text-[12px] text-red-600 mt-1">
+              {errors.email.message}
             </p>
           )}
+        </div>
 
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            aria-busy={isSubmitting}
-            className="w-full min-h-[48px]"
-          >
-            {isSubmitting ? 'Sending...' : 'Send me the audit'}
-          </Button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="lead-company" className="ui-label block mb-1.5">
+              Company
+            </label>
+            <input
+              id="lead-company"
+              autoComplete="organization"
+              className="ui-input"
+              {...register('company')}
+            />
+          </div>
+          <div>
+            <label htmlFor="lead-role" className="ui-label block mb-1.5">
+              Role
+            </label>
+            <input
+              id="lead-role"
+              autoComplete="organization-title"
+              className="ui-input"
+              {...register('role')}
+            />
+          </div>
+        </div>
 
-          <p className="text-xs text-muted-foreground text-center">
-            No spam. Unsubscribe any time.
+        <div>
+          <label htmlFor="lead-team-size" className="ui-label block mb-1.5">
+            Team size
+          </label>
+          <input
+            id="lead-team-size"
+            type="number"
+            min={1}
+            inputMode="numeric"
+            className="ui-input"
+            {...register('teamSize')}
+          />
+        </div>
+
+        {errors.root && (
+          <p role="alert" className="text-[12px] text-red-600">
+            {errors.root.message}
           </p>
-        </form>
-      </CardContent>
-    </Card>
+        )}
+
+        <button type="submit" disabled={isSubmitting} aria-busy={isSubmitting} className="ui-btn-primary w-full">
+          {isSubmitting ? 'Sending…' : 'Send audit'}
+        </button>
+
+        <p className="text-[11px] text-zinc-400 text-center">No spam. Unsubscribe anytime.</p>
+      </form>
+    </section>
   )
 }

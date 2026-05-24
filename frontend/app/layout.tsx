@@ -3,11 +3,15 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { cn } from '@/lib/utils'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'AI Spend Audit — Credex',
-  description: 'Free 2-minute audit of your AI subscriptions.',
+  description: 'Audit your AI tool stack and find overspend in under two minutes.',
 }
 
 export default function RootLayout({
@@ -16,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={cn('font-sans', inter.variable)}>
-      <body className="antialiased text-foreground bg-background">{children}</body>
+    <html lang="en" className={cn(inter.variable, 'font-sans')}>
+      <body>{children}</body>
     </html>
   )
 }

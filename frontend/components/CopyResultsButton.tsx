@@ -54,7 +54,7 @@ export default function CopyResultsButton({ auditResult }: Props) {
       type="button"
       onClick={handleCopy}
       aria-label={copied ? 'Results copied' : 'Copy results as text'}
-      className="w-full min-h-[48px] border border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+      className="ui-btn-secondary w-full h-10 gap-2"
     >
       {copied ? (
         <>
@@ -63,8 +63,7 @@ export default function CopyResultsButton({ auditResult }: Props) {
         </>
       ) : (
         <>
-          <span aria-hidden="true">📋</span>
-          <span>Copy results for Slack / email</span>
+          <span>Copy for Slack / email</span>
         </>
       )}
     </button>

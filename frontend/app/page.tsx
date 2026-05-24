@@ -2,48 +2,51 @@ import VisualBuilder from '@/components/VisualBuilder'
 import LandingFAQ from '@/components/LandingFAQ'
 import SocialProof from '@/components/SocialProof'
 import type { Metadata } from 'next'
-import { CheckCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'AI Spend Audit — Stop overpaying for AI tools',
+  title: 'AI Spend Audit — Credex',
   description:
-    'Free 2-minute audit of your AI subscriptions. See exactly where you are overspending and what to do about it.',
+    'Audit your AI subscriptions. See where you are overspending and what to change.',
   openGraph: {
-    title: 'AI Spend Audit — Stop overpaying for AI tools',
-    description: 'Free 2-minute audit of your AI subscriptions.',
+    title: 'AI Spend Audit — Credex',
+    description: 'Audit your AI subscriptions in under two minutes.',
   },
 }
 
 export default function Home() {
   return (
-    <main className="min-h-screen py-12 sm:py-20 px-4 sm:px-8">
-      <div className="max-w-5xl mx-auto">
-
-        {/* Hero Section */}
-        <div className="text-center mb-16 anim-1">
-          <span className="inline-flex items-center gap-1.5 bg-white/70 backdrop-blur border border-purple-100 rounded-full px-4 py-1.5 text-sm text-purple-700 font-medium shadow-sm mb-6">
-            <CheckCircle className="w-3.5 h-3.5 text-purple-500" />
-            AI spend intelligence for startups
+    <main className="min-h-screen bg-[#FAFAFA]">
+      <div className="border-b border-zinc-200/80 bg-white">
+        <div className="max-w-[720px] mx-auto px-5 sm:px-6 py-3 flex items-center justify-between">
+          <span className="text-[13px] font-semibold text-zinc-900 tracking-[-0.02em]">
+            Credex
           </span>
-          <h1 className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight leading-tight max-w-3xl mx-auto">
-            Take Control of Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600">AI Subscription Spend</span>
+          <span className="text-[11px] text-zinc-500">AI spend audit</span>
+        </div>
+      </div>
+
+      <div className="max-w-[720px] mx-auto px-5 sm:px-6 py-10 sm:py-14">
+        <header className="mb-10">
+          <h1 className="text-[24px] sm:text-[26px] font-semibold text-zinc-900 tracking-[-0.025em] leading-[1.2]">
+            Audit your AI tool spend
           </h1>
-          <p className="text-base sm:text-lg text-gray-600 mt-4 max-w-2xl mx-auto leading-relaxed">
-            Build your team's AI tool stack below. Adjust plan tiers and seats, then get a comprehensive, automated savings audit in less than 2 minutes.
+          <p className="mt-2 text-[14px] text-zinc-500 leading-relaxed max-w-[460px]">
+            Configure your team and stack below. You will get a savings breakdown in
+            under two minutes — no account required.
           </p>
-        </div>
+        </header>
 
-        {/* The visual builder containing the three stacked steps */}
-        <div className="anim-2">
-          <VisualBuilder />
-        </div>
+        <VisualBuilder />
 
-        {/* Below-card extras */}
-        <div className="mt-20 max-w-3xl mx-auto anim-3">
+        <footer className="mt-16 pt-10 border-t border-zinc-200">
           <SocialProof />
-          <LandingFAQ />
-        </div>
-
+          <div className="mt-12">
+            <LandingFAQ />
+          </div>
+          <p className="mt-10 text-center text-[11px] text-zinc-400">
+            Email is only requested after you view your results.
+          </p>
+        </footer>
       </div>
     </main>
   )

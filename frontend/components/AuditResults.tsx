@@ -7,15 +7,6 @@ import PdfExportButton from './PdfExportButton'
 import ToolIcon from './ToolIcon'
 import LeadCapture from './LeadCapture'
 import ShareButton from './ShareButton'
-import { FlickeringGrid } from '@/components/ui/flickering-grid'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import type { PublicAuditData, ToolRecommendation } from '@backend/lib/types'
 
 interface Props {
@@ -30,149 +21,114 @@ export default function AuditResults({ data }: Props) {
   const isOptimal = auditResult.totalMonthlySavings === 0
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6 sm:space-y-8">
-
-        {/* ── Screenshot-friendly hero section with Credex watermark ── */}
-        <div className="rounded-2xl border border-border bg-card p-6 sm:p-10 relative overflow-hidden">
-          {/* Subtle Flickering Grid overlay */}
-          <div className="absolute inset-0 -z-10 opacity-[0.08] pointer-events-none">
-            <FlickeringGrid
-              squareSize={4}
-              gridGap={5}
-              flickerChance={0.2}
-              color="rgb(59, 130, 246)"
-              maxOpacity={0.3}
-            />
-          </div>
-
-          {/* Subtle Credex watermark */}
-          <span className="absolute top-4 right-4 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/40 select-none" aria-hidden="true">
-            credex.rocks
+    <div className="min-h-screen bg-[#FAFAFA]">
+      <div className="border-b border-zinc-200/80 bg-white">
+        <div className="max-w-[720px] mx-auto px-5 sm:px-6 py-3 flex items-center justify-between">
+          <span className="text-[13px] font-semibold text-zinc-900 tracking-[-0.02em]">
+            Credex
           </span>
-
-          <header className="text-center space-y-2">
-            {isOptimal ? (
-              <>
-                <p className="text-3xl sm:text-4xl mb-2" aria-hidden="true">
-                  ✓
-                </p>
-                <h1 className="text-2xl sm:text-3xl font-bold">You are spending well</h1>
-                <p className="text-muted-foreground text-sm sm:text-base">
-                  Your AI tool stack looks well-optimized for your team size and use case.
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
-                  Potential savings found
-                </p>
-                <h1 className="text-4xl sm:text-6xl font-bold tabular-nums">
-                  <AnimatedCounter
-                    target={auditResult.totalMonthlySavings}
-                    prefix="$"
-                    duration={1500}
-                  />
-                  <span className="text-xl sm:text-2xl font-normal text-muted-foreground">/month</span>
-                </h1>
-                <p className="text-lg sm:text-xl text-muted-foreground">
-                  <AnimatedCounter
-                    target={auditResult.totalAnnualSavings}
-                    prefix="$"
-                    suffix=" per year"
-                    duration={1800}
-                  />
-                </p>
-              </>
-            )}
-          </header>
-
-          {/* Bottom branding bar for screenshot sharing */}
-          <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-            <span>AI Spend Audit</span>
-            <span className="font-medium">Powered by Credex</span>
-          </div>
+          <span className="text-[11px] text-zinc-500">Audit results</span>
         </div>
+      </div>
+
+      <div className="max-w-[720px] mx-auto px-5 sm:px-6 py-10 sm:py-12 space-y-4">
+        <section className="ui-section p-6 sm:p-8">
+          <p className="ui-label mb-3">Summary</p>
+          {isOptimal ? (
+            <>
+              <h1 className="text-[22px] font-semibold text-zinc-900 tracking-[-0.02em]">
+                Stack within expected range
+              </h1>
+              <p className="ui-body mt-2">
+                Your current plan mix looks appropriate for your team size and use case.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-[13px] text-zinc-500 mb-1">Potential monthly savings</p>
+              <p className="text-[36px] sm:text-[40px] font-semibold text-zinc-900 tracking-[-0.03em] tabular-nums leading-none">
+                <AnimatedCounter
+                  target={auditResult.totalMonthlySavings}
+                  prefix="$"
+                  duration={1200}
+                />
+              </p>
+              <p className="text-[14px] text-zinc-500 mt-2 tabular-nums">
+                <AnimatedCounter
+                  target={auditResult.totalAnnualSavings}
+                  prefix="$"
+                  suffix=" per year"
+                  duration={1400}
+                />
+              </p>
+            </>
+          )}
+          <p className="text-[11px] text-zinc-400 mt-6 pt-4 border-t border-zinc-100">
+            credex.rocks · shareable audit link
+          </p>
+        </section>
 
         {isHighSavings && (
-          <Card className="bg-primary text-primary-foreground ring-primary">
-            <CardHeader>
-              <CardTitle className="text-primary-foreground">
-                Credex can save you even more
-              </CardTitle>
-              <CardDescription className="text-primary-foreground/80">
-                Credex sells discounted AI credits at up to 40% off retail. With $500+/month
-                in identified savings, you are exactly who we built this for.
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <a
-                href="https://credex.rocks"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-[44px] items-center justify-center rounded-md bg-secondary px-5 py-2.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/80"
-              >
-                Book a free Credex consultation →
-              </a>
-            </CardFooter>
-          </Card>
+          <section className="ui-section p-5 border-zinc-900 bg-zinc-900 text-white">
+            <h2 className="text-[15px] font-semibold">Credex institutional credits</h2>
+            <p className="text-[13px] text-zinc-300 mt-1.5 leading-relaxed">
+              Savings exceed $500/mo. Credex offers discounted AI credits at up to 40% off
+              retail.
+            </p>
+            <a
+              href="https://credex.rocks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex mt-4 h-9 items-center px-4 text-[13px] font-medium bg-white text-zinc-900 rounded-md hover:bg-zinc-100 transition-colors"
+            >
+              Book consultation
+            </a>
+          </section>
         )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
-              AI analysis
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="leading-relaxed text-sm sm:text-base">{aiSummary}</p>
-          </CardContent>
-        </Card>
+        <section className="ui-section p-5 sm:p-6">
+          <h2 className="ui-label mb-3">Analysis</h2>
+          <p className="text-[14px] text-zinc-700 leading-relaxed">{aiSummary}</p>
+        </section>
 
-        <section aria-labelledby="breakdown-heading">
-          <h2 id="breakdown-heading" className="font-semibold mb-3">
-            Breakdown by tool
-          </h2>
-          <ul className="space-y-3">
+        <section>
+          <h2 className="ui-heading mb-3 px-0.5">By tool</h2>
+          <ul className="border border-zinc-200 rounded-md overflow-hidden divide-y divide-zinc-200 bg-white">
             {auditResult.recommendations.map((rec: ToolRecommendation, i: number) => (
-              <li key={`${rec.tool}-${i}`}>
-                <Card size="sm">
-                  <CardHeader className="pb-2">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                      <div className="flex items-start gap-3">
-                        <ToolIcon tool={rec.tool} />
-                        <div>
-                          <CardTitle className="capitalize text-base">
-                            {rec.tool.replace(/-/g, ' ')}
-                          </CardTitle>
-                          <CardDescription className="text-base font-medium text-foreground mt-1">
-                            Current spend: ${rec.currentSpend}/mo
-                          </CardDescription>
-                        </div>
-                      </div>
-                      {rec.estimatedMonthlySaving > 0 ? (
-                        <span className="text-green-600 font-semibold text-sm shrink-0">
-                          Save ${rec.estimatedMonthlySaving}/mo
+              <li key={`${rec.tool}-${i}`} className="p-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                  <div className="flex items-start gap-3 min-w-0">
+                    <ToolIcon tool={rec.tool} />
+                    <div>
+                      <p className="text-[14px] font-medium text-zinc-900 capitalize">
+                        {rec.tool.replace(/-/g, ' ')}
+                      </p>
+                      <p className="text-[13px] text-zinc-500 mt-0.5">
+                        Current spend{' '}
+                        <span className="font-medium text-zinc-700 tabular-nums">
+                          ${rec.currentSpend}/mo
                         </span>
-                      ) : (
-                        <span className="text-muted-foreground text-sm shrink-0">Optimal</span>
-                      )}
+                      </p>
                     </div>
-                  </CardHeader>
-                  <CardContent className="pt-0 space-y-1.5">
-                    <p className="text-sm font-medium">{rec.recommendedAction}</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {rec.reasoning}
-                    </p>
-                  </CardContent>
-                </Card>
+                  </div>
+                  {rec.estimatedMonthlySaving > 0 ? (
+                    <span className="text-[13px] font-medium text-emerald-700 tabular-nums shrink-0">
+                      −${rec.estimatedMonthlySaving}/mo
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wide shrink-0">
+                      Optimal
+                    </span>
+                  )}
+                </div>
+                <p className="text-[13px] font-medium text-zinc-800 mt-3">{rec.recommendedAction}</p>
+                <p className="text-[12px] text-zinc-500 mt-1 leading-relaxed">{rec.reasoning}</p>
               </li>
             ))}
           </ul>
         </section>
 
-        {/* Action buttons */}
-        <div className="space-y-3">
+        <div className="space-y-2">
           <ShareButton slug={slug} />
           <CopyResultsButton auditResult={auditResult} />
           <PdfExportButton auditResult={auditResult} aiSummary={aiSummary} />
@@ -188,17 +144,10 @@ export default function AuditResults({ data }: Props) {
             isOptimal={isOptimal}
           />
         ) : (
-          <p className="text-center text-sm text-muted-foreground py-2" role="status">
+          <p className="text-center text-[13px] text-zinc-500 py-2" role="status">
             Audit sent to your inbox
           </p>
         )}
-
-        <footer className="text-center text-xs text-muted-foreground pb-4">
-          Powered by{' '}
-          <a href="https://credex.rocks" className="underline hover:text-foreground">
-            Credex
-          </a>
-        </footer>
       </div>
     </div>
   )

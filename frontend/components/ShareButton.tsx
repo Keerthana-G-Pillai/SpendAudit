@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Link2, Check } from 'lucide-react'
 
 interface Props {
   slug: string
@@ -24,18 +25,18 @@ export default function ShareButton({ slug }: Props) {
     <button
       type="button"
       onClick={handleCopy}
-      aria-label={copied ? 'Audit link copied' : 'Copy shareable audit link'}
-      className="w-full min-h-[48px] border border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+      aria-label={copied ? 'Link copied' : 'Copy shareable link'}
+      className="ui-btn-secondary w-full h-10 gap-2"
     >
       {copied ? (
         <>
-          <span aria-hidden="true">✓</span>
-          <span>Link copied to clipboard</span>
+          <Check size={14} />
+          Copied
         </>
       ) : (
         <>
-          <span aria-hidden="true">↗</span>
-          <span>Share this audit</span>
+          <Link2 size={14} />
+          Copy share link
         </>
       )}
     </button>

@@ -2,30 +2,41 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search } from 'lucide-react'
+import {
+  Search,
+  Code2,
+  PenLine,
+  BarChart2,
+  Microscope,
+  Layers,
+  Check,
+  Plus,
+  Minus,
+  X,
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
 import SubmitProgress from './SubmitProgress'
 import type { ToolName, UseCase } from '@backend/lib/types'
+import type { LucideIcon } from 'lucide-react'
 
-// ─── Catalogues ───────────────────────────────────────────────────────────────
 interface ToolCfg {
   id: ToolName
   label: string
-  iconBg: string
-  iconText: string
   initials: string
+  domain: string
 }
 
 const ALL_TOOLS: ToolCfg[] = [
-  { id: 'cursor',         label: 'Cursor',        iconBg: '#ede9fe', iconText: '#6d28d9', initials: 'Cu' },
-  { id: 'chatgpt',        label: 'ChatGPT',       iconBg: '#d1fae5', iconText: '#065f46', initials: 'GP' },
-  { id: 'claude',         label: 'Claude',        iconBg: '#fef3c7', iconText: '#92400e', initials: 'Cl' },
-  { id: 'gemini',         label: 'Gemini',        iconBg: '#dbeafe', iconText: '#1e40af', initials: 'Ge' },
-  { id: 'github-copilot', label: 'Copilot',       iconBg: '#1f2937', iconText: '#ffffff', initials: 'GC' },
-  { id: 'windsurf',       label: 'Windsurf',      iconBg: '#cffafe', iconText: '#155e75', initials: 'Ws' },
-  { id: 'anthropic-api',  label: 'Anthropic',     iconBg: '#fde8d8', iconText: '#9a3412', initials: 'An' },
-  { id: 'openai-api',     label: 'OpenAI API',    iconBg: '#f0fdf4', iconText: '#166534', initials: 'OA' },
-  { id: 'figma',          label: 'Figma',         iconBg: '#fee2e2', iconText: '#ef4444', initials: 'Fi' },
-  { id: 'notion',         label: 'Notion',        iconBg: '#f3f4f6', iconText: '#111827', initials: 'No' },
+  { id: 'cursor', label: 'Cursor', initials: 'Cu', domain: 'cursor.com' },
+  { id: 'chatgpt', label: 'ChatGPT', initials: 'GP', domain: 'openai.com' },
+  { id: 'claude', label: 'Claude', initials: 'Cl', domain: 'anthropic.com' },
+  { id: 'gemini', label: 'Gemini', initials: 'Ge', domain: 'google.com' },
+  { id: 'github-copilot', label: 'Copilot', initials: 'CP', domain: 'github.com' },
+  { id: 'windsurf', label: 'Windsurf', initials: 'Ws', domain: 'codeium.com' },
+  { id: 'anthropic-api', label: 'Anthropic API', initials: 'An', domain: 'anthropic.com' },
+  { id: 'openai-api', label: 'OpenAI API', initials: 'OA', domain: 'openai.com' },
+  { id: 'figma', label: 'Figma', initials: 'Fg', domain: 'figma.com' },
+  { id: 'notion', label: 'Notion', initials: 'No', domain: 'notion.so' },
 ]
 
 interface PlanOption {
@@ -36,58 +47,80 @@ interface PlanOption {
 
 const TOOL_PLANS: Record<ToolName, PlanOption[]> = {
   cursor: [
-    { id: 'pro', label: 'Pro ($20/mo)', price: 20 },
-    { id: 'business', label: 'Business ($40/mo)', price: 40 },
+    { id: 'pro', label: 'Pro · $20/seat', price: 20 },
+    { id: 'business', label: 'Business · $40/seat', price: 40 },
   ],
   'github-copilot': [
-    { id: 'individual', label: 'Individual ($10/mo)', price: 10 },
-    { id: 'business', label: 'Business ($19/mo)', price: 19 },
-    { id: 'enterprise', label: 'Enterprise ($39/mo)', price: 39 },
+    { id: 'individual', label: 'Individual · $10/seat', price: 10 },
+    { id: 'business', label: 'Business · $19/seat', price: 19 },
+    { id: 'enterprise', label: 'Enterprise · $39/seat', price: 39 },
   ],
   claude: [
-    { id: 'pro', label: 'Pro ($20/mo)', price: 20 },
-    { id: 'team', label: 'Team ($30/mo)', price: 30 },
-    { id: 'max', label: 'Max ($100/mo)', price: 100 },
+    { id: 'pro', label: 'Pro · $20/seat', price: 20 },
+    { id: 'team', label: 'Team · $30/seat', price: 30 },
+    { id: 'max', label: 'Max · $100/seat', price: 100 },
   ],
   chatgpt: [
-    { id: 'plus', label: 'Plus ($20/mo)', price: 20 },
-    { id: 'team', label: 'Team ($30/mo)', price: 30 },
+    { id: 'plus', label: 'Plus · $20/seat', price: 20 },
+    { id: 'team', label: 'Team · $30/seat', price: 30 },
   ],
   windsurf: [
-    { id: 'pro', label: 'Pro ($15/mo)', price: 15 },
-    { id: 'teams', label: 'Teams ($35/mo)', price: 35 },
+    { id: 'pro', label: 'Pro · $15/seat', price: 15 },
+    { id: 'teams', label: 'Teams · $35/seat', price: 35 },
   ],
   gemini: [
-    { id: 'pro', label: 'Pro ($0/mo)', price: 0 },
-    { id: 'ultra', label: 'Ultra ($19.99/mo)', price: 19.99 },
+    { id: 'pro', label: 'Pro · Free', price: 0 },
+    { id: 'ultra', label: 'Ultra · $19.99/seat', price: 19.99 },
   ],
-  'anthropic-api': [
-    { id: 'pay-as-you-go', label: 'Pay-as-you-go (API)', price: 0 },
-  ],
-  'openai-api': [
-    { id: 'pay-as-you-go', label: 'Pay-as-you-go (API)', price: 0 },
-  ],
+  'anthropic-api': [{ id: 'pay-as-you-go', label: 'Pay-as-you-go', price: 0 }],
+  'openai-api': [{ id: 'pay-as-you-go', label: 'Pay-as-you-go', price: 0 }],
   figma: [
-    { id: 'professional', label: 'Professional ($15/mo)', price: 15 },
-    { id: 'organization', label: 'Organization ($45/mo)', price: 45 },
-    { id: 'enterprise', label: 'Enterprise ($75/mo)', price: 75 },
+    { id: 'professional', label: 'Professional · $15/seat', price: 15 },
+    { id: 'organization', label: 'Organization · $45/seat', price: 45 },
   ],
   notion: [
-    { id: 'plus', label: 'Plus ($10/mo)', price: 10 },
-    { id: 'business', label: 'Business ($15/mo)', price: 15 },
-    { id: 'enterprise', label: 'Enterprise ($25/mo)', price: 25 },
+    { id: 'plus', label: 'Plus · $10/seat', price: 10 },
+    { id: 'business', label: 'Business · $15/seat', price: 15 },
   ],
 }
 
-const USE_CASES: { id: UseCase; label: string; emoji: string }[] = [
-  { id: 'coding',   label: 'Engineering', emoji: '💻' },
-  { id: 'writing',  label: 'Marketing',   emoji: '📣' },
-  { id: 'data',     label: 'Design',      emoji: '🎨' },
-  { id: 'research', label: 'Research',    emoji: '🔬' },
-  { id: 'mixed',    label: 'Mixed',       emoji: '✨' },
+const USE_CASES: {
+  id: UseCase
+  label: string
+  description: string
+  icon: LucideIcon
+}[] = [
+  {
+    id: 'coding',
+    label: 'Engineering',
+    description: 'Product development, code, and technical workflows',
+    icon: Code2,
+  },
+  {
+    id: 'writing',
+    label: 'Content & marketing',
+    description: 'Copy, campaigns, and growth operations',
+    icon: PenLine,
+  },
+  {
+    id: 'data',
+    label: 'Data & analytics',
+    description: 'Analysis, reporting, and business intelligence',
+    icon: BarChart2,
+  },
+  {
+    id: 'research',
+    label: 'Research',
+    description: 'Discovery, synthesis, and knowledge work',
+    icon: Microscope,
+  },
+  {
+    id: 'mixed',
+    label: 'Cross-functional',
+    description: 'Multiple teams or mixed departmental use',
+    icon: Layers,
+  },
 ]
-
-const AVATARS = ['🧑', '👩', '👨', '🧑‍💻', '👩‍💼', '👨‍🔬', '🧑‍🎨', '👩‍🚀', '👨‍💼', '🧑‍🔬']
 
 interface SelectedTool {
   toolId: ToolName
@@ -96,85 +129,137 @@ interface SelectedTool {
   customSpend?: number
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+function Section({
+  step,
+  title,
+  description,
+  children,
+}: {
+  step: number
+  title: string
+  description: string
+  children: React.ReactNode
+}) {
+  return (
+    <section className="ui-section p-5 sm:p-6">
+      <div className="mb-5">
+        <p className="ui-step-badge mb-1.5">Step {step} of 3</p>
+        <h2 className="ui-heading">{title}</h2>
+        <p className="ui-body mt-1">{description}</p>
+      </div>
+      {children}
+    </section>
+  )
+}
+
+function ToolMark({ initials, domain }: { initials: string; domain?: string }) {
+  const [error, setError] = useState(false)
+
+  if (domain && !error) {
+    return (
+      <img
+        src={`https://logo.clearbit.com/${domain}`}
+        alt={initials}
+        className="h-8 w-8 rounded object-cover shadow-sm bg-white"
+        onError={() => setError(true)}
+      />
+    )
+  }
+
+  return (
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-accent/30 text-[11px] font-semibold text-primary">
+      {initials}
+    </span>
+  )
+}
+
 export default function VisualBuilder() {
   const router = useRouter()
 
-  const [teamSize,  setTeamSize]  = useState(4)
-  const [useCase,   setUseCase]   = useState<UseCase>('coding')
-  
-  // Pre-populate with options matching the user mockup
-  const [selected,  setSelected]  = useState<SelectedTool[]>([
-    { toolId: 'cursor', plan: 'pro', seats: 1, customSpend: 0 },
-    { toolId: 'chatgpt', plan: 'plus', seats: 1, customSpend: 0 },
-    { toolId: 'figma', plan: 'professional', seats: 2, customSpend: 0 },
-    { toolId: 'notion', plan: 'plus', seats: 3, customSpend: 0 },
+  const [teamSize, setTeamSize] = useState(8)
+  const [useCase, setUseCase] = useState<UseCase>('coding')
+  const [selected, setSelected] = useState<SelectedTool[]>([
+    { toolId: 'cursor', plan: 'pro', seats: 4 },
+    { toolId: 'chatgpt', plan: 'team', seats: 4 },
   ])
-  
-  const [quickAdd,  setQuickAdd]  = useState('')
-  const [loading,   setLoading]   = useState(false)
+  const [quickAdd, setQuickAdd] = useState('')
+  const [loading, setLoading] = useState(false)
   const [submitErr, setSubmitErr] = useState<string | null>(null)
 
-  const fillPct = `${((teamSize - 1) / 99) * 100}%`
-  const avatarCount = Math.min(Math.ceil((teamSize / 100) * 10) + 1, 10)
-
   const totalMonthly = selected.reduce((sum, s) => {
-    const cfg = ALL_TOOLS.find(t => t.id === s.toolId)
-    if (!cfg) return sum
     if (s.toolId === 'anthropic-api' || s.toolId === 'openai-api') {
       return sum + (s.customSpend ?? 100)
     }
     const plans = TOOL_PLANS[s.toolId]
-    const plan = plans.find(p => p.id === s.plan) || plans[0]
+    const plan = plans.find((p) => p.id === s.plan) ?? plans[0]
     return sum + (plan?.price ?? 0) * s.seats
   }, 0)
 
   const addTool = (toolId: ToolName) => {
-    if (selected.find(s => s.toolId === toolId)) return
+    if (selected.some((s) => s.toolId === toolId)) return
     const defaultPlan = TOOL_PLANS[toolId][0]!.id
-    setSelected(prev => [...prev, { 
-      toolId, 
-      plan: defaultPlan, 
-      seats: 1, 
-      customSpend: toolId.includes('-api') ? 100 : 0 
-    }])
+    setSelected((prev) => [
+      ...prev,
+      {
+        toolId,
+        plan: defaultPlan,
+        seats: 1,
+        customSpend: toolId.includes('-api') ? 100 : undefined,
+      },
+    ])
   }
 
   const removeTool = (toolId: ToolName) => {
-    setSelected(prev => prev.filter(t => t.toolId !== toolId))
+    setSelected((prev) => prev.filter((t) => t.toolId !== toolId))
   }
 
   const changePlan = (toolId: ToolName, plan: string) => {
-    setSelected(prev => prev.map(t => t.toolId === toolId ? { ...t, plan } : t))
+    setSelected((prev) => prev.map((t) => (t.toolId === toolId ? { ...t, plan } : t)))
   }
 
   const changeCustomSpend = (toolId: ToolName, spend: number) => {
-    setSelected(prev => prev.map(t => t.toolId === toolId ? { ...t, customSpend: Math.max(0, spend) } : t))
+    setSelected((prev) =>
+      prev.map((t) =>
+        t.toolId === toolId ? { ...t, customSpend: Math.max(0, spend) } : t
+      )
+    )
   }
 
   const adjustSeats = (toolId: ToolName, delta: number) => {
-    setSelected(prev => prev.map(t => t.toolId === toolId ? { ...t, seats: Math.max(1, t.seats + delta) } : t))
+    setSelected((prev) =>
+      prev.map((t) =>
+        t.toolId === toolId ? { ...t, seats: Math.max(1, t.seats + delta) } : t
+      )
+    )
   }
 
-  const suggestions = quickAdd.length > 0
-    ? ALL_TOOLS.filter(t =>
-        (t.label.toLowerCase().includes(quickAdd.toLowerCase()) ||
-         t.id.toLowerCase().includes(quickAdd.toLowerCase())) &&
-        !selected.find(s => s.toolId === t.id)
-      ).slice(0, 5)
-    : []
+  const available = ALL_TOOLS.filter((t) => !selected.some((s) => s.toolId === t.id))
+  const suggestions =
+    quickAdd.length > 0
+      ? available
+          .filter(
+            (t) =>
+              t.label.toLowerCase().includes(quickAdd.toLowerCase()) ||
+              t.id.toLowerCase().includes(quickAdd.toLowerCase())
+          )
+          .slice(0, 6)
+      : []
 
   const handleSubmit = async () => {
-    if (selected.length === 0) { setSubmitErr('Please select at least one tool.'); return }
-    setLoading(true); setSubmitErr(null)
+    if (selected.length === 0) {
+      setSubmitErr('Add at least one tool to continue.')
+      return
+    }
+    setLoading(true)
+    setSubmitErr(null)
     try {
-      const tools = selected.map(s => {
+      const tools = selected.map((s) => {
         let monthlySpend = 0
         if (s.toolId === 'anthropic-api' || s.toolId === 'openai-api') {
           monthlySpend = s.customSpend ?? 100
         } else {
           const plans = TOOL_PLANS[s.toolId]
-          const plan = plans.find(p => p.id === s.plan) || plans[0]
+          const plan = plans.find((p) => p.id === s.plan) ?? plans[0]
           monthlySpend = (plan?.price ?? 0) * s.seats
         }
         return { tool: s.toolId, plan: s.plan, monthlySpend, seats: s.seats }
@@ -185,8 +270,8 @@ export default function VisualBuilder() {
         body: JSON.stringify({ teamSize, useCase, tools }),
       })
       if (!res.ok) throw new Error()
-      const { slug } = await res.json() as { slug: string }
-      await new Promise(r => setTimeout(r, 1800))
+      const { slug } = (await res.json()) as { slug: string }
+      await new Promise((r) => setTimeout(r, 1600))
       router.push(`/audit/${slug}`)
     } catch {
       setSubmitErr('Something went wrong. Please try again.')
@@ -195,271 +280,288 @@ export default function VisualBuilder() {
   }
 
   return (
-    <div className="flex flex-col gap-10">
-
-      {/* ═══════════════════════ STEP 1 CARD ════════════════════════════ */}
-      <div className="bg-white/90 backdrop-blur border border-purple-100/80 rounded-3xl p-8 shadow-xl flex flex-col md:flex-row gap-8 items-center justify-between transition-all">
-        <div className="max-w-md w-full shrink-0">
-          <span className="text-xs font-bold uppercase tracking-widest text-purple-600 bg-purple-50 px-3 py-1 rounded-full border border-purple-100">Step 1 of 3</span>
-          <h2 className="text-xl font-bold text-gray-900 mt-4 leading-snug">How many people are in your team?</h2>
-          <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-            Set size so we can customize the recommendations and seat adjustments.
-          </p>
+    <div className="flex flex-col gap-4">
+      <Section
+        step={1}
+        title="Team size"
+        description="Used to benchmark plan tiers and seat counts against typical team profiles."
+      >
+        <div className="flex items-center justify-between gap-4 mb-3">
+          <span className="ui-label">People on your team</span>
+          <span className="text-[13px] font-medium text-primary tabular-nums">
+            {teamSize}
+            {teamSize >= 100 ? '+' : ''}
+          </span>
         </div>
-
-        <div className="flex-1 w-full max-w-xl">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Team Size</span>
-            <span className="text-sm font-bold text-purple-600 bg-purple-50 px-3 py-0.5 rounded-full border border-purple-100">
-              {teamSize === 100 ? '100+' : teamSize}
-            </span>
-          </div>
-          {/* Emoji strip */}
-          <div className="relative h-7 mb-1 overflow-hidden">
-            <div
-              className="absolute top-0 flex transition-all duration-200"
-              style={{ left: `clamp(0px, calc(${fillPct} - ${avatarCount * 11}px), calc(100% - ${avatarCount * 22}px))` }}
-            >
-              {AVATARS.slice(0, avatarCount).map((av, i) => (
-                <span key={i} style={{ fontSize: 17 }} className="mr-1">{av}</span>
-              ))}
-            </div>
-          </div>
-          <input
-            type="range" min={1} max={100} value={teamSize}
-            onChange={e => setTeamSize(Number(e.target.value))}
-            className="team-slider w-full"
-            style={{ '--fill-pct': fillPct } as React.CSSProperties}
-            aria-label="Team size"
-          />
-          <div className="flex justify-between text-[10px] text-gray-400 mt-1 font-medium">
-            <span>1</span><span>25</span><span>50</span><span>75</span><span>100+</span>
+        
+        <div className="flex items-center justify-center mb-6 h-10">
+          <div className="flex -space-x-3 overflow-hidden p-1">
+            {Array.from({ length: Math.min(teamSize, 8) }).map((_, i) => (
+              <img
+                key={i}
+                className="inline-block h-10 w-10 rounded-full ring-2 ring-background bg-secondary object-cover"
+                src={`https://api.dicebear.com/7.x/notionists/svg?seed=${i + 12}&backgroundColor=C8D9E6,F5EFEB,567C8D`}
+                alt="Avatar"
+              />
+            ))}
+            {teamSize > 8 && (
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary ring-2 ring-background text-[11px] font-medium text-white shadow-sm z-10">
+                +{teamSize - 8}
+              </div>
+            )}
           </div>
         </div>
-      </div>
-
-      {/* ═══════════════════════ STEP 2 CARD ════════════════════════════ */}
-      <div className="bg-white/90 backdrop-blur border border-purple-100/80 rounded-3xl p-8 shadow-xl flex flex-col md:flex-row gap-8 items-start justify-between transition-all">
-        <div className="max-w-md w-full shrink-0">
-          <span className="text-xs font-bold uppercase tracking-widest text-purple-600 bg-purple-50 px-3 py-1 rounded-full border border-purple-100">Step 2 of 3</span>
-          <h2 className="text-xl font-bold text-gray-900 mt-4 leading-snug">What best describes your primary use case?</h2>
-          <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-            We'll customize recommendations based on your work.
-          </p>
+        <input
+          type="range"
+          min={1}
+          max={100}
+          value={teamSize}
+          onChange={(e) => setTeamSize(Number(e.target.value))}
+          className="ui-range w-full"
+          aria-label="Team size"
+        />
+        <div className="flex justify-between mt-2 text-[11px] text-zinc-400 tabular-nums">
+          <span>1</span>
+          <span>25</span>
+          <span>50</span>
+          <span>75</span>
+          <span>100+</span>
         </div>
+      </Section>
 
-        <div className="flex-1 w-full max-w-xl flex flex-col gap-3">
-          {USE_CASES.map(uc => {
+      <Section
+        step={2}
+        title="Primary use case"
+        description="Shapes which recommendations and overlap checks we prioritize."
+      >
+        <div className="grid gap-2">
+          {USE_CASES.map((uc) => {
+            const Icon = uc.icon
             const isSelected = useCase === uc.id
             return (
               <button
-                key={uc.id} type="button"
-                className={`flex items-center justify-between p-4 rounded-2xl border-2 text-left transition-all ${
-                  isSelected 
-                    ? 'border-purple-600 bg-purple-50/50 shadow-md ring-1 ring-purple-600' 
-                    : 'border-gray-100 bg-white hover:border-purple-200 hover:shadow-sm'
-                }`}
+                key={uc.id}
+                type="button"
                 onClick={() => setUseCase(uc.id)}
+                className={cn('ui-option', isSelected && 'ui-option-selected')}
               >
-                <div className="flex items-center gap-4">
-                  <span className="text-2xl">{uc.emoji}</span>
-                  <div>
-                    <p className="font-bold text-sm text-gray-800">{uc.label}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      {uc.id === 'coding' && 'Building products, coding, and technical workflows'}
-                      {uc.id === 'writing' && 'Content, campaigns, growth, and analytics'}
-                      {uc.id === 'data' && 'UI/UX, creative, and visual content'}
-                      {uc.id === 'research' && 'Data analysis, insights, and reporting'}
-                      {uc.id === 'mixed' && 'Cross-functional or multiple departments'}
-                    </p>
-                  </div>
-                </div>
-                {isSelected ? (
-                  <div className="w-5 h-5 rounded-full bg-purple-600 flex items-center justify-center text-white text-[10px] font-bold shadow-sm">
-                    ✓
-                  </div>
-                ) : (
-                  <span className="text-gray-300 text-sm">➔</span>
+                <span
+                  className={cn(
+                    'flex h-8 w-8 shrink-0 items-center justify-center rounded border',
+                    isSelected
+                      ? 'border-zinc-900 bg-zinc-900 text-white'
+                      : 'border-zinc-200 bg-zinc-50 text-zinc-600'
+                  )}
+                >
+                  <Icon size={15} strokeWidth={1.75} />
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span className="block text-[13px] font-medium text-zinc-900">
+                    {uc.label}
+                  </span>
+                  <span className="block text-[12px] text-zinc-500 mt-0.5 leading-snug">
+                    {uc.description}
+                  </span>
+                </span>
+                {isSelected && (
+                  <Check size={16} className="shrink-0 text-zinc-900 mt-0.5" strokeWidth={2} />
                 )}
               </button>
             )
           })}
         </div>
-      </div>
+      </Section>
 
-      {/* ═══════════════════════ STEP 3 CARD ════════════════════════════ */}
-      <div className="bg-white/90 backdrop-blur border border-purple-100/80 rounded-3xl p-8 shadow-xl flex flex-col gap-8 transition-all">
-        
-        {/* Header & Search */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-6">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-purple-600 bg-purple-50 px-3 py-1 rounded-full border border-purple-100">Step 3 of 3</span>
-            <h2 className="text-xl font-bold text-gray-900 mt-4 leading-snug">Add the tools you're paying for</h2>
-            <p className="text-sm text-gray-500 mt-1">
-              Select the tools in your stack and we'll calculate your total spend.
-            </p>
-          </div>
-          
-          <div className="relative w-full md:w-64">
-            <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-400 focus-within:border-purple-300 focus-within:bg-white transition-colors">
-              <Search size={14} className="text-gray-400" />
-              <input
-                value={quickAdd}
-                onChange={e => setQuickAdd(e.target.value)}
-                placeholder="Search tools..."
-                className="bg-transparent border-none outline-none w-full text-gray-700 text-sm placeholder-gray-400 font-sans"
-              />
-            </div>
-            {suggestions.length > 0 && (
-              <div className="absolute right-0 top-11 z-10 w-full bg-white border border-purple-100 shadow-xl rounded-2xl p-2 flex flex-col gap-1">
-                {suggestions.map(s => (
-                  <button
-                    key={s.id} type="button"
-                    onClick={() => { addTool(s.id); setQuickAdd('') }}
-                    className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-purple-50 text-left w-full transition-colors"
-                  >
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm shrink-0" style={{ background: s.iconBg, color: s.iconText }}>
-                      {s.initials}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-gray-800">{s.label}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Active List */}
-        <div className="flex flex-col gap-3">
-          {selected.map(item => {
-            const cfg = ALL_TOOLS.find(t => t.id === item.toolId)!
-            const plans = TOOL_PLANS[item.toolId]
-            const currentPlan = plans.find(p => p.id === item.plan) || plans[0]!
-            const isApi = item.toolId === 'anthropic-api' || item.toolId === 'openai-api'
-            const itemPrice = isApi ? (item.customSpend ?? 100) : (currentPlan?.price ?? 0) * item.seats
-
-            return (
-              <div key={item.toolId} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-white/50 border border-purple-50 rounded-2xl shadow-sm hover:shadow transition-all">
-                {/* Tool Meta */}
-                <div className="flex items-center gap-3 w-48 shrink-0">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs shadow-sm shrink-0" style={{ background: cfg.iconBg, color: cfg.iconText }}>
-                    {cfg.initials}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800">{cfg.label}</p>
-                  </div>
-                </div>
-
-                {/* Plan Dropdown */}
-                <div className="flex-1 min-w-[150px]">
-                  <select
-                    value={item.plan}
-                    onChange={e => changePlan(item.toolId, e.target.value)}
-                    className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-medium text-gray-700 outline-none focus:border-purple-300 shadow-sm cursor-pointer hover:border-gray-300 transition-colors"
-                  >
-                    {plans.map(p => (
-                      <option key={p.id} value={p.id}>{p.label}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Seats or Custom Spend */}
-                <div className="flex items-center justify-end gap-6 ml-auto">
-                  {isApi ? (
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold tracking-wider text-gray-400 uppercase">SPEND</span>
-                      <div className="flex items-center bg-white border border-gray-200 rounded-xl px-2 py-1 shadow-sm w-28">
-                        <span className="text-xs text-gray-400 font-bold">$</span>
-                        <input
-                          type="number"
-                          value={item.customSpend ?? 100}
-                          onChange={e => changeCustomSpend(item.toolId, Number(e.target.value))}
-                          className="bg-transparent border-none outline-none w-full text-xs font-bold text-gray-700 text-right px-1"
-                        />
-                        <span className="text-[10px] text-gray-400">/mo</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <span className="text-[9px] font-bold text-gray-400 tracking-wider uppercase mb-1">Seats</span>
-                      <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl p-1 shadow-sm">
-                        <button type="button" className="w-6 h-6 rounded-lg bg-gray-50 text-gray-500 hover:bg-purple-50 hover:text-purple-600 transition-colors font-bold text-xs"
-                          onClick={() => adjustSeats(item.toolId, -1)}>-</button>
-                        <span className="text-xs font-bold text-gray-700 w-4 text-center">{item.seats}</span>
-                        <button type="button" className="w-6 h-6 rounded-lg bg-gray-50 text-gray-500 hover:bg-purple-50 hover:text-purple-600 transition-colors font-bold text-xs"
-                          onClick={() => adjustSeats(item.toolId, 1)}>+</button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Price info */}
-                  <div className="w-20 text-right">
-                    <p className="text-sm font-black text-gray-800">${itemPrice}<span className="text-[10px] font-normal text-gray-400">/mo</span></p>
-                  </div>
-
-                  {/* Delete */}
-                  <button type="button" className="text-gray-300 hover:text-red-500 transition-colors text-sm font-semibold p-1"
-                    onClick={() => removeTool(item.toolId)}>×</button>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Available Catalog Grid */}
-        {ALL_TOOLS.filter(t => !selected.find(s => s.toolId === t.id)).length > 0 && (
-          <div className="mt-4 pt-6 border-t border-gray-100">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Add more tools to your stack:</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
-              {ALL_TOOLS.filter(t => !selected.find(s => s.toolId === t.id)).map(tool => (
+      <Section
+        step={3}
+        title="Your stack"
+        description="Add tools, set plans, and seat counts. Spend updates as you configure."
+      >
+        <div className="relative mb-4">
+          <Search
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
+          />
+          <input
+            value={quickAdd}
+            onChange={(e) => setQuickAdd(e.target.value)}
+            placeholder="Search tools to add…"
+            className="ui-input pl-9"
+            aria-label="Search tools"
+          />
+          {suggestions.length > 0 && (
+            <div className="absolute z-20 left-0 right-0 top-[calc(100%+4px)] bg-white border border-zinc-200 rounded-md shadow-[0_4px_16px_rgba(0,0,0,0.08)] py-1">
+              {suggestions.map((s) => (
                 <button
-                  key={tool.id} type="button"
-                  onClick={() => addTool(tool.id)}
-                  className="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl hover:border-purple-300 hover:shadow-sm hover:translate-y-[-1px] transition-all text-left"
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    addTool(s.id)
+                    setQuickAdd('')
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-zinc-50 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[10px] shadow-sm shrink-0" style={{ background: tool.iconBg, color: tool.iconText }}>
-                    {tool.initials}
+                  <ToolMark initials={s.initials} domain={s.domain} />
+                  <span className="text-[13px] font-medium text-zinc-900">{s.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {selected.length > 0 && (
+          <div className="mb-5 border border-zinc-200 rounded-md overflow-hidden divide-y divide-zinc-200">
+            {selected.map((item) => {
+              const cfg = ALL_TOOLS.find((t) => t.id === item.toolId)!
+              const plans = TOOL_PLANS[item.toolId]
+              const currentPlan = plans.find((p) => p.id === item.plan) ?? plans[0]!
+              const isApi =
+                item.toolId === 'anthropic-api' || item.toolId === 'openai-api'
+              const itemPrice = isApi
+                ? (item.customSpend ?? 100)
+                : (currentPlan?.price ?? 0) * item.seats
+
+              return (
+                <div
+                  key={item.toolId}
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-white"
+                >
+                  <div className="flex items-center gap-2.5 sm:w-[140px] shrink-0">
+                    <ToolMark initials={cfg.initials} domain={cfg.domain} />
+                    <span className="text-[13px] font-medium text-zinc-900">{cfg.label}</span>
                   </div>
-                  <div>
-                    <p className="text-xs font-semibold text-gray-800 leading-tight">{tool.label}</p>
-                    <p className="text-[9px] text-gray-400 mt-0.5">Click to add</p>
+
+                  <div className="flex-1 min-w-0">
+                    <select
+                      value={item.plan}
+                      onChange={(e) => changePlan(item.toolId, e.target.value)}
+                      className="ui-select w-full"
+                    >
+                      {plans.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
+
+                  <div className="flex items-center gap-3 sm:ml-auto">
+                    {isApi ? (
+                      <div className="flex items-center gap-1.5">
+                        <span className="ui-label">Spend</span>
+                        <div className="flex items-center h-8 border border-zinc-200 rounded-md bg-white px-2">
+                          <span className="text-[12px] text-zinc-400">$</span>
+                          <input
+                            type="number"
+                            value={item.customSpend ?? 100}
+                            onChange={(e) =>
+                              changeCustomSpend(item.toolId, Number(e.target.value))
+                            }
+                            className="w-16 bg-transparent border-0 outline-none text-[13px] text-zinc-900 text-right tabular-nums"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="ui-label">Seats</span>
+                        <div className="inline-flex items-center h-8 border border-zinc-200 rounded-md">
+                          <button
+                            type="button"
+                            className="h-8 w-8 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                            onClick={() => adjustSeats(item.toolId, -1)}
+                            aria-label="Decrease seats"
+                          >
+                            <Minus size={14} />
+                          </button>
+                          <span className="w-6 text-center text-[13px] font-medium tabular-nums text-zinc-900">
+                            {item.seats}
+                          </span>
+                          <button
+                            type="button"
+                            className="h-8 w-8 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                            onClick={() => adjustSeats(item.toolId, 1)}
+                            aria-label="Increase seats"
+                          >
+                            <Plus size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    <span className="text-[13px] font-medium text-zinc-900 tabular-nums w-[72px] text-right">
+                      ${itemPrice}
+                      <span className="text-zinc-400 font-normal">/mo</span>
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => removeTool(item.toolId)}
+                      className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-zinc-900 transition-colors"
+                      aria-label={`Remove ${cfg.label}`}
+                    >
+                      <X size={15} />
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {available.length > 0 && (
+          <div>
+            <p className="ui-label mb-2">Add to stack</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {available.map((tool) => (
+                <button
+                  key={tool.id}
+                  type="button"
+                  onClick={() => addTool(tool.id)}
+                  className="ui-tool-tile"
+                >
+                  <ToolMark initials={tool.initials} domain={tool.domain} />
+                  <span className="text-[12px] font-medium text-zinc-900 text-center leading-tight">
+                    {tool.label}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
         )}
+      </Section>
 
-      </div>
-
-      {/* Spend Tracker Sticky-like card at bottom */}
-      <div className="bg-purple-900 text-white rounded-3xl p-6 shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
+      <div className="ui-section p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-purple-300">Stack Spend Summary</p>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-black">${totalMonthly}</span>
-            <span className="text-sm font-semibold text-purple-300">/ month</span>
-            <span className="text-xs text-purple-400 font-medium ml-2">({selected.length} tools configured)</span>
-          </div>
+          <p className="ui-label">Estimated monthly spend</p>
+          <p className="mt-1 text-[24px] font-semibold text-zinc-900 tracking-[-0.02em] tabular-nums">
+            ${totalMonthly.toLocaleString()}
+            <span className="text-[14px] font-normal text-zinc-500">/mo</span>
+          </p>
+          <p className="text-[12px] text-zinc-500 mt-0.5">
+            {selected.length} tool{selected.length === 1 ? '' : 's'} configured
+          </p>
         </div>
 
-        <div className="w-full md:w-auto flex flex-col gap-2">
+        <div className="w-full sm:w-[220px] flex flex-col gap-2">
           {submitErr && (
-            <p role="alert" className="text-xs text-red-200 bg-red-900/50 border border-red-500/30 px-3 py-1.5 rounded-xl">{submitErr}</p>
+            <p
+              role="alert"
+              className="text-[12px] text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2"
+            >
+              {submitErr}
+            </p>
           )}
           <SubmitProgress active={loading} />
-          
           <button
-            type="button" disabled={loading} onClick={handleSubmit}
-            className="w-full md:w-64 min-h-[50px] bg-white text-purple-900 hover:bg-purple-50 rounded-2xl font-bold text-base transition-all shadow-lg active:scale-95 hover:shadow-xl"
+            type="button"
+            disabled={loading}
+            onClick={handleSubmit}
+            className="ui-btn-primary w-full h-10"
           >
-            {loading ? 'Running audit…' : 'Get my free audit →'}
+            {loading ? 'Running audit…' : 'Run audit'}
           </button>
         </div>
       </div>
-
     </div>
   )
 }

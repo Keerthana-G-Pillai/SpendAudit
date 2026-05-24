@@ -1,42 +1,39 @@
-import { KineticText } from './ui/kinetic-text'
-
 const FAQS = [
   {
-    q: 'Is this actually free? What is the catch?',
-    a: 'Yes, completely free. No credit card, no account required. The audit runs instantly. We only ask for an optional email after you see your results.',
+    q: 'Is this actually free?',
+    a: 'Yes. No credit card or account. We only ask for an optional email after you see results.',
   },
   {
-    q: 'How accurate are the savings estimates?',
-    a: 'Pricing data is verified from official vendor pages. Recommendations use published plan features and your team size — not guesses.',
+    q: 'How accurate are the estimates?',
+    a: 'Pricing is sourced from official vendor pages. Recommendations use published plan features and your team size.',
   },
   {
     q: 'Do you store my data?',
-    a: 'Your audit is saved so you can share it via a unique link. We never store payment info. Email is only used to send your summary.',
+    a: 'Audits are saved for sharing via a unique link. Email is only used to send your summary.',
   },
   {
-    q: 'What is Credex and why is it in my audit?',
-    a: 'Credex sells discounted AI credits from companies that overforecast. We mention it only when your savings are significant — not for everyone.',
+    q: 'What is Credex?',
+    a: 'Credex sells discounted AI credits. We mention it only when savings are significant.',
   },
   {
-    q: 'What AI tools do you cover?',
-    a: 'Cursor, GitHub Copilot, Claude, ChatGPT, Anthropic API, OpenAI API, Gemini, and Windsurf.',
+    q: 'Which tools are covered?',
+    a: 'Cursor, Copilot, Claude, ChatGPT, Anthropic API, OpenAI API, Gemini, Windsurf, Figma, and Notion.',
   },
 ]
 
 export default function LandingFAQ() {
   return (
-    <section className="mt-16" aria-labelledby="faq-heading">
-      <KineticText
-        text="Frequently asked questions"
-        as="h2"
-        id="faq-heading"
-        className="text-lg font-semibold text-gray-900 mb-4 cursor-default select-none"
-      />
-      <dl className="space-y-4">
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" className="ui-heading mb-4">
+        Frequently asked questions
+      </h2>
+      <dl className="border border-zinc-200 rounded-md overflow-hidden divide-y divide-zinc-200 bg-white">
         {FAQS.map((item) => (
-          <div key={item.q} className="border-b border-gray-100 pb-4 last:border-0">
-            <dt className="font-medium text-gray-900 text-sm">{item.q}</dt>
-            <dd className="mt-1.5 text-sm text-gray-600 leading-relaxed">{item.a}</dd>
+          <div key={item.q} className="p-4 sm:grid sm:grid-cols-[1fr_1.1fr] sm:gap-6">
+            <dt className="text-[13px] font-medium text-zinc-900">{item.q}</dt>
+            <dd className="text-[13px] text-zinc-500 leading-relaxed mt-1 sm:mt-0">
+              {item.a}
+            </dd>
           </div>
         ))}
       </dl>
