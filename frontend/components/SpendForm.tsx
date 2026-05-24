@@ -1,395 +1,353 @@
 'use client'
 
-import { useForm, useFieldArray } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { spendInputSchema, type SpendInputSchema } from '@/lib/schemas'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Sparkles, Search } from 'lucide-react'
 import SubmitProgress from './SubmitProgress'
 import type { ToolName, UseCase } from '@backend/lib/types'
 
-interface PlanInfo {
-  value: string
-  label: string
-  pricePerSeat: number
-}
-
-interface ToolConfig {
+// ─── Tool catalogue ───────────────────────────────────────────────────────────
+interface ToolCfg {
   id: ToolName
   label: string
-  plans: PlanInfo[]
+  pricePerSeat: number
+  iconBg: string
+  iconText: string
+  initials: string
+  emoji?: string
 }
 
-const TOOLS: ToolConfig[] = [
-  {
-    id: 'cursor',
-    label: 'Cursor',
-    plans: [
-      { value: 'hobby', label: 'Hobby (Free)', pricePerSeat: 0 },
-      { value: 'pro', label: 'Pro ($20/mo)', pricePerSeat: 20 },
-      { value: 'business', label: 'Business ($40/mo)', pricePerSeat: 40 },
-    ],
-  },
-  {
-    id: 'github-copilot',
-    label: 'GitHub Copilot',
-    plans: [
-      { value: 'individual', label: 'Individual ($10/mo)', pricePerSeat: 10 },
-      { value: 'business', label: 'Business ($19/mo)', pricePerSeat: 19 },
-      { value: 'enterprise', label: 'Enterprise ($39/mo)', pricePerSeat: 39 },
-    ],
-  },
-  {
-    id: 'claude',
-    label: 'Claude',
-    plans: [
-      { value: 'free', label: 'Free', pricePerSeat: 0 },
-      { value: 'pro', label: 'Pro ($20/mo)', pricePerSeat: 20 },
-      { value: 'max', label: 'Max ($100/mo)', pricePerSeat: 100 },
-      { value: 'team', label: 'Team ($30/mo)', pricePerSeat: 30 },
-      { value: 'api-direct', label: 'API Direct (Pay-as-you-go)', pricePerSeat: 0 },
-    ],
-  },
-  {
-    id: 'chatgpt',
-    label: 'ChatGPT',
-    plans: [
-      { value: 'plus', label: 'Plus ($20/mo)', pricePerSeat: 20 },
-      { value: 'team', label: 'Team ($30/mo)', pricePerSeat: 30 },
-      { value: 'api-direct', label: 'API Direct (Pay-as-you-go)', pricePerSeat: 0 },
-    ],
-  },
-  {
-    id: 'anthropic-api',
-    label: 'Anthropic API Direct',
-    plans: [
-      { value: 'pay-as-you-go', label: 'Pay-as-you-go', pricePerSeat: 0 },
-    ],
-  },
-  {
-    id: 'openai-api',
-    label: 'OpenAI API Direct',
-    plans: [
-      { value: 'pay-as-you-go', label: 'Pay-as-you-go', pricePerSeat: 0 },
-    ],
-  },
-  {
-    id: 'gemini',
-    label: 'Gemini',
-    plans: [
-      { value: 'pro', label: 'Pro (Free)', pricePerSeat: 0 },
-      { value: 'ultra', label: 'Ultra ($19.99/mo)', pricePerSeat: 19.99 },
-      { value: 'api', label: 'API (Pay-as-you-go)', pricePerSeat: 0 },
-    ],
-  },
-  {
-    id: 'windsurf',
-    label: 'Windsurf',
-    plans: [
-      { value: 'free', label: 'Free', pricePerSeat: 0 },
-      { value: 'pro', label: 'Pro ($15/mo)', pricePerSeat: 15 },
-      { value: 'teams', label: 'Teams ($35/mo)', pricePerSeat: 35 },
-    ],
-  },
+const ALL_TOOLS: ToolCfg[] = [
+  { id: 'cursor',         label: 'Cursor',          pricePerSeat: 20, iconBg: '#ede9fe', iconText: '#6d28d9', initials: 'Cu' },
+  { id: 'chatgpt',        label: 'ChatGPT',         pricePerSeat: 30, iconBg: '#d1fae5', iconText: '#065f46', initials: 'GP' },
+  { id: 'claude',         label: 'Claude',          pricePerSeat: 20, iconBg: '#fef3c7', iconText: '#92400e', initials: 'Cl' },
+  { id: 'gemini',         label: 'Gemini',          pricePerSeat: 20, iconBg: '#dbeafe', iconText: '#1e40af', initials: 'Ge' },
+  { id: 'github-copilot', label: 'Copilot',         pricePerSeat: 19, iconBg: '#1f2937', iconText: '#ffffff', initials: 'GC' },
+  { id: 'windsurf',       label: 'Windsurf',        pricePerSeat: 15, iconBg: '#cffafe', iconText: '#155e75', initials: 'Ws' },
+  { id: 'anthropic-api',  label: 'Anthropic API',   pricePerSeat: 0,  iconBg: '#fde8d8', iconText: '#9a3412', initials: 'An' },
+  { id: 'openai-api',     label: 'OpenAI API',      pricePerSeat: 0,  iconBg: '#f0fdf4', iconText: '#166534', initials: 'OA' },
 ]
 
-const USE_CASES: { value: UseCase; label: string }[] = [
-  { value: 'coding', label: 'Coding / engineering' },
-  { value: 'writing', label: 'Writing / content' },
-  { value: 'data', label: 'Data analysis' },
-  { value: 'research', label: 'Research' },
-  { value: 'mixed', label: 'Mixed / general' },
+// ─── Use cases ────────────────────────────────────────────────────────────────
+const USE_CASES: { id: UseCase; label: string; emoji: string }[] = [
+  { id: 'coding',   label: 'Engineering', emoji: '💻' },
+  { id: 'writing',  label: 'Marketing',   emoji: '📣' },
+  { id: 'data',     label: 'Design',      emoji: '🎨' },
+  { id: 'research', label: 'Research',    emoji: '🔬' },
+  { id: 'mixed',    label: 'Mixed',       emoji: '✨' },
 ]
 
-const STORAGE_KEY = 'credex-spend-form-v1'
+// ─── Avatars shown on slider ──────────────────────────────────────────────────
+const AVATARS = ['🧑', '👩', '👨', '🧑‍💻', '👩‍💼', '👨‍🔬', '🧑‍🎨', '👩‍🚀', '👨‍💼', '🧑‍🔬']
+
+// ─── Component ────────────────────────────────────────────────────────────────
+interface SelectedTool { toolId: ToolName; seats: number }
 
 export default function SpendForm() {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<SpendInputSchema>({
-    resolver: zodResolver(spendInputSchema),
-    defaultValues: { tools: [], teamSize: 1, useCase: 'coding' },
-  })
+  // form state
+  const [teamSize,  setTeamSize]  = useState(4)
+  const [useCase,   setUseCase]   = useState<UseCase>('coding')
+  const [selected,  setSelected]  = useState<SelectedTool[]>([])
+  const [quickAdd,  setQuickAdd]  = useState('')
+  const [loading,   setLoading]   = useState(false)
+  const [submitErr, setSubmitErr] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  const { fields, append, remove } = useFieldArray({ control, name: 'tools' })
+  // slider fill % for CSS
+  const fillPct = `${((teamSize - 1) / 99) * 100}%`
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) {
-        const parsed = spendInputSchema.safeParse(JSON.parse(saved))
-        if (parsed.success) {
-          setValue('tools', parsed.data.tools)
-          setValue('teamSize', parsed.data.teamSize)
-          setValue('useCase', parsed.data.useCase)
-        }
-      }
-    } catch {
-      /* ignore */
-    }
-  }, [setValue])
+  // how many avatars to show (up to 10)
+  const avatarCount = Math.min(Math.ceil((teamSize / 100) * 10) + 1, 10)
 
-  const formValues = watch()
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(formValues))
-    } catch {
-      /* ignore */
-    }
-  }, [formValues])
-
-  const watchedTools = watch('tools')
-
-  const updateSpend = (index: number, toolName: ToolName | '', planValue: string, numSeats: number) => {
-    if (!toolName || !planValue) return
-    const config = TOOLS.find((t) => t.id === toolName)
-    const planObj = config?.plans.find((p) => p.value === planValue)
-    if (planObj) {
-      const calculatedSpend = planObj.pricePerSeat * numSeats
-      setValue(`tools.${index}.monthlySpend`, calculatedSpend)
-    }
+  // toggle a tool card on/off
+  const toggleTool = (toolId: ToolName) => {
+    setSelected(prev => {
+      const exists = prev.find(t => t.toolId === toolId)
+      return exists
+        ? prev.filter(t => t.toolId !== toolId)
+        : [...prev, { toolId, seats: 1 }]
+    })
   }
 
-  const onSubmit = async (data: SpendInputSchema) => {
+  // adjust seats for a selected tool
+  const adjustSeats = (toolId: ToolName, delta: number) => {
+    setSelected(prev =>
+      prev.map(t =>
+        t.toolId === toolId
+          ? { ...t, seats: Math.max(1, t.seats + delta) }
+          : t
+      )
+    )
+  }
+
+  // quick-add via keyboard
+  const handleQuickAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return
+    const q = quickAdd.toLowerCase().trim()
+    const match = ALL_TOOLS.find(t =>
+      t.label.toLowerCase().includes(q) || t.id.toLowerCase().includes(q)
+    )
+    if (match && !selected.find(s => s.toolId === match.id)) {
+      setSelected(prev => [...prev, { toolId: match.id, seats: 1 }])
+    }
+    setQuickAdd('')
+  }
+
+  // filtered suggestions
+  const suggestions = quickAdd.length > 0
+    ? ALL_TOOLS.filter(t =>
+        (t.label.toLowerCase().includes(quickAdd.toLowerCase()) ||
+         t.id.toLowerCase().includes(quickAdd.toLowerCase())) &&
+        !selected.find(s => s.toolId === t.id)
+      ).slice(0, 4)
+    : []
+
+  // submit
+  const handleSubmit = async () => {
+    if (selected.length === 0) {
+      setSubmitErr('Please select at least one tool.')
+      return
+    }
     setLoading(true)
-    setSubmitError(null)
+    setSubmitErr(null)
     try {
+      const tools = selected.map(s => {
+        const cfg = ALL_TOOLS.find(t => t.id === s.toolId)!
+        return {
+          tool: s.toolId,
+          plan: 'pro',
+          monthlySpend: cfg.pricePerSeat * s.seats,
+          seats: s.seats,
+        }
+      })
       const res = await fetch('/api/audit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ teamSize, useCase, tools }),
       })
       if (!res.ok) throw new Error('Audit failed')
-      const { slug } = (await res.json()) as { slug: string }
-      // Ensure progress bar animation completes before navigating
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      const { slug } = await res.json() as { slug: string }
+      await new Promise(r => setTimeout(r, 1800))
       router.push(`/audit/${slug}`)
     } catch {
-      setSubmitError('Something went wrong. Please try again.')
+      setSubmitErr('Something went wrong. Please try again.')
       setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="teamSize" className="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">Team Size</label>
-          <input
-            id="teamSize"
-            type="number"
-            min={1}
-            inputMode="numeric"
-            className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[48px] focus:outline-none focus:ring-2 focus:ring-gray-600"
-            {...register('teamSize', { valueAsNumber: true })}
-          />
-          {errors.teamSize && (
-            <p role="alert" className="text-sm text-red-500 mt-1">
-              {errors.teamSize.message}
-            </p>
-          )}
+    <div className="space-y-5">
+
+      {/* ── Team size slider ─────────────────────────────────── */}
+      <div className="anim-2">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Team Size</span>
+          <span className="text-sm font-bold text-[#7c6fe0] bg-purple-50 px-3 py-0.5 rounded-full">
+            {teamSize === 100 ? '100+' : teamSize}
+          </span>
         </div>
-        <div>
-          <label htmlFor="useCase" className="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">Primary Use Case</label>
-          <select
-            id="useCase"
-            className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[48px] focus:outline-none focus:ring-2 focus:ring-gray-600"
-            {...register('useCase')}
+
+        {/* Avatar strip */}
+        <div className="relative h-8 mb-1">
+          <div
+            className="absolute top-0 flex gap-0.5 transition-all duration-200"
+            style={{ left: `calc(${fillPct} - ${avatarCount * 10}px)` }}
           >
-            {USE_CASES.map((u) => (
-              <option key={u.value} value={u.value}>
-                {u.label}
-              </option>
+            {AVATARS.slice(0, avatarCount).map((av, i) => (
+              <span key={i} className="text-base leading-none" style={{ fontSize: 18 }}>{av}</span>
             ))}
-          </select>
+          </div>
+        </div>
+
+        <input
+          type="range"
+          min={1}
+          max={100}
+          value={teamSize}
+          onChange={e => setTeamSize(Number(e.target.value))}
+          className="team-slider w-full"
+          style={{ '--fill-pct': fillPct } as React.CSSProperties}
+          aria-label="Team size"
+        />
+        <div className="flex justify-between text-[10px] text-gray-400 mt-1 font-medium">
+          <span>1</span><span>25</span><span>50</span><span>75</span><span>100+</span>
         </div>
       </div>
 
-      <fieldset>
-        <legend className="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">Tools You Are Paying For</legend>
-        <div className="space-y-0">
-          {/* Column headers */}
-          {fields.length > 0 && (
-            <div className="hidden sm:grid sm:grid-cols-12 sm:gap-2 px-0 mb-1">
-              <div className="sm:col-span-4"><span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Tool</span></div>
-              <div className="sm:col-span-3"><span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Plan</span></div>
-              <div className="sm:col-span-2"><span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">$/mo</span></div>
-              <div className="sm:col-span-2"><span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Seats</span></div>
-            </div>
-          )}
-        <div className="space-y-2">
-          {fields.map((field, index) => {
-            const selectedTool = watchedTools?.[index]?.tool
-            const toolConfig = TOOLS.find((t) => t.id === selectedTool)
-            const baseId = `tool-${index}`
-            const toolErrors = errors.tools?.[index]
+      {/* ── Use case pills ───────────────────────────────────── */}
+      <div className="anim-3">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Use Case</p>
+        <div className="flex flex-wrap gap-2">
+          {USE_CASES.map(uc => (
+            <button
+              key={uc.id}
+              type="button"
+              className={`use-pill${useCase === uc.id ? ' active' : ''}`}
+              onClick={() => setUseCase(uc.id)}
+            >
+              <span>{uc.emoji}</span>
+              {uc.label}
+            </button>
+          ))}
+          <button
+            type="button"
+            className="use-pill"
+            title="More options"
+            style={{ padding: '8px 12px' }}
+          >
+            <Sparkles size={14} />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Tool cards grid ──────────────────────────────────── */}
+      <div className="anim-4">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Drag-and-drop tools</p>
+          <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-400">
+            <Search size={11} />
+            <span>Search Tool…</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          {ALL_TOOLS.map(tool => {
+            const sel = selected.find(s => s.toolId === tool.id)
+            const isSelected = !!sel
 
             return (
               <div
-                key={field.id}
-                className="flex flex-col gap-2 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-center py-2"
+                key={tool.id}
+                className={`tool-card${isSelected ? ' selected' : ''}`}
+                onClick={() => toggleTool(tool.id)}
               >
-                <div className="sm:col-span-4">
-                  <label className="sm:hidden block text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Tool</label>
-                  <select
-                    id={`${baseId}-name`}
-                    className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[44px] focus:outline-none"
-                    defaultValue=""
-                    {...register(`tools.${index}.tool`, {
-                      onChange: (e) => {
-                        const val = e.target.value as ToolName
-                        const config = TOOLS.find((t) => t.id === val)
-                        if (config && config.plans.length > 0) {
-                          const firstPlan = config.plans[0]?.value
-                          if (firstPlan) {
-                            setValue(`tools.${index}.plan`, firstPlan)
-                            updateSpend(index, val, firstPlan, watchedTools?.[index]?.seats ?? 1)
-                          }
-                        }
-                      }
-                    })}
-                  >
-                    <option value="" disabled>Select tool</option>
-                    {TOOLS.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.label}
-                      </option>
-                    ))}
-                  </select>
+                {/* Price badge */}
+                <div className="absolute top-2.5 right-2.5">
+                  <span className="text-[10px] font-semibold text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">
+                    {tool.pricePerSeat === 0 ? 'usage' : `$${tool.pricePerSeat}/mo`}
+                  </span>
                 </div>
 
-                <div className="sm:col-span-3">
-                  <label className="sm:hidden block text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Plan</label>
-                  <select
-                    id={`${baseId}-plan`}
-                    className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[44px] focus:outline-none disabled:opacity-40"
-                    disabled={!selectedTool}
-                    defaultValue=""
-                    {...register(`tools.${index}.plan`, {
-                      onChange: (e) => {
-                        updateSpend(index, selectedTool || '', e.target.value, watchedTools?.[index]?.seats ?? 1)
-                      }
-                    })}
-                  >
-                    <option value="" disabled>Select plan</option>
-                    {(toolConfig?.plans ?? []).map((p) => (
-                      <option key={p.value} value={p.value}>
-                        {p.label}
-                      </option>
-                    ))}
-                  </select>
-                  {toolErrors?.plan && (
-                    <p role="alert" className="text-xs text-red-500 mt-0.5">
-                      {toolErrors.plan.message}
-                    </p>
-                  )}
+                {/* Icon */}
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm mb-2 mx-auto"
+                  style={{ background: tool.iconBg, color: tool.iconText }}
+                >
+                  {tool.initials}
                 </div>
 
-                <div className="sm:col-span-2">
-                  <label className="sm:hidden block text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">$/mo</label>
-                  <input
-                    id={`${baseId}-spend`}
-                    type="number"
-                    min={0}
-                    inputMode="decimal"
-                    className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[44px] focus:outline-none"
-                    {...register(`tools.${index}.monthlySpend`, { valueAsNumber: true })}
-                  />
-                  {toolErrors?.monthlySpend && (
-                    <p role="alert" className="text-xs text-red-500 mt-0.5">
-                      {toolErrors.monthlySpend.message}
-                    </p>
-                  )}
-                </div>
+                {/* Name */}
+                <p className="text-xs font-semibold text-center text-gray-800 mb-2 leading-tight">
+                  {tool.label}
+                </p>
 
-                <div className="sm:col-span-2">
-                  <label className="sm:hidden block text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Seats</label>
-                  <input
-                    id={`${baseId}-seats`}
-                    type="number"
-                    min={1}
-                    inputMode="numeric"
-                    className="dark-input w-full rounded-lg px-3 py-3 text-sm font-medium min-h-[44px] focus:outline-none"
-                    {...register(`tools.${index}.seats`, {
-                      valueAsNumber: true,
-                      onChange: (e) => {
-                        const sVal = parseInt(e.target.value) || 1
-                        updateSpend(index, selectedTool || '', watchedTools?.[index]?.plan || '', sVal)
-                      }
-                    })}
-                  />
-                  {toolErrors?.seats && (
-                    <p role="alert" className="text-xs text-red-500 mt-0.5">
-                      {toolErrors.seats.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="sm:col-span-1 flex sm:justify-center">
+                {/* Seat counter */}
+                <div
+                  className="flex items-center justify-center gap-2"
+                  onClick={e => e.stopPropagation()}
+                >
                   <button
                     type="button"
-                    onClick={() => remove(index)}
-                    aria-label={`Remove tool ${index + 1}`}
-                    className="text-gray-400 hover:text-red-500 text-xl font-light transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50"
+                    className="counter-btn"
+                    onClick={() => isSelected ? adjustSeats(tool.id, -1) : undefined}
+                    disabled={!isSelected}
+                    aria-label="Decrease seats"
                   >
-                    ×
+                    −
+                  </button>
+                  <span className="text-xs font-bold text-gray-700 w-4 text-center">
+                    {sel?.seats ?? 1}
+                  </span>
+                  <button
+                    type="button"
+                    className="counter-btn"
+                    onClick={() => {
+                      if (!isSelected) toggleTool(tool.id)
+                      else adjustSeats(tool.id, 1)
+                    }}
+                    aria-label="Increase seats"
+                  >
+                    +
                   </button>
                 </div>
               </div>
             )
           })}
         </div>
+      </div>
+
+      {/* ── Quick-add bar ────────────────────────────────────── */}
+      <div className="anim-5 relative">
+        <div className="quick-add-bar">
+          <span className="text-[11px] font-semibold text-purple-300 bg-purple-900/40 px-2 py-0.5 rounded">
+            Quick Add
+          </span>
+          <input
+            ref={inputRef}
+            value={quickAdd}
+            onChange={e => setQuickAdd(e.target.value)}
+            onKeyDown={handleQuickAdd}
+            placeholder="Type tool name or use AI suggestion…"
+            aria-label="Quick add tool"
+          />
+          <button
+            type="button"
+            className="text-[11px] font-semibold text-purple-300 hover:text-white transition-colors"
+            onClick={() => {
+              const e = { key: 'Enter' } as React.KeyboardEvent<HTMLInputElement>
+              handleQuickAdd(e)
+            }}
+          >
+            Add
+          </button>
         </div>
 
-        <button
-          type="button"
-          className="mt-4 text-sm font-medium text-gray-500 hover:text-gray-900 border border-gray-200 hover:border-gray-400 rounded-lg px-4 py-2.5 transition-all"
-          onClick={() =>
-            append({ tool: 'cursor', plan: 'pro', monthlySpend: 20, seats: 1 })
-          }
-        >
-          + Add a tool
-        </button>
-        {errors.tools?.message && (
-          <p role="alert" className="text-sm text-red-500 mt-2">
-            {errors.tools.message}
-          </p>
+        {/* Suggestion pills */}
+        {suggestions.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {suggestions.map(s => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => {
+                  setSelected(prev => [...prev, { toolId: s.id, seats: 1 }])
+                  setQuickAdd('')
+                }}
+                className="text-[11px] font-medium bg-white border border-purple-200 text-purple-700 rounded-full px-3 py-1 hover:bg-purple-50 transition-colors"
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
         )}
-      </fieldset>
+      </div>
 
-      {submitError && (
-        <p role="alert" className="text-sm text-red-500 bg-red-50 px-4 py-3 rounded-lg">
-          {submitError}
+      {/* ── Error & progress ─────────────────────────────────── */}
+      {submitErr && (
+        <p role="alert" className="text-sm text-red-500 bg-red-50 px-4 py-2 rounded-xl">
+          {submitErr}
         </p>
       )}
-
       <SubmitProgress active={loading} />
 
+      {/* ── Submit ───────────────────────────────────────────── */}
       <button
-        type="submit"
+        type="button"
         disabled={loading}
-        aria-busy={loading}
-        className="w-full min-h-[52px] rounded-xl font-semibold text-base transition-all"
+        onClick={handleSubmit}
+        className="w-full min-h-[52px] rounded-2xl font-semibold text-base transition-all shadow-lg"
         style={{
-          backgroundColor: loading ? '#555' : '#111',
+          background: loading
+            ? '#9ca3af'
+            : 'linear-gradient(135deg, #7c6fe0 0%, #6366f1 100%)',
           color: '#fff',
           cursor: loading ? 'not-allowed' : 'pointer',
         }}
       >
-        {loading ? 'Running audit...' : 'Get my free audit →'}
+        {loading ? 'Running audit…' : 'Get my free audit →'}
       </button>
-    </form>
+    </div>
   )
 }
