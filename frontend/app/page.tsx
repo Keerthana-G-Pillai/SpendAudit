@@ -42,8 +42,6 @@ export default function Home() {
                 href="#"
                 className="text-[13px] font-medium transition-colors"
                 style={{ color: '#C8D9E6' }}
-                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#ffffff')}
-                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = '#C8D9E6')}
               >
                 {item}
               </a>

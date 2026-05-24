@@ -187,3 +187,8 @@ input[type='range'].ui-range::-moz-range-thumb {
   box-shadow: 0 1px 4px rgba(47, 65, 86, 0.20);
   cursor: pointer;
 }
+
+/* ── Nav link hover (CSS-only, works in Server Components) ── */
+nav a[href="#"]:hover {
+  color: #ffffff !important;
+}
