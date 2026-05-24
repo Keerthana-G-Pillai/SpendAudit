@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "outputDirectory": "frontend/.next",
+
     {
       "src": "frontend/package.json",
       "use": "@vercel/next"
