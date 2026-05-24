@@ -164,7 +164,7 @@ export default function LeadCapture({
           {isSubmitting ? 'Sending…' : 'Send audit'}
         </button>
 
-        <p className="text-[11px] text-zinc-400 text-center">No spam. Unsubscribe anytime.</p>
+        <p className="text-[11px] text-secondary/80 text-center">No spam. Unsubscribe anytime.</p>
       </form>
     </section>
   )

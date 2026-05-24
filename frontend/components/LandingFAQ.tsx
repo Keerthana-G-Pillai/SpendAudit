@@ -27,11 +27,11 @@ export default function LandingFAQ() {
       <h2 id="faq-heading" className="ui-heading mb-4">
         Frequently asked questions
       </h2>
-      <dl className="border border-zinc-200 rounded-md overflow-hidden divide-y divide-zinc-200 bg-white">
+      <dl className="border border-accent rounded-md overflow-hidden divide-y divide-accent bg-white">
         {FAQS.map((item) => (
           <div key={item.q} className="p-4 sm:grid sm:grid-cols-[1fr_1.1fr] sm:gap-6">
-            <dt className="text-[13px] font-medium text-zinc-900">{item.q}</dt>
-            <dd className="text-[13px] text-zinc-500 leading-relaxed mt-1 sm:mt-0">
+            <dt className="text-[13px] font-medium text-primary">{item.q}</dt>
+            <dd className="text-[13px] text-secondary leading-relaxed mt-1 sm:mt-0">
               {item.a}
             </dd>
           </div>

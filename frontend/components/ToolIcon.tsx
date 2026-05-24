@@ -25,7 +25,7 @@ export default function ToolIcon({ tool, size = 'md' }: Props) {
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded bg-zinc-100 font-semibold text-zinc-700',
+        'inline-flex shrink-0 items-center justify-center rounded bg-accent/50 font-semibold text-primary/80',
         sizeClasses
       )}
       aria-hidden="true"

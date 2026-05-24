@@ -25,14 +25,14 @@ export default function SocialProof() {
       <h2 id="social-proof-heading" className="ui-label mb-4">
         What teams report
       </h2>
-      <p className="text-[12px] text-zinc-400 mb-4">Illustrative quotes for launch</p>
+      <p className="text-[12px] text-secondary/80 mb-4">Illustrative quotes for launch</p>
       <ul className="grid gap-3 sm:grid-cols-3">
         {TESTIMONIALS.map((t) => (
           <li key={t.author} className="ui-section p-4 flex flex-col">
-            <blockquote className="text-[13px] text-zinc-700 leading-relaxed flex-1">
+            <blockquote className="text-[13px] text-primary/80 leading-relaxed flex-1">
               &ldquo;{t.quote}&rdquo;
             </blockquote>
-            <footer className="mt-3 pt-3 border-t border-zinc-100 text-[11px] text-zinc-500">
+            <footer className="mt-3 pt-3 border-t border-accent/50 text-[11px] text-secondary">
               {t.author} · {t.context}
             </footer>
           </li>

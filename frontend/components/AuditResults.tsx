@@ -21,22 +21,22 @@ export default function AuditResults({ data }: Props) {
   const isOptimal = auditResult.totalMonthlySavings === 0
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="border-b border-zinc-200/80 bg-white">
-        <div className="max-w-[720px] mx-auto px-5 sm:px-6 py-3 flex items-center justify-between">
-          <span className="text-[13px] font-semibold text-zinc-900 tracking-[-0.02em]">
+    <div className="min-h-screen bg-background">
+      <div className="border-b border-accent/80 bg-white">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 py-3 flex items-center justify-between">
+          <span className="text-[13px] font-semibold text-primary tracking-[-0.02em]">
             Credex
           </span>
-          <span className="text-[11px] text-zinc-500">Audit results</span>
+          <span className="text-[11px] text-secondary">Audit results</span>
         </div>
       </div>
 
-      <div className="max-w-[720px] mx-auto px-5 sm:px-6 py-10 sm:py-12 space-y-4">
+      <div className="max-w-5xl mx-auto px-5 sm:px-6 py-10 sm:py-12 space-y-4">
         <section className="ui-section p-6 sm:p-8">
           <p className="ui-label mb-3">Summary</p>
           {isOptimal ? (
             <>
-              <h1 className="text-[22px] font-semibold text-zinc-900 tracking-[-0.02em]">
+              <h1 className="text-[22px] font-semibold text-primary tracking-[-0.02em]">
                 Stack within expected range
               </h1>
               <p className="ui-body mt-2">
@@ -45,15 +45,15 @@ export default function AuditResults({ data }: Props) {
             </>
           ) : (
             <>
-              <p className="text-[13px] text-zinc-500 mb-1">Potential monthly savings</p>
-              <p className="text-[36px] sm:text-[40px] font-semibold text-zinc-900 tracking-[-0.03em] tabular-nums leading-none">
+              <p className="text-[13px] text-secondary mb-1">Potential monthly savings</p>
+              <p className="text-[36px] sm:text-[40px] font-semibold text-primary tracking-[-0.03em] tabular-nums leading-none">
                 <AnimatedCounter
                   target={auditResult.totalMonthlySavings}
                   prefix="$"
                   duration={1200}
                 />
               </p>
-              <p className="text-[14px] text-zinc-500 mt-2 tabular-nums">
+              <p className="text-[14px] text-secondary mt-2 tabular-nums">
                 <AnimatedCounter
                   target={auditResult.totalAnnualSavings}
                   prefix="$"
@@ -63,15 +63,15 @@ export default function AuditResults({ data }: Props) {
               </p>
             </>
           )}
-          <p className="text-[11px] text-zinc-400 mt-6 pt-4 border-t border-zinc-100">
+          <p className="text-[11px] text-secondary/80 mt-6 pt-4 border-t border-accent/50">
             credex.rocks · shareable audit link
           </p>
         </section>
 
         {isHighSavings && (
-          <section className="ui-section p-5 border-zinc-900 bg-zinc-900 text-white">
+          <section className="ui-section p-5 border-primary bg-primary text-white">
             <h2 className="text-[15px] font-semibold">Credex institutional credits</h2>
-            <p className="text-[13px] text-zinc-300 mt-1.5 leading-relaxed">
+            <p className="text-[13px] text-accent mt-1.5 leading-relaxed">
               Savings exceed $500/mo. Credex offers discounted AI credits at up to 40% off
               retail.
             </p>
@@ -79,7 +79,7 @@ export default function AuditResults({ data }: Props) {
               href="https://credex.rocks"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex mt-4 h-9 items-center px-4 text-[13px] font-medium bg-white text-zinc-900 rounded-md hover:bg-zinc-100 transition-colors"
+              className="inline-flex mt-4 h-9 items-center px-4 text-[13px] font-medium bg-white text-primary rounded-md hover:bg-accent/50 transition-colors"
             >
               Book consultation
             </a>
@@ -88,24 +88,24 @@ export default function AuditResults({ data }: Props) {
 
         <section className="ui-section p-5 sm:p-6">
           <h2 className="ui-label mb-3">Analysis</h2>
-          <p className="text-[14px] text-zinc-700 leading-relaxed">{aiSummary}</p>
+          <p className="text-[14px] text-primary/80 leading-relaxed">{aiSummary}</p>
         </section>
 
         <section>
           <h2 className="ui-heading mb-3 px-0.5">By tool</h2>
-          <ul className="border border-zinc-200 rounded-md overflow-hidden divide-y divide-zinc-200 bg-white">
+          <ul className="border border-accent rounded-md overflow-hidden divide-y divide-accent bg-white">
             {auditResult.recommendations.map((rec: ToolRecommendation, i: number) => (
               <li key={`${rec.tool}-${i}`} className="p-4">
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0">
                     <ToolIcon tool={rec.tool} />
                     <div>
-                      <p className="text-[14px] font-medium text-zinc-900 capitalize">
+                      <p className="text-[14px] font-medium text-primary capitalize">
                         {rec.tool.replace(/-/g, ' ')}
                       </p>
-                      <p className="text-[13px] text-zinc-500 mt-0.5">
+                      <p className="text-[13px] text-secondary mt-0.5">
                         Current spend{' '}
-                        <span className="font-medium text-zinc-700 tabular-nums">
+                        <span className="font-medium text-primary/80 tabular-nums">
                           ${rec.currentSpend}/mo
                         </span>
                       </p>
@@ -116,13 +116,13 @@ export default function AuditResults({ data }: Props) {
                       −${rec.estimatedMonthlySaving}/mo
                     </span>
                   ) : (
-                    <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wide shrink-0">
+                    <span className="text-[11px] font-medium text-secondary/80 uppercase tracking-wide shrink-0">
                       Optimal
                     </span>
                   )}
                 </div>
-                <p className="text-[13px] font-medium text-zinc-800 mt-3">{rec.recommendedAction}</p>
-                <p className="text-[12px] text-zinc-500 mt-1 leading-relaxed">{rec.reasoning}</p>
+                <p className="text-[13px] font-medium text-primary mt-3">{rec.recommendedAction}</p>
+                <p className="text-[12px] text-secondary mt-1 leading-relaxed">{rec.reasoning}</p>
               </li>
             ))}
           </ul>
@@ -144,7 +144,7 @@ export default function AuditResults({ data }: Props) {
             isOptimal={isOptimal}
           />
         ) : (
-          <p className="text-center text-[13px] text-zinc-500 py-2" role="status">
+          <p className="text-center text-[13px] text-secondary py-2" role="status">
             Audit sent to your inbox
           </p>
         )}

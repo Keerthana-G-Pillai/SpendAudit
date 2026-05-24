@@ -28,13 +28,13 @@ export default function SubmitProgress({ active }: Props) {
 
   return (
     <div className="space-y-2" role="status" aria-live="polite">
-      <div className="h-1 w-full bg-zinc-100 rounded-sm overflow-hidden">
+      <div className="h-1 w-full bg-accent/50 rounded-sm overflow-hidden">
         <div
-          className="h-full bg-zinc-900 transition-all duration-500 ease-out"
+          className="h-full bg-primary transition-all duration-500 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <p className="text-[11px] text-zinc-500">{STEPS[stepIndex]}…</p>
+      <p className="text-[11px] text-secondary">{STEPS[stepIndex]}…</p>
     </div>
   )
 }

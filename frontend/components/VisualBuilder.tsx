@@ -320,7 +320,7 @@ export default function VisualBuilder() {
           className="ui-range w-full"
           aria-label="Team size"
         />
-        <div className="flex justify-between mt-2 text-[11px] text-zinc-400 tabular-nums">
+        <div className="flex justify-between mt-2 text-[11px] text-secondary/80 tabular-nums">
           <span>1</span>
           <span>25</span>
           <span>50</span>
@@ -349,22 +349,22 @@ export default function VisualBuilder() {
                   className={cn(
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded border',
                     isSelected
-                      ? 'border-zinc-900 bg-zinc-900 text-white'
-                      : 'border-zinc-200 bg-zinc-50 text-zinc-600'
+                      ? 'border-primary bg-primary text-white'
+                      : 'border-accent bg-background text-primary/70'
                   )}
                 >
                   <Icon size={15} strokeWidth={1.75} />
                 </span>
                 <span className="flex-1 min-w-0">
-                  <span className="block text-[13px] font-medium text-zinc-900">
+                  <span className="block text-[13px] font-medium text-primary">
                     {uc.label}
                   </span>
-                  <span className="block text-[12px] text-zinc-500 mt-0.5 leading-snug">
+                  <span className="block text-[12px] text-secondary mt-0.5 leading-snug">
                     {uc.description}
                   </span>
                 </span>
                 {isSelected && (
-                  <Check size={16} className="shrink-0 text-zinc-900 mt-0.5" strokeWidth={2} />
+                  <Check size={16} className="shrink-0 text-primary mt-0.5" strokeWidth={2} />
                 )}
               </button>
             )
@@ -380,7 +380,7 @@ export default function VisualBuilder() {
         <div className="relative mb-4">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/80 pointer-events-none"
           />
           <input
             value={quickAdd}
@@ -390,7 +390,7 @@ export default function VisualBuilder() {
             aria-label="Search tools"
           />
           {suggestions.length > 0 && (
-            <div className="absolute z-20 left-0 right-0 top-[calc(100%+4px)] bg-white border border-zinc-200 rounded-md shadow-[0_4px_16px_rgba(0,0,0,0.08)] py-1">
+            <div className="absolute z-20 left-0 right-0 top-[calc(100%+4px)] bg-white border border-accent rounded-md shadow-[0_4px_16px_rgba(0,0,0,0.08)] py-1">
               {suggestions.map((s) => (
                 <button
                   key={s.id}
@@ -399,10 +399,10 @@ export default function VisualBuilder() {
                     addTool(s.id)
                     setQuickAdd('')
                   }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-zinc-50 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-background transition-colors"
                 >
                   <ToolMark initials={s.initials} domain={s.domain} />
-                  <span className="text-[13px] font-medium text-zinc-900">{s.label}</span>
+                  <span className="text-[13px] font-medium text-primary">{s.label}</span>
                 </button>
               ))}
             </div>
@@ -410,7 +410,7 @@ export default function VisualBuilder() {
         </div>
 
         {selected.length > 0 && (
-          <div className="mb-5 border border-zinc-200 rounded-md overflow-hidden divide-y divide-zinc-200">
+          <div className="mb-5 border border-accent rounded-md overflow-hidden divide-y divide-accent">
             {selected.map((item) => {
               const cfg = ALL_TOOLS.find((t) => t.id === item.toolId)!
               const plans = TOOL_PLANS[item.toolId]
@@ -428,7 +428,7 @@ export default function VisualBuilder() {
                 >
                   <div className="flex items-center gap-2.5 sm:w-[140px] shrink-0">
                     <ToolMark initials={cfg.initials} domain={cfg.domain} />
-                    <span className="text-[13px] font-medium text-zinc-900">{cfg.label}</span>
+                    <span className="text-[13px] font-medium text-primary">{cfg.label}</span>
                   </div>
 
                   <div className="flex-1 min-w-0">
@@ -449,36 +449,36 @@ export default function VisualBuilder() {
                     {isApi ? (
                       <div className="flex items-center gap-1.5">
                         <span className="ui-label">Spend</span>
-                        <div className="flex items-center h-8 border border-zinc-200 rounded-md bg-white px-2">
-                          <span className="text-[12px] text-zinc-400">$</span>
+                        <div className="flex items-center h-8 border border-accent rounded-md bg-white px-2">
+                          <span className="text-[12px] text-secondary/80">$</span>
                           <input
                             type="number"
                             value={item.customSpend ?? 100}
                             onChange={(e) =>
                               changeCustomSpend(item.toolId, Number(e.target.value))
                             }
-                            className="w-16 bg-transparent border-0 outline-none text-[13px] text-zinc-900 text-right tabular-nums"
+                            className="w-16 bg-transparent border-0 outline-none text-[13px] text-primary text-right tabular-nums"
                           />
                         </div>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
                         <span className="ui-label">Seats</span>
-                        <div className="inline-flex items-center h-8 border border-zinc-200 rounded-md">
+                        <div className="inline-flex items-center h-8 border border-accent rounded-md">
                           <button
                             type="button"
-                            className="h-8 w-8 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                            className="h-8 w-8 flex items-center justify-center text-secondary hover:bg-background hover:text-primary transition-colors"
                             onClick={() => adjustSeats(item.toolId, -1)}
                             aria-label="Decrease seats"
                           >
                             <Minus size={14} />
                           </button>
-                          <span className="w-6 text-center text-[13px] font-medium tabular-nums text-zinc-900">
+                          <span className="w-6 text-center text-[13px] font-medium tabular-nums text-primary">
                             {item.seats}
                           </span>
                           <button
                             type="button"
-                            className="h-8 w-8 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                            className="h-8 w-8 flex items-center justify-center text-secondary hover:bg-background hover:text-primary transition-colors"
                             onClick={() => adjustSeats(item.toolId, 1)}
                             aria-label="Increase seats"
                           >
@@ -488,15 +488,15 @@ export default function VisualBuilder() {
                       </div>
                     )}
 
-                    <span className="text-[13px] font-medium text-zinc-900 tabular-nums w-[72px] text-right">
+                    <span className="text-[13px] font-medium text-primary tabular-nums w-[72px] text-right">
                       ${itemPrice}
-                      <span className="text-zinc-400 font-normal">/mo</span>
+                      <span className="text-secondary/80 font-normal">/mo</span>
                     </span>
 
                     <button
                       type="button"
                       onClick={() => removeTool(item.toolId)}
-                      className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-zinc-900 transition-colors"
+                      className="h-8 w-8 flex items-center justify-center text-secondary/80 hover:text-primary transition-colors"
                       aria-label={`Remove ${cfg.label}`}
                     >
                       <X size={15} />
@@ -520,7 +520,7 @@ export default function VisualBuilder() {
                   className="ui-tool-tile"
                 >
                   <ToolMark initials={tool.initials} domain={tool.domain} />
-                  <span className="text-[12px] font-medium text-zinc-900 text-center leading-tight">
+                  <span className="text-[12px] font-medium text-primary text-center leading-tight">
                     {tool.label}
                   </span>
                 </button>
@@ -533,11 +533,11 @@ export default function VisualBuilder() {
       <div className="ui-section p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <p className="ui-label">Estimated monthly spend</p>
-          <p className="mt-1 text-[24px] font-semibold text-zinc-900 tracking-[-0.02em] tabular-nums">
+          <p className="mt-1 text-[24px] font-semibold text-primary tracking-[-0.02em] tabular-nums">
             ${totalMonthly.toLocaleString()}
-            <span className="text-[14px] font-normal text-zinc-500">/mo</span>
+            <span className="text-[14px] font-normal text-secondary">/mo</span>
           </p>
-          <p className="text-[12px] text-zinc-500 mt-0.5">
+          <p className="text-[12px] text-secondary mt-0.5">
             {selected.length} tool{selected.length === 1 ? '' : 's'} configured
           </p>
         </div>
