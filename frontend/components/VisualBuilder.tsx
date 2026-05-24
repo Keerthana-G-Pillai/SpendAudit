@@ -294,18 +294,18 @@ export default function VisualBuilder() {
           </span>
         </div>
         
-        <div className="flex items-center justify-center mb-6 h-10">
-          <div className="flex -space-x-3 overflow-hidden p-1">
+        <div className="flex items-center justify-center mb-6 h-12">
+          <div className="flex -space-x-3 overflow-hidden p-1 hover:-space-x-1 transition-all duration-300 ease-in-out">
             {Array.from({ length: Math.min(teamSize, 8) }).map((_, i) => (
               <img
                 key={i}
-                className="inline-block h-10 w-10 rounded-full ring-2 ring-background bg-secondary object-cover"
+                className="inline-block h-12 w-12 rounded-full ring-4 ring-background bg-secondary object-cover hover:-translate-y-2 hover:scale-110 transition-transform duration-300 shadow-md relative z-0 hover:z-10 cursor-pointer"
                 src={`https://api.dicebear.com/7.x/notionists/svg?seed=${i + 12}&backgroundColor=C8D9E6,F5EFEB,567C8D`}
                 alt="Avatar"
               />
             ))}
             {teamSize > 8 && (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary ring-2 ring-background text-[11px] font-medium text-white shadow-sm z-10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary ring-4 ring-background text-[13px] font-bold text-white shadow-md relative z-0 hover:z-10 hover:-translate-y-2 hover:scale-110 transition-transform duration-300 cursor-pointer">
                 +{teamSize - 8}
               </div>
             )}
@@ -334,7 +334,7 @@ export default function VisualBuilder() {
         title="Primary use case"
         description="Shapes which recommendations and overlap checks we prioritize."
       >
-        <div className="grid gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {USE_CASES.map((uc) => {
             const Icon = uc.icon
             const isSelected = useCase === uc.id
@@ -343,28 +343,30 @@ export default function VisualBuilder() {
                 key={uc.id}
                 type="button"
                 onClick={() => setUseCase(uc.id)}
-                className={cn('ui-option', isSelected && 'ui-option-selected')}
+                className={cn('ui-option group flex-col items-center text-center p-4', isSelected && 'ui-option-selected transform scale-[1.02] shadow-md')}
               >
                 <span
                   className={cn(
-                    'flex h-8 w-8 shrink-0 items-center justify-center rounded border',
+                    'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border mb-2 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3',
                     isSelected
-                      ? 'border-primary bg-primary text-white'
+                      ? 'border-primary bg-primary text-white shadow-lg'
                       : 'border-accent bg-background text-primary/70'
                   )}
                 >
-                  <Icon size={15} strokeWidth={1.75} />
+                  <Icon size={18} strokeWidth={2} />
                 </span>
                 <span className="flex-1 min-w-0">
-                  <span className="block text-[13px] font-medium text-primary">
+                  <span className="block text-[14px] font-bold text-primary mb-1">
                     {uc.label}
                   </span>
-                  <span className="block text-[12px] text-secondary mt-0.5 leading-snug">
+                  <span className="block text-[12px] text-secondary leading-snug">
                     {uc.description}
                   </span>
                 </span>
                 {isSelected && (
-                  <Check size={16} className="shrink-0 text-primary mt-0.5" strokeWidth={2} />
+                  <div className="absolute top-3 right-3 text-primary">
+                    <Check size={16} strokeWidth={2.5} />
+                  </div>
                 )}
               </button>
             )
@@ -509,20 +511,26 @@ export default function VisualBuilder() {
         )}
 
         {available.length > 0 && (
-          <div>
-            <p className="ui-label mb-2">Add to stack</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div className="mt-8">
+            <p className="ui-label mb-3">Available Tools (Add to stack)</p>
+            <div className="flex flex-col gap-2">
               {available.map((tool) => (
                 <button
                   key={tool.id}
                   type="button"
                   onClick={() => addTool(tool.id)}
-                  className="ui-tool-tile"
+                  className="w-full flex items-center justify-between p-3 rounded-lg border border-accent bg-white hover:bg-background hover:border-secondary hover:shadow-md transition-all group"
                 >
-                  <ToolMark initials={tool.initials} domain={tool.domain} />
-                  <span className="text-[12px] font-medium text-primary text-center leading-tight">
-                    {tool.label}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <ToolMark initials={tool.initials} domain={tool.domain} />
+                    <span className="text-[14px] font-bold text-primary">
+                      {tool.label}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-secondary group-hover:text-primary transition-colors">
+                    <span className="text-[12px] font-semibold hidden sm:inline-block">Add</span>
+                    <Plus size={16} strokeWidth={2.5} />
+                  </div>
                 </button>
               ))}
             </div>

@@ -56,8 +56,13 @@
   .ui-section {
     background-color: #ffffff;
     border: 1px solid #C8D9E6;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(47, 65, 86, 0.06);
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(47, 65, 86, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .ui-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(47, 65, 86, 0.08);
   }
 
   /* Labels — teal caps */
