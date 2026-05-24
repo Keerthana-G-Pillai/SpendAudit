@@ -1,9 +1,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Montserrat } from 'next/font/google'
+import { Roboto_Mono } from 'next/font/google'
 import { cn } from '@/lib/utils'
 
-const fontSans = Montserrat({
+const fontSans = Roboto_Mono({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
