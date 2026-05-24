@@ -82,11 +82,11 @@
 ## Day 4 — 2026-05-24
 **Hours worked:** 4
 **What I did:**
-- Deployed the Next.js application, which required debugging a critical build failure in the production environment.
-- Encountered a Next.js `Unhandled Runtime Error` during deployment: "Event handlers cannot be passed to Client Component props."
-- Traced the error to inline `onMouseEnter` and `onMouseLeave` handlers used inside a Server Component (`page.tsx`).
-- Resolved the build crash by entirely removing the inline JavaScript handlers and reimplementing the interactive hover logic using Tailwind/CSS `:hover` states in `globals.css`.
-- Overhauled the user interface into a cohesive, interactive visual builder with refined typography and a semantic Teal color scheme.
+- Overhauled the user interface into a cohesive visual builder featuring refined typography and a semantic Teal color scheme.
+- Updated `page.tsx` to correctly structure its layout as a Client Component with nested Server Components.
+- Deployed the final application to Vercel and confronted a critical build failure in the production environment.
+- Encountered and traced a Next.js `Unhandled Runtime Error` ("Event handlers cannot be passed to Client Component props") to inline `onMouseEnter`/`onMouseLeave` handlers in `page.tsx`.
+- Resolved the Vercel build crash by removing the inline JavaScript handlers and reimplementing interactive hover logic using Tailwind/CSS `:hover` states in `globals.css`.
 **What I learned:**
 - Server Components in Next.js 14 are strictly static during rendering and will crash the production build if you attempt to pass functions (like event handlers) to them without explicitly defining a `"use client"` boundary. Moving interaction logic to CSS is often a safer and more performant fallback.
 **Blockers:**
