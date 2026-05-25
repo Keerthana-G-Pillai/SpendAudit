@@ -6,10 +6,11 @@ All prices last verified on 2026-05-22 from official vendor pricing pages.
 ## Cursor
 - Hobby: $0/month (free) — https://cursor.com/pricing — verified 2026-05-22
 - Pro: $20/user/month — https://cursor.com/pricing — verified 2026-05-22
-- Business: $40/user/month — https://cursor.com/pricing — verified 2026-05-22
+- Pro+: $60/user/month — https://cursor.com/pricing — verified 2026-05-22
+- Teams: $40/user/month — https://cursor.com/pricing — verified 2026-05-22
 - Enterprise: Custom pricing (contact sales) — https://cursor.com/pricing — verified 2026-05-22
 
-**Notes:** Pro includes 500 fast requests/month and unlimited slow requests. Business adds SSO, audit logs, and centralized billing. The AI completion model is the same across Pro and Business.
+**Notes:** Pro includes 500 fast requests/month and unlimited slow requests. Pro+ adds higher limits and priority models. Teams adds SSO, audit logs, and centralized billing.
 
 ## GitHub Copilot
 - Individual: $10/user/month (or $100/year) — https://github.com/features/copilot#pricing — verified 2026-05-22
@@ -29,11 +30,12 @@ All prices last verified on 2026-05-22 from official vendor pricing pages.
 
 ## ChatGPT (OpenAI)
 - Free: $0/month — https://openai.com/chatgpt/pricing — verified 2026-05-22
+- Go: $8/user/month — https://openai.com/chatgpt/pricing — verified 2026-05-22
 - Plus: $20/month (single user) — https://openai.com/chatgpt/pricing — verified 2026-05-22
-- Team: $30/user/month (minimum 2 users) — https://openai.com/chatgpt/pricing — verified 2026-05-22
+- Business: $25-30/user/month — https://openai.com/chatgpt/pricing — verified 2026-05-22
 - Enterprise: Custom pricing — https://openai.com/chatgpt/pricing — verified 2026-05-22
 
-**Notes:** Team adds a shared workspace, longer context, and admin controls. Plus is per individual account. Enterprise adds SSO, advanced security, and no usage caps.
+**Notes:** Business adds a shared workspace, longer context, and admin controls. Plus is per individual account. Go provides a lightweight entry plan. Enterprise adds SSO, advanced security, and no usage caps.
 
 ## Anthropic API Direct
 - Pay as you go — no monthly minimum
@@ -62,8 +64,9 @@ All prices last verified on 2026-05-22 from official vendor pricing pages.
 
 ## Windsurf (Codeium)
 - Free: $0/month — https://windsurf.com/pricing — verified 2026-05-22
-- Pro: $15/user/month — https://windsurf.com/pricing — verified 2026-05-22
-- Teams: $35/user/month — https://windsurf.com/pricing — verified 2026-05-22
+- Pro: $20/user/month — https://windsurf.com/pricing — verified 2026-05-22
+- Teams: $40/user/month — https://windsurf.com/pricing — verified 2026-05-22
+- Max: $200/user/month — https://windsurf.com/pricing — verified 2026-05-22
 - Enterprise: Custom pricing — https://windsurf.com/pricing — verified 2026-05-22
 
-**Notes:** Pro includes unlimited AI completions and a monthly credit allowance for premium models. Teams adds admin controls and centralized billing. The core AI coding experience is identical between Pro and Teams.
+**Notes:** Pro includes unlimited AI completions. Teams adds admin controls and centralized billing. Max is for elite power users.

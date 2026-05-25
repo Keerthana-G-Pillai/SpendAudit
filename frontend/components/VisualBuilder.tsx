@@ -43,7 +43,8 @@ interface PlanOption {
 const TOOL_PLANS: Record<ToolName, PlanOption[]> = {
   cursor: [
     { id: 'pro', label: 'Pro · $20/seat', price: 20 },
-    { id: 'business', label: 'Business · $40/seat', price: 40 },
+    { id: 'pro-plus', label: 'Pro+ · $60/seat', price: 60 },
+    { id: 'teams', label: 'Teams · $40/seat', price: 40 },
   ],
   'github-copilot': [
     { id: 'individual', label: 'Individual · $10/seat', price: 10 },
@@ -56,12 +57,14 @@ const TOOL_PLANS: Record<ToolName, PlanOption[]> = {
     { id: 'max', label: 'Max · $100/seat', price: 100 },
   ],
   chatgpt: [
+    { id: 'go', label: 'Go · $8/seat', price: 8 },
     { id: 'plus', label: 'Plus · $20/seat', price: 20 },
-    { id: 'team', label: 'Team · $30/seat', price: 30 },
+    { id: 'business', label: 'Business · $30/seat', price: 30 },
   ],
   windsurf: [
-    { id: 'pro', label: 'Pro · $15/seat', price: 15 },
-    { id: 'teams', label: 'Teams · $35/seat', price: 35 },
+    { id: 'pro', label: 'Pro · $20/seat', price: 20 },
+    { id: 'teams', label: 'Teams · $40/seat', price: 40 },
+    { id: 'max', label: 'Max · $200/seat', price: 200 },
   ],
   gemini: [
     { id: 'pro', label: 'Pro · Free', price: 0 },
@@ -84,69 +87,69 @@ const USE_CASES: {
   label: string
   renderIcon: () => React.ReactNode
 }[] = [
-  {
-    id: 'coding',
-    label: 'Coding',
-    renderIcon: () => (
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-        <rect x="8" y="12" width="48" height="32" rx="6" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="3"/>
-        <path d="M20 44l-4 8h32l-4-8" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M24 52h16" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round"/>
-        <path d="M16 22l6 6-6 6" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="28" cy="28" r="2" fill="#3b82f6"/>
-      </svg>
-    )
-  },
-  {
-    id: 'writing',
-    label: 'Writing',
-    renderIcon: () => (
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-        <path d="M16 48c8-4 12-8 16-16m-4-4l20-20a4.24 4.24 0 016 6L34 50l-12 4 4-12z" stroke="#ec4899" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M42 14l6 6" stroke="#ec4899" strokeWidth="3"/>
-        <path d="M12 52c10 0 18-4 24-12" stroke="#f472b6" strokeWidth="2" strokeDasharray="3 3"/>
-      </svg>
-    )
-  },
-  {
-    id: 'data',
-    label: 'Data',
-    renderIcon: () => (
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-        <rect x="12" y="32" width="8" height="20" rx="2" fill="#10b981" fillOpacity="0.8"/>
-        <rect x="28" y="16" width="8" height="36" rx="2" fill="#ef4444" fillOpacity="0.8"/>
-        <rect x="44" y="24" width="8" height="28" rx="2" fill="#3b82f6" fillOpacity="0.8"/>
-        <path d="M8 52h48" stroke="#64748b" strokeWidth="3" strokeLinecap="round"/>
-      </svg>
-    )
-  },
-  {
-    id: 'research',
-    label: 'Research',
-    renderIcon: () => (
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-        <circle cx="26" cy="26" r="16" stroke="#8b5cf6" strokeWidth="4"/>
-        <path d="M38 38l16 16" stroke="#8b5cf6" strokeWidth="5" strokeLinecap="round"/>
-        <path d="M20 20a8 8 0 018 0" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    )
-  },
-  {
-    id: 'mixed',
-    label: 'Mixed',
-    renderIcon: () => (
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-        <path d="M36 4L16 32h16v28l20-28H36V4z" fill="url(#bolt-grad)" stroke="#f59e0b" strokeWidth="2" strokeLinejoin="round"/>
-        <defs>
-          <linearGradient id="bolt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fbbf24"/>
-            <stop offset="100%" stopColor="#d97706"/>
-          </linearGradient>
-        </defs>
-      </svg>
-    )
-  }
-]
+    {
+      id: 'coding',
+      label: 'Coding',
+      renderIcon: () => (
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+          <rect x="8" y="12" width="48" height="32" rx="6" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="3" />
+          <path d="M20 44l-4 8h32l-4-8" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M24 52h16" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" />
+          <path d="M16 22l6 6-6 6" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="28" cy="28" r="2" fill="#3b82f6" />
+        </svg>
+      )
+    },
+    {
+      id: 'writing',
+      label: 'Writing',
+      renderIcon: () => (
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+          <path d="M16 48c8-4 12-8 16-16m-4-4l20-20a4.24 4.24 0 016 6L34 50l-12 4 4-12z" stroke="#ec4899" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M42 14l6 6" stroke="#ec4899" strokeWidth="3" />
+          <path d="M12 52c10 0 18-4 24-12" stroke="#f472b6" strokeWidth="2" strokeDasharray="3 3" />
+        </svg>
+      )
+    },
+    {
+      id: 'data',
+      label: 'Data',
+      renderIcon: () => (
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+          <rect x="12" y="32" width="8" height="20" rx="2" fill="#10b981" fillOpacity="0.8" />
+          <rect x="28" y="16" width="8" height="36" rx="2" fill="#ef4444" fillOpacity="0.8" />
+          <rect x="44" y="24" width="8" height="28" rx="2" fill="#3b82f6" fillOpacity="0.8" />
+          <path d="M8 52h48" stroke="#64748b" strokeWidth="3" strokeLinecap="round" />
+        </svg>
+      )
+    },
+    {
+      id: 'research',
+      label: 'Research',
+      renderIcon: () => (
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+          <circle cx="26" cy="26" r="16" stroke="#8b5cf6" strokeWidth="4" />
+          <path d="M38 38l16 16" stroke="#8b5cf6" strokeWidth="5" strokeLinecap="round" />
+          <path d="M20 20a8 8 0 018 0" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      )
+    },
+    {
+      id: 'mixed',
+      label: 'Mixed',
+      renderIcon: () => (
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+          <path d="M36 4L16 32h16v28l20-28H36V4z" fill="url(#bolt-grad)" stroke="#f59e0b" strokeWidth="2" strokeLinejoin="round" />
+          <defs>
+            <linearGradient id="bolt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fbbf24" />
+              <stop offset="100%" stop-color="#d97706" />
+            </linearGradient>
+          </defs>
+        </svg>
+      )
+    }
+  ]
 
 interface SelectedTool {
   toolId: ToolName
@@ -185,7 +188,7 @@ export default function VisualBuilder() {
   const [useCase, setUseCase] = useState<UseCase>('coding')
   const [selected, setSelected] = useState<SelectedTool[]>([
     { toolId: 'cursor', plan: 'pro', seats: 4 },
-    { toolId: 'chatgpt', plan: 'team', seats: 4 },
+    { toolId: 'chatgpt', plan: 'business', seats: 4 },
   ])
   const [quickAdd, setQuickAdd] = useState('')
   const [loading, setLoading] = useState(false)
@@ -285,41 +288,52 @@ export default function VisualBuilder() {
         title="Team size"
         description="Used to benchmark plan tiers and seat counts against typical team profiles."
       >
-        <div className="flex items-center justify-between gap-4 mb-3">
-          <span className="ui-label">People on your team</span>
-          <span className="text-[13px] font-medium text-primary tabular-nums">
-            {teamSize}
-            {teamSize >= 100 ? '+' : ''}
-          </span>
-        </div>
-        
-        <div className="flex items-center justify-center mb-6 h-12">
-          <div className="flex -space-x-3 overflow-hidden p-1 hover:-space-x-1 transition-all duration-300 ease-in-out">
-            {Array.from({ length: Math.min(teamSize, 8) }).map((_, i) => (
-              <img
-                key={i}
-                className="inline-block h-12 w-12 rounded-full ring-4 ring-background bg-secondary object-cover hover:-translate-y-2 hover:scale-110 transition-transform duration-300 shadow-md relative z-0 hover:z-10 cursor-pointer"
-                src={`https://api.dicebear.com/7.x/notionists/svg?seed=${i + 12}&backgroundColor=C8D9E6,F5EFEB,567C8D`}
-                alt="Avatar"
-              />
-            ))}
-            {teamSize > 8 && (
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary ring-4 ring-background text-[13px] font-bold text-white shadow-md relative z-0 hover:z-10 hover:-translate-y-2 hover:scale-110 transition-transform duration-300 cursor-pointer">
-                +{teamSize - 8}
-              </div>
+        <div className="flex items-center justify-between gap-4 mb-5 bg-[#C8D9E6]/10 p-3.5 rounded-xl border border-[#C8D9E6]/30">
+          {/* Left: TEAM SIZE label */}
+          <div className="flex flex-col">
+            <span className="ui-label text-[12px] font-extrabold tracking-wider" style={{ color: '#2F4156' }}>Team Size</span>
+            <span className="text-[10px] text-[#567C8D]/80 font-medium">Organization capacity</span>
+          </div>
+
+          {/* Center: row of dynamic overlapping avatars */}
+          <div className="flex items-center gap-1.5">
+            <div className="flex -space-x-2.5 overflow-hidden py-0.5 px-1.5 bg-white/45 rounded-full border border-[#C8D9E6]/25">
+              {Array.from({ length: Math.min(Math.floor(teamSize / 10) + 1, 8) }).map((_, i) => (
+                <img
+                  key={i}
+                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-[#567C8D] object-cover shadow-sm transition-transform duration-300 hover:scale-110 hover:z-10 relative cursor-pointer"
+                  src={`https://api.dicebear.com/7.x/notionists/svg?seed=${i + 12}&backgroundColor=C8D9E6,F5EFEB,567C8D`}
+                  alt="Avatar"
+                />
+              ))}
+            </div>
+            {teamSize > 70 && (
+              <span className="text-[#567C8D] font-extrabold text-[14px] leading-none animate-pulse px-1" aria-hidden="true">
+                &gt;
+              </span>
             )}
           </div>
+
+          {/* Right: numeric size badge */}
+          <div className="px-3.5 py-1.5 rounded-lg bg-[#2F4156] text-[#ffffff] font-extrabold text-[13px] shadow-sm tabular-nums min-w-[3.5rem] text-center">
+            {teamSize}
+            {teamSize >= 100 ? '+' : ''}
+          </div>
         </div>
+
         <input
           type="range"
           min={1}
           max={100}
           value={teamSize}
           onChange={(e) => setTeamSize(Number(e.target.value))}
+          style={{
+            background: `linear-gradient(to right, #567C8D 0%, #2F4156 ${((teamSize - 1) / (100 - 1)) * 100}%, #C8D9E6 ${((teamSize - 1) / (100 - 1)) * 100}%, #C8D9E6 100%)`
+          }}
           className="ui-range w-full"
           aria-label="Team size"
         />
-        <div className="flex justify-between mt-2 text-[11px] text-secondary/80 tabular-nums">
+        <div className="flex justify-between mt-2.5 text-[11px] font-bold text-secondary/85 tabular-nums">
           <span>1</span>
           <span>25</span>
           <span>50</span>
@@ -331,10 +345,10 @@ export default function VisualBuilder() {
       {/* Step 2: Primary use case */}
       <section className="ui-section p-5 sm:p-6">
         <div className="flex items-center gap-3 mb-5">
-          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-sm font-bold shrink-0">
+          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#2F4156] text-white text-sm font-bold shrink-0">
             2
           </span>
-          <h2 className="text-lg font-bold text-gray-900">
+          <h2 className="text-lg font-bold" style={{ color: '#2F4156' }}>
             What does your team primarily use AI for?
           </h2>
         </div>
@@ -349,8 +363,8 @@ export default function VisualBuilder() {
                 className={cn(
                   'flex flex-col items-center text-center p-5 rounded-2xl border transition-all duration-200 relative group',
                   isSelected
-                    ? 'border-[#567C8D] bg-[#567C8D]/10 shadow-sm'
-                    : 'border-gray-200 bg-white hover:border-[#567C8D]/50 hover:bg-gray-50/30'
+                    ? 'border-[#2F4156] bg-gradient-to-br from-[#567C8D]/15 to-[#C8D9E6]/25 shadow-md scale-[1.02]'
+                    : 'border-[#C8D9E6] bg-white hover:border-[#567C8D]/85 hover:bg-[#C8D9E6]/10'
                 )}
               >
                 <span className="flex h-16 w-16 items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
@@ -358,7 +372,7 @@ export default function VisualBuilder() {
                 </span>
                 <span className={cn(
                   'text-sm font-bold tracking-tight transition-colors',
-                  isSelected ? 'text-[#567C8D]' : 'text-gray-500'
+                  isSelected ? 'text-[#2F4156]' : 'text-[#567C8D]'
                 )}>
                   {uc.label}
                 </span>
@@ -372,16 +386,16 @@ export default function VisualBuilder() {
       <section className="ui-section p-5 sm:p-6">
         <div className="flex flex-col gap-1.5 mb-5">
           <div className="flex items-center gap-3">
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-sm font-bold shrink-0">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#2F4156] text-white text-sm font-bold shrink-0">
               3
             </span>
-            <h2 className="text-lg font-bold text-gray-900">Build your AI stack</h2>
+            <h2 className="text-lg font-bold" style={{ color: '#2F4156' }}>Build your AI stack</h2>
           </div>
           <div className="flex items-center justify-between mt-2.5">
-            <span className="text-sm font-semibold text-gray-500">
+            <span className="text-sm font-semibold text-[#567C8D]">
               {selected.length} tool{selected.length === 1 ? '' : 's'} added · ${totalMonthly}/mo total
             </span>
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-gray-400 bg-gray-100 border border-gray-200/50">
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#2F4156] bg-[#C8D9E6]/30 border border-[#C8D9E6]">
               Select plan & seats per tool
             </span>
           </div>
@@ -391,13 +405,13 @@ export default function VisualBuilder() {
         <div className="relative mb-5">
           <Search
             size={16}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#567C8D]/60 pointer-events-none"
           />
           <input
             value={quickAdd}
             onChange={(e) => setQuickAdd(e.target.value)}
             placeholder="Search tools to add to stack…"
-            className="w-full h-11 pl-10 pr-4 text-sm rounded-xl border border-gray-200 outline-none focus:border-[#567C8D] focus:ring-2 focus:ring-[#567C8D]/10 transition-all bg-white"
+            className="w-full h-11 pl-10 pr-4 text-sm rounded-xl border border-[#C8D9E6] outline-none focus:border-[#2F4156] focus:ring-2 focus:ring-[#567C8D]/20 transition-all bg-white text-[#2F4156] placeholder-[#567C8D]/60"
             aria-label="Search tools"
           />
         </div>
@@ -421,8 +435,8 @@ export default function VisualBuilder() {
                 className={cn(
                   'flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all duration-200 group relative',
                   isSelected
-                    ? 'border-[#567C8D] bg-[#567C8D]/10 shadow-sm'
-                    : 'border-gray-200 bg-white hover:border-[#567C8D]/50 hover:bg-gray-50/30'
+                    ? 'border-[#2F4156] bg-gradient-to-br from-[#567C8D]/15 to-[#C8D9E6]/25 shadow-md scale-[1.02]'
+                    : 'border-[#C8D9E6] bg-white hover:border-[#567C8D]/60 hover:bg-[#C8D9E6]/10'
                 )}
               >
                 <div className="w-10 h-10 rounded-xl overflow-hidden mb-2.5 transition-transform duration-300 group-hover:scale-105 shadow-sm bg-white flex items-center justify-center">
@@ -430,12 +444,12 @@ export default function VisualBuilder() {
                 </div>
                 <span className={cn(
                   'text-xs font-bold truncate max-w-full px-1',
-                  isSelected ? 'text-[#567C8D]' : 'text-gray-700'
+                  isSelected ? 'text-[#2F4156]' : 'text-[#567C8D]'
                 )}>
                   {tool.label}
                 </span>
                 {isSelected ? (
-                  <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-[#567C8D] flex items-center justify-center text-white">
+                  <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-[#2F4156] flex items-center justify-center text-white">
                     <Check size={10} strokeWidth={3} />
                   </div>
                 ) : (
@@ -468,31 +482,31 @@ export default function VisualBuilder() {
               return (
                 <div
                   key={item.toolId}
-                  className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm flex flex-col gap-4 relative text-left"
+                  className="bg-gradient-to-br from-white to-[#C8D9E6]/10 border border-[#C8D9E6] rounded-2xl p-5 shadow-sm hover:border-[#567C8D]/50 transition-colors flex flex-col gap-4 relative text-left"
                 >
                   {/* Card Header */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3.5">
-                      <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-sm bg-white flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-sm bg-white flex items-center justify-center border border-[#C8D9E6]/40">
                         <ToolIcon tool={item.toolId} size="md" />
                       </div>
                       <div>
-                        <h3 className="text-base font-bold text-gray-900">{cfg.label}</h3>
-                        <p className="text-xs text-gray-500 font-medium mt-0.5">
+                        <h3 className="text-base font-bold text-[#2F4156]">{cfg.label}</h3>
+                        <p className="text-xs text-[#567C8D] font-medium mt-0.5">
                           {isApi ? 'API Usage' : `${currentPlan.label.split(' · ')[0]} · ${item.seats} seat${item.seats === 1 ? '' : 's'}`}
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-3">
                       <div className="text-right">
-                        <span className="text-lg font-bold text-gray-900">${itemPrice}</span>
-                        <span className="text-xs text-gray-400 font-medium ml-1">/month</span>
+                        <span className="text-lg font-extrabold text-[#2F4156]">${itemPrice}</span>
+                        <span className="text-xs text-[#567C8D]/70 font-medium ml-1">/month</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => removeTool(item.toolId)}
-                        className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+                        className="w-8 h-8 rounded-lg bg-[#C8D9E6]/20 hover:bg-red-50 border border-[#C8D9E6] flex items-center justify-center text-[#567C8D] hover:text-red-600 transition-colors"
                         aria-label={`Remove ${cfg.label}`}
                       >
                         <X size={16} />
@@ -501,8 +515,8 @@ export default function VisualBuilder() {
                   </div>
 
                   {/* PLAN Row */}
-                  <div className="border-t border-gray-100 pt-4 flex flex-col gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">PLAN</span>
+                  <div className="border-t border-[#C8D9E6]/40 pt-4 flex flex-col gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#567C8D]/80">PLAN</span>
                     <div className="flex flex-wrap gap-2">
                       {plans.map((p) => {
                         const isActive = item.plan === p.id
@@ -514,8 +528,8 @@ export default function VisualBuilder() {
                             className={cn(
                               'px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all',
                               isActive
-                                ? 'bg-black text-white'
-                                : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200/60'
+                                ? 'bg-[#2F4156] text-white shadow-sm'
+                                : 'bg-[#C8D9E6]/30 hover:bg-[#C8D9E6]/60 text-[#2F4156] border border-[#C8D9E6]'
                             )}
                           >
                             {p.label}
@@ -526,38 +540,38 @@ export default function VisualBuilder() {
                   </div>
 
                   {/* Seats or Custom Spend Row */}
-                  <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                  <div className="flex items-center justify-between border-t border-[#C8D9E6]/40 pt-4">
                     {isApi ? (
                       <>
-                        <span className="text-xs font-semibold text-gray-700">Estimated monthly API spend</span>
-                        <div className="flex items-center h-9 border border-gray-200 rounded-xl bg-gray-50 px-3">
-                          <span className="text-xs text-gray-500 font-semibold mr-1.5">$</span>
+                        <span className="text-xs font-semibold text-[#2F4156]">Estimated monthly API spend</span>
+                        <div className="flex items-center h-9 border border-[#C8D9E6] rounded-xl bg-[#C8D9E6]/15 px-3">
+                          <span className="text-xs text-[#567C8D]/80 font-semibold mr-1.5">$</span>
                           <input
                             type="number"
                             value={item.customSpend ?? 100}
                             onChange={(e) => changeCustomSpend(item.toolId, Number(e.target.value))}
-                            className="w-20 bg-transparent border-0 outline-none text-sm text-gray-900 text-right font-bold tabular-nums"
+                            className="w-20 bg-transparent border-0 outline-none text-sm text-[#2F4156] text-right font-bold tabular-nums"
                           />
                         </div>
                       </>
                     ) : (
                       <>
-                        <span className="text-xs font-semibold text-gray-700">Seats</span>
+                        <span className="text-xs font-semibold text-[#2F4156]">Seats</span>
                         <div className="flex items-center gap-2.5">
                           <button
                             type="button"
-                            className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-600 font-bold transition-all disabled:opacity-40"
+                            className="w-8 h-8 rounded-lg bg-[#C8D9E6]/20 hover:bg-[#C8D9E6]/50 border border-[#C8D9E6] flex items-center justify-center text-[#2F4156] font-bold transition-all disabled:opacity-40"
                             onClick={() => adjustSeats(item.toolId, -1)}
                             disabled={item.seats <= 1}
                           >
                             <Minus size={14} />
                           </button>
-                          <span className="w-8 text-center text-sm font-bold text-gray-900 tabular-nums">
+                          <span className="w-8 text-center text-sm font-extrabold text-[#2F4156] tabular-nums">
                             {item.seats}
                           </span>
                           <button
                             type="button"
-                            className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-600 font-bold transition-all"
+                            className="w-8 h-8 rounded-lg bg-[#C8D9E6]/20 hover:bg-[#C8D9E6]/50 border border-[#C8D9E6] flex items-center justify-center text-[#2F4156] font-bold transition-all"
                             onClick={() => adjustSeats(item.toolId, 1)}
                           >
                             <Plus size={14} />
@@ -568,9 +582,9 @@ export default function VisualBuilder() {
                   </div>
 
                   {/* Monthly Spend Row */}
-                  <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                    <span className="text-xs font-semibold text-gray-700">Monthly spend</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500 font-semibold w-24 justify-end">
+                  <div className="flex items-center justify-between border-t border-[#C8D9E6]/40 pt-4">
+                    <span className="text-xs font-semibold text-[#2F4156]">Monthly spend</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-[#C8D9E6]/25 border border-[#C8D9E6] rounded-lg text-sm text-[#2F4156] font-bold w-24 justify-end">
                       <span>$ {itemPrice}</span>
                     </div>
                   </div>
@@ -582,12 +596,12 @@ export default function VisualBuilder() {
       </section>
 
       {/* Audit Summary & Action Footer */}
-      <div className="ui-section p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="ui-section p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-[#567C8D] bg-gradient-to-r from-white to-[#C8D9E6]/10">
         <div>
           <p className="ui-label">Estimated monthly spend</p>
-          <p className="mt-1 text-[28px] font-extrabold text-[#567C8D] tracking-tight tabular-nums">
+          <p className="mt-1 text-[28px] font-extrabold text-[#2F4156] tracking-tight tabular-nums">
             ${totalMonthly.toLocaleString()}
-            <span className="text-[14px] font-bold text-[#567C8D]/70">/mo</span>
+            <span className="text-[14px] font-bold text-[#567C8D] ml-1">/mo</span>
           </p>
           <p className="text-[12px] text-[#567C8D] mt-0.5">
             {selected.length} tool{selected.length === 1 ? '' : 's'} configured
@@ -608,7 +622,7 @@ export default function VisualBuilder() {
             type="button"
             disabled={loading}
             onClick={handleSubmit}
-            className="ui-btn-primary w-full h-10"
+            className="ui-btn-primary w-full h-10 hover:scale-[1.02] shadow-md transition-transform duration-200"
           >
             {loading ? 'Running audit…' : 'Run audit'}
           </button>

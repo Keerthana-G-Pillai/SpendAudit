@@ -159,39 +159,47 @@
   .ui-divider { border-top: 1px solid #C8D9E6; }
 }
 
-/* ── Range slider — teal thumb, sky track ── */
+/* ── Range slider — filled gradient track, white circular thumb ── */
 input[type='range'].ui-range {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 5px;
-  border-radius: 3px;
-  background: #C8D9E6;
+  height: 8px;
+  border-radius: 9999px;
   outline: none;
   cursor: pointer;
+  background: #C8D9E6; /* Fallback */
 }
 
 input[type='range'].ui-range::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #567C8D;
-  border: 2.5px solid #ffffff;
-  box-shadow: 0 1px 4px rgba(47, 65, 86, 0.20);
+  background: #ffffff;
+  border: 3px solid #2F4156;
+  box-shadow: 0 2px 6px rgba(47, 65, 86, 0.30);
   cursor: pointer;
-  transition: background 0.15s;
+  transition: transform 0.1s, border-color 0.1s;
 }
-input[type='range'].ui-range::-webkit-slider-thumb:hover { background: #2F4156; }
+input[type='range'].ui-range::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  border-color: #567C8D;
+}
 
 input[type='range'].ui-range::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #567C8D;
-  border: 2.5px solid #ffffff;
-  box-shadow: 0 1px 4px rgba(47, 65, 86, 0.20);
+  background: #ffffff;
+  border: 3px solid #2F4156;
+  box-shadow: 0 2px 6px rgba(47, 65, 86, 0.30);
   cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+input[type='range'].ui-range::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  border-color: #567C8D;
 }
 
 /* ── Nav link hover (CSS-only, works in Server Components) ── */

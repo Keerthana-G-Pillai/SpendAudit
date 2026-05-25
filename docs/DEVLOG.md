@@ -63,3 +63,20 @@
 **Plan for tomorrow:**
 - Implement the final test cases in `backend/lib/audit.test.ts`.
 - Update `TESTS.md` and `ARCHITECTURE.md` to reflect the final project structure.
+
+## Day 5 — 2026-05-25
+**Hours worked:** 4
+**What I did:**
+- Redesigned the Team Size slider (Step 1) in `VisualBuilder.tsx` to a horizontal header row showing label, real-time overlapping avatars count (`Math.min(Math.floor(teamSize / 10) + 1, 8)`), a `>` indicator when `teamSize > 70`, and a numeric capacity badge on the right.
+- Styled the range slider track with dynamic Teal-to-Navy gradient fills based on the handle position, and set up a custom circular white thumb with a Navy border.
+- Integrated the Homepage floating glassmorphism navbar on the Audit Results page.
+- Created a new dedicated `/faq` route under `app/faq/page.tsx` rendering the `SocialProof` and `LandingFAQ` components under a consistent floating navbar.
+- Simplified the footers in both `app/page.tsx` (Homepage) and `components/AuditResults.tsx` to only show the copyright and email disclaimer bar, removing the nested FAQ and Social Proof components.
+- Updated Navbar links across the application to route correctly to `/faq` and back to `/`.
+- Updated Cursor, ChatGPT, and Windsurf pricing plans and rates inside `VisualBuilder.tsx`, `audit.ts`, `SpendForm.tsx`, and `PRICING_DATA.md`.
+- Updated all unit tests in `audit.test.ts` to sync with the new plan names and pricing rates.
+**What I learned:**
+- Segmenting secondary elements like FAQs and Social Proof to separate static pages significantly lightens the initial load size of main landing and dynamic results pages, improving speed and readability.
+- Reusing common layouts like the floating navbar across page routes makes the web app feel polished and integrated.
+**Blockers:**
+- None. Updates were applied cleanly and validated successfully via the local build and vitest runners.

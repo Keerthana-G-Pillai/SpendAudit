@@ -22,7 +22,7 @@ const ALL_TOOLS: ToolCfg[] = [
   { id: 'claude',         label: 'Claude',        pricePerSeat: 20, iconBg: '#fef3c7', iconText: '#92400e', initials: 'Cl' },
   { id: 'gemini',         label: 'Gemini',        pricePerSeat: 20, iconBg: '#dbeafe', iconText: '#1e40af', initials: 'Ge' },
   { id: 'github-copilot', label: 'Copilot',       pricePerSeat: 19, iconBg: '#1f2937', iconText: '#ffffff', initials: 'GC' },
-  { id: 'windsurf',       label: 'Windsurf',      pricePerSeat: 15, iconBg: '#cffafe', iconText: '#155e75', initials: 'Ws' },
+  { id: 'windsurf',       label: 'Windsurf',      pricePerSeat: 20, iconBg: '#cffafe', iconText: '#155e75', initials: 'Ws' },
   { id: 'anthropic-api',  label: 'Anthropic API', pricePerSeat: 0,  iconBg: '#fde8d8', iconText: '#9a3412', initials: 'An' },
   { id: 'openai-api',     label: 'OpenAI API',    pricePerSeat: 0,  iconBg: '#f0fdf4', iconText: '#166534', initials: 'OA' },
 ]

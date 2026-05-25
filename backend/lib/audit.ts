@@ -9,11 +9,11 @@ import type { SpendInput, AuditResult, ToolRecommendation, ToolEntry } from './t
 // ─── Pricing reference (USD/user/month unless noted) ─────────────────────────
 // Keep this in sync with PRICING_DATA.md at all times.
 export const PRICING = {
-  cursor: { hobby: 0, pro: 20, business: 40 },
+  cursor: { hobby: 0, pro: 20, 'pro-plus': 60, teams: 40 },
   'github-copilot': { individual: 10, business: 19, enterprise: 39 },
   claude: { free: 0, pro: 20, max: 100, team: 30 },
-  chatgpt: { plus: 20, team: 30 },
-  windsurf: { free: 0, pro: 15, teams: 35 },
+  chatgpt: { go: 8, plus: 20, business: 30 },
+  windsurf: { free: 0, pro: 20, teams: 40, max: 200 },
   gemini: { pro: 0, ultra: 19.99 },
   'anthropic-api': { 'pay-as-you-go': 0 },
   'openai-api': { 'pay-as-you-go': 0 },
@@ -29,8 +29,8 @@ const CREDEX_MIN_SPEND_THRESHOLD = 50 // Only recommend Credex for $50+/mo API s
 
 // ─── Thresholds ───────────────────────────────────────────────────────────────
 const TEAM_SIZE_THRESHOLDS = {
-  chatgptTeamJustified: 5,    // Team plan justified at 5+ users
-  cursorBusinessJustified: 4, // Business plan justified at 4+ users
+  chatgptBusinessJustified: 5,    // Business plan justified at 5+ users
+  cursorTeamsJustified: 4, // Teams plan justified at 4+ users
   windsurfTeamsJustified: 4,  // Teams plan justified at 4+ users
   copilotEnterpriseJustified: 10, // Enterprise justified at 10+ users
   claudeTeamSmall: 2,         // Team plan vs individual Pro check below this
@@ -90,17 +90,17 @@ function analyzeToolEntry(entry: ToolEntry, input: SpendInput): ToolRecommendati
 function analyzeChatGPT(entry: ToolEntry, input: SpendInput): ToolRecommendation {
   const { seats } = entry
 
-  // Rule 1: Team plan for small teams — Plus is cheaper, same capability
-  if (entry.plan === 'team' && seats < TEAM_SIZE_THRESHOLDS.chatgptTeamJustified) {
-    const currentCost = PRICING.chatgpt.team * seats
+  // Rule 1: Business plan for small teams — Plus is cheaper, same capability
+  if (entry.plan === 'business' && seats < TEAM_SIZE_THRESHOLDS.chatgptBusinessJustified) {
+    const currentCost = PRICING.chatgpt.business * seats
     const cheaperCost = PRICING.chatgpt.plus * seats
     const saving = currentCost - cheaperCost
     return {
       tool: entry.tool,
       currentSpend: entry.monthlySpend,
-      recommendedAction: `Downgrade ${seats} seat${seats > 1 ? 's' : ''} from ChatGPT Team to ChatGPT Plus`,
+      recommendedAction: `Downgrade ${seats} seat${seats > 1 ? 's' : ''} from ChatGPT Business to ChatGPT Plus`,
       estimatedMonthlySaving: saving,
-      reasoning: `ChatGPT Team ($${PRICING.chatgpt.team}/user/mo) vs Plus ($${PRICING.chatgpt.plus}/user/mo) — Team adds shared workspaces and admin controls, which are unnecessary for teams under ${TEAM_SIZE_THRESHOLDS.chatgptTeamJustified} with standard prompting usage. Saves $${saving}/mo ($${saving * 12}/yr).`,
+      reasoning: `ChatGPT Business ($${PRICING.chatgpt.business}/user/mo) vs Plus ($${PRICING.chatgpt.plus}/user/mo) — Business adds shared workspaces and admin controls, which are unnecessary for teams under ${TEAM_SIZE_THRESHOLDS.chatgptBusinessJustified} with standard prompting usage. Saves $${saving}/mo ($${saving * 12}/yr).`,
     }
   }
 
@@ -135,15 +135,15 @@ function analyzeChatGPT(entry: ToolEntry, input: SpendInput): ToolRecommendation
 function analyzeCursor(entry: ToolEntry, input: SpendInput): ToolRecommendation {
   const { seats } = entry
 
-  // Rule 1: Business plan for small teams — Pro has identical AI features
-  if (entry.plan === 'business' && seats < TEAM_SIZE_THRESHOLDS.cursorBusinessJustified) {
-    const saving = (PRICING.cursor.business - PRICING.cursor.pro) * seats
+  // Rule 1: Teams plan for small teams — Pro has identical AI features
+  if (entry.plan === 'teams' && seats < TEAM_SIZE_THRESHOLDS.cursorTeamsJustified) {
+    const saving = (PRICING.cursor.teams - PRICING.cursor.pro) * seats
     return {
       tool: entry.tool,
       currentSpend: entry.monthlySpend,
-      recommendedAction: `Downgrade ${seats} Cursor seat${seats > 1 ? 's' : ''} from Business to Pro`,
+      recommendedAction: `Downgrade ${seats} Cursor seat${seats > 1 ? 's' : ''} from Teams to Pro`,
       estimatedMonthlySaving: saving,
-      reasoning: `Cursor Business ($${PRICING.cursor.business}/user/mo) adds SSO, centralized billing, and an admin dashboard. For teams under ${TEAM_SIZE_THRESHOLDS.cursorBusinessJustified}, Pro ($${PRICING.cursor.pro}/user/mo) has identical AI completion features. Saves $${saving}/mo ($${saving * 12}/yr).`,
+      reasoning: `Cursor Teams ($${PRICING.cursor.teams}/user/mo) adds centralized billing and admin controls. For teams under ${TEAM_SIZE_THRESHOLDS.cursorTeamsJustified}, Pro ($${PRICING.cursor.pro}/user/mo) has identical AI completion features. Saves $${saving}/mo ($${saving * 12}/yr).`,
     }
   }
 

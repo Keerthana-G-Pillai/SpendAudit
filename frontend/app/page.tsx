@@ -38,16 +38,15 @@ export default function Home() {
 
           {/* Nav links */}
           <div className="hidden md:flex items-center gap-8 bg-white/50 px-6 py-2 rounded-full border border-[#C8D9E6]/50">
-            {['Features', 'Pricing', 'About'].map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-[13px] font-bold transition-colors"
-                style={{ color: '#567C8D' }}
-              >
-                {item}
-              </a>
-            ))}
+            <a href="/" className="text-[13px] font-bold transition-colors" style={{ color: '#567C8D' }}>
+              Features
+            </a>
+            <a href="/faq" className="text-[13px] font-bold transition-colors" style={{ color: '#567C8D' }}>
+              FAQ
+            </a>
+            <a href="/faq" className="text-[13px] font-bold transition-colors" style={{ color: '#567C8D' }}>
+              About
+            </a>
           </div>
 
           {/* CTA */}
@@ -227,12 +226,8 @@ export default function Home() {
         className="w-full border-t"
         style={{ borderColor: '#C8D9E6', backgroundColor: '#F5EFEB' }}
       >
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-12 py-14">
-          <SocialProof />
-          <div className="mt-12">
-            <LandingFAQ />
-          </div>
-          <p className="mt-10 text-center text-[11px]" style={{ color: '#567C8D' }}>
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-12 py-10">
+          <p className="text-center text-[11px]" style={{ color: '#567C8D' }}>
             Email is only requested after you view your results. · Credex © 2025
           </p>
         </div>

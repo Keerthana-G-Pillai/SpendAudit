@@ -55,9 +55,9 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json({ success: true })
-  } catch (err: any) {
+  } catch (err) {
     console.error('Lead API error:', err)
-    return NextResponse.json({ error: 'Failed to save lead', details: err?.message || String(err) }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to save lead' }, { status: 500 })
   }
 }
 
@@ -101,16 +101,15 @@ async function sendConfirmationEmail({
               </a>
             </p>
             <p><strong>Potential monthly savings: $${totalSavings}</strong></p>
-            ${
-              isHighSavings
-                ? `
+            ${isHighSavings
+            ? `
               <div style="background:#f4f4f4;border-radius:8px;padding:16px;margin-top:16px">
                 <p style="margin:0;font-weight:600">Credex will reach out</p>
                 <p style="margin:8px 0 0">You have over $500/month in identified savings. The Credex team will contact you about capturing further savings through discounted AI credits.</p>
               </div>
             `
-                : ''
-            }
+            : ''
+          }
             <hr style="margin:24px 0;border:none;border-top:1px solid #eee"/>
             <p style="color:#888;font-size:12px">Credex · credex.rocks</p>
           </div>
