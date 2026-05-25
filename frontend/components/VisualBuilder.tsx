@@ -4,11 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Search,
-  Code2,
-  PenLine,
-  BarChart2,
-  Microscope,
-  Layers,
   Check,
   Plus,
   Minus,
@@ -16,8 +11,8 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import SubmitProgress from './SubmitProgress'
+import ToolIcon from './ToolIcon'
 import type { ToolName, UseCase } from '@backend/lib/types'
-import type { LucideIcon } from 'lucide-react'
 
 interface ToolCfg {
   id: ToolName
@@ -87,39 +82,70 @@ const TOOL_PLANS: Record<ToolName, PlanOption[]> = {
 const USE_CASES: {
   id: UseCase
   label: string
-  description: string
-  icon: LucideIcon
+  renderIcon: () => React.ReactNode
 }[] = [
   {
     id: 'coding',
-    label: 'Engineering',
-    description: 'Product development, code, and technical workflows',
-    icon: Code2,
+    label: 'Coding',
+    renderIcon: () => (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+        <rect x="8" y="12" width="48" height="32" rx="6" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="3"/>
+        <path d="M20 44l-4 8h32l-4-8" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M24 52h16" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round"/>
+        <path d="M16 22l6 6-6 6" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="28" cy="28" r="2" fill="#3b82f6"/>
+      </svg>
+    )
   },
   {
     id: 'writing',
-    label: 'Content & marketing',
-    description: 'Copy, campaigns, and growth operations',
-    icon: PenLine,
+    label: 'Writing',
+    renderIcon: () => (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+        <path d="M16 48c8-4 12-8 16-16m-4-4l20-20a4.24 4.24 0 016 6L34 50l-12 4 4-12z" stroke="#ec4899" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M42 14l6 6" stroke="#ec4899" strokeWidth="3"/>
+        <path d="M12 52c10 0 18-4 24-12" stroke="#f472b6" strokeWidth="2" strokeDasharray="3 3"/>
+      </svg>
+    )
   },
   {
     id: 'data',
-    label: 'Data & analytics',
-    description: 'Analysis, reporting, and business intelligence',
-    icon: BarChart2,
+    label: 'Data',
+    renderIcon: () => (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+        <rect x="12" y="32" width="8" height="20" rx="2" fill="#10b981" fillOpacity="0.8"/>
+        <rect x="28" y="16" width="8" height="36" rx="2" fill="#ef4444" fillOpacity="0.8"/>
+        <rect x="44" y="24" width="8" height="28" rx="2" fill="#3b82f6" fillOpacity="0.8"/>
+        <path d="M8 52h48" stroke="#64748b" strokeWidth="3" strokeLinecap="round"/>
+      </svg>
+    )
   },
   {
     id: 'research',
     label: 'Research',
-    description: 'Discovery, synthesis, and knowledge work',
-    icon: Microscope,
+    renderIcon: () => (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+        <circle cx="26" cy="26" r="16" stroke="#8b5cf6" strokeWidth="4"/>
+        <path d="M38 38l16 16" stroke="#8b5cf6" strokeWidth="5" strokeLinecap="round"/>
+        <path d="M20 20a8 8 0 018 0" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    )
   },
   {
     id: 'mixed',
-    label: 'Cross-functional',
-    description: 'Multiple teams or mixed departmental use',
-    icon: Layers,
-  },
+    label: 'Mixed',
+    renderIcon: () => (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
+        <path d="M36 4L16 32h16v28l20-28H36V4z" fill="url(#bolt-grad)" stroke="#f59e0b" strokeWidth="2" strokeLinejoin="round"/>
+        <defs>
+          <linearGradient id="bolt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fbbf24"/>
+            <stop offset="100%" stopColor="#d97706"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    )
+  }
 ]
 
 interface SelectedTool {
@@ -149,27 +175,6 @@ function Section({
       </div>
       {children}
     </section>
-  )
-}
-
-function ToolMark({ initials, domain }: { initials: string; domain?: string }) {
-  const [error, setError] = useState(false)
-
-  if (domain && !error) {
-    return (
-      <img
-        src={`https://logo.clearbit.com/${domain}`}
-        alt={initials}
-        className="h-8 w-8 rounded object-cover shadow-sm bg-white"
-        onError={() => setError(true)}
-      />
-    )
-  }
-
-  return (
-    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-accent/30 text-[11px] font-semibold text-primary">
-      {initials}
-    </span>
   )
 }
 
@@ -233,17 +238,10 @@ export default function VisualBuilder() {
     )
   }
 
-  const available = ALL_TOOLS.filter((t) => !selected.some((s) => s.toolId === t.id))
-  const suggestions =
-    quickAdd.length > 0
-      ? available
-          .filter(
-            (t) =>
-              t.label.toLowerCase().includes(quickAdd.toLowerCase()) ||
-              t.id.toLowerCase().includes(quickAdd.toLowerCase())
-          )
-          .slice(0, 6)
-      : []
+  const filteredTools = ALL_TOOLS.filter((t) =>
+    t.label.toLowerCase().includes(quickAdd.toLowerCase()) ||
+    t.id.toLowerCase().includes(quickAdd.toLowerCase())
+  )
 
   const handleSubmit = async () => {
     if (selected.length === 0) {
@@ -281,6 +279,7 @@ export default function VisualBuilder() {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Step 1: Team size */}
       <Section
         step={1}
         title="Team size"
@@ -329,96 +328,139 @@ export default function VisualBuilder() {
         </div>
       </Section>
 
-      <Section
-        step={2}
-        title="Primary use case"
-        description="Shapes which recommendations and overlap checks we prioritize."
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      {/* Step 2: Primary use case */}
+      <section className="ui-section p-5 sm:p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-sm font-bold shrink-0">
+            2
+          </span>
+          <h2 className="text-lg font-bold text-gray-900">
+            What does your team primarily use AI for?
+          </h2>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5">
           {USE_CASES.map((uc) => {
-            const Icon = uc.icon
             const isSelected = useCase === uc.id
             return (
               <button
                 key={uc.id}
                 type="button"
                 onClick={() => setUseCase(uc.id)}
-                className={cn('ui-option group flex-col items-center text-center p-4', isSelected && 'ui-option-selected transform scale-[1.02] shadow-md')}
+                className={cn(
+                  'flex flex-col items-center text-center p-5 rounded-2xl border transition-all duration-200 relative group',
+                  isSelected
+                    ? 'border-[#567C8D] bg-[#567C8D]/10 shadow-sm'
+                    : 'border-gray-200 bg-white hover:border-[#567C8D]/50 hover:bg-gray-50/30'
+                )}
               >
-                <span
-                  className={cn(
-                    'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border mb-2 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3',
-                    isSelected
-                      ? 'border-secondary bg-secondary text-white shadow-lg'
-                      : 'border-accent bg-background text-primary/70'
-                  )}
-                >
-                  <Icon size={18} strokeWidth={2} />
+                <span className="flex h-16 w-16 items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
+                  {uc.renderIcon()}
                 </span>
-                <span className="flex-1 min-w-0">
-                  <span className="block text-[14px] font-bold text-primary mb-1">
-                    {uc.label}
-                  </span>
-                  <span className="block text-[12px] text-secondary leading-snug">
-                    {uc.description}
-                  </span>
+                <span className={cn(
+                  'text-sm font-bold tracking-tight transition-colors',
+                  isSelected ? 'text-[#567C8D]' : 'text-gray-500'
+                )}>
+                  {uc.label}
                 </span>
-                {isSelected && (
-                  <div className="absolute top-3 right-3 text-secondary">
-                    <Check size={16} strokeWidth={2.5} />
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* Step 3: Build your AI stack */}
+      <section className="ui-section p-5 sm:p-6">
+        <div className="flex flex-col gap-1.5 mb-5">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white text-sm font-bold shrink-0">
+              3
+            </span>
+            <h2 className="text-lg font-bold text-gray-900">Build your AI stack</h2>
+          </div>
+          <div className="flex items-center justify-between mt-2.5">
+            <span className="text-sm font-semibold text-gray-500">
+              {selected.length} tool{selected.length === 1 ? '' : 's'} added · ${totalMonthly}/mo total
+            </span>
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-gray-400 bg-gray-100 border border-gray-200/50">
+              Select plan & seats per tool
+            </span>
+          </div>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative mb-5">
+          <Search
+            size={16}
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+          />
+          <input
+            value={quickAdd}
+            onChange={(e) => setQuickAdd(e.target.value)}
+            placeholder="Search tools to add to stack…"
+            className="w-full h-11 pl-10 pr-4 text-sm rounded-xl border border-gray-200 outline-none focus:border-[#567C8D] focus:ring-2 focus:ring-[#567C8D]/10 transition-all bg-white"
+            aria-label="Search tools"
+          />
+        </div>
+
+        {/* Selection grid of all tools */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 mb-8">
+          {filteredTools.map((tool) => {
+            const sel = selected.find((s) => s.toolId === tool.id)
+            const isSelected = !!sel
+            return (
+              <button
+                key={tool.id}
+                type="button"
+                onClick={() => {
+                  if (isSelected) {
+                    removeTool(tool.id)
+                  } else {
+                    addTool(tool.id)
+                  }
+                }}
+                className={cn(
+                  'flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all duration-200 group relative',
+                  isSelected
+                    ? 'border-[#567C8D] bg-[#567C8D]/10 shadow-sm'
+                    : 'border-gray-200 bg-white hover:border-[#567C8D]/50 hover:bg-gray-50/30'
+                )}
+              >
+                <div className="w-10 h-10 rounded-xl overflow-hidden mb-2.5 transition-transform duration-300 group-hover:scale-105 shadow-sm bg-white flex items-center justify-center">
+                  <ToolIcon tool={tool.id} size="sm" />
+                </div>
+                <span className={cn(
+                  'text-xs font-bold truncate max-w-full px-1',
+                  isSelected ? 'text-[#567C8D]' : 'text-gray-700'
+                )}>
+                  {tool.label}
+                </span>
+                {isSelected ? (
+                  <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-[#567C8D] flex items-center justify-center text-white">
+                    <Check size={10} strokeWidth={3} />
+                  </div>
+                ) : (
+                  <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Plus size={10} strokeWidth={3} />
                   </div>
                 )}
               </button>
             )
           })}
-        </div>
-      </Section>
-
-      <Section
-        step={3}
-        title="Your stack"
-        description="Add tools, set plans, and seat counts. Spend updates as you configure."
-      >
-        <div className="relative mb-4">
-          <Search
-            size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/80 pointer-events-none"
-          />
-          <input
-            value={quickAdd}
-            onChange={(e) => setQuickAdd(e.target.value)}
-            placeholder="Search tools to add…"
-            className="ui-input pl-9"
-            aria-label="Search tools"
-          />
-          {suggestions.length > 0 && (
-            <div className="absolute z-20 left-0 right-0 top-[calc(100%+4px)] bg-white border border-accent rounded-md shadow-[0_4px_16px_rgba(0,0,0,0.08)] py-1">
-              {suggestions.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => {
-                    addTool(s.id)
-                    setQuickAdd('')
-                  }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-background transition-colors"
-                >
-                  <ToolMark initials={s.initials} domain={s.domain} />
-                  <span className="text-[13px] font-medium text-primary">{s.label}</span>
-                </button>
-              ))}
+          {filteredTools.length === 0 && (
+            <div className="col-span-full py-8 text-center text-sm text-gray-400">
+              No tools found matching &quot;{quickAdd}&quot;
             </div>
           )}
         </div>
 
+        {/* Configuration cards of selected tools */}
         {selected.length > 0 && (
-          <div className="mb-5 border border-accent rounded-md overflow-hidden divide-y divide-accent">
+          <div className="flex flex-col gap-4 border-t border-gray-100 pt-6">
             {selected.map((item) => {
               const cfg = ALL_TOOLS.find((t) => t.id === item.toolId)!
               const plans = TOOL_PLANS[item.toolId]
               const currentPlan = plans.find((p) => p.id === item.plan) ?? plans[0]!
-              const isApi =
-                item.toolId === 'anthropic-api' || item.toolId === 'openai-api'
+              const isApi = item.toolId === 'anthropic-api' || item.toolId === 'openai-api'
               const itemPrice = isApi
                 ? (item.customSpend ?? 100)
                 : (currentPlan?.price ?? 0) * item.seats
@@ -426,126 +468,128 @@ export default function VisualBuilder() {
               return (
                 <div
                   key={item.toolId}
-                  className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-white"
+                  className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm flex flex-col gap-4 relative text-left"
                 >
-                  <div className="flex items-center gap-2.5 sm:w-[140px] shrink-0">
-                    <ToolMark initials={cfg.initials} domain={cfg.domain} />
-                    <span className="text-[13px] font-medium text-primary">{cfg.label}</span>
+                  {/* Card Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-sm bg-white flex items-center justify-center">
+                        <ToolIcon tool={item.toolId} size="md" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-gray-900">{cfg.label}</h3>
+                        <p className="text-xs text-gray-500 font-medium mt-0.5">
+                          {isApi ? 'API Usage' : `${currentPlan.label.split(' · ')[0]} · ${item.seats} seat${item.seats === 1 ? '' : 's'}`}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-gray-900">${itemPrice}</span>
+                        <span className="text-xs text-gray-400 font-medium ml-1">/month</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeTool(item.toolId)}
+                        className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+                        aria-label={`Remove ${cfg.label}`}
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <select
-                      value={item.plan}
-                      onChange={(e) => changePlan(item.toolId, e.target.value)}
-                      className="ui-select w-full"
-                    >
-                      {plans.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.label}
-                        </option>
-                      ))}
-                    </select>
+                  {/* PLAN Row */}
+                  <div className="border-t border-gray-100 pt-4 flex flex-col gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">PLAN</span>
+                    <div className="flex flex-wrap gap-2">
+                      {plans.map((p) => {
+                        const isActive = item.plan === p.id
+                        return (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => changePlan(item.toolId, p.id)}
+                            className={cn(
+                              'px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all',
+                              isActive
+                                ? 'bg-black text-white'
+                                : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200/60'
+                            )}
+                          >
+                            {p.label}
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-3 sm:ml-auto">
+                  {/* Seats or Custom Spend Row */}
+                  <div className="flex items-center justify-between border-t border-gray-100 pt-4">
                     {isApi ? (
-                      <div className="flex items-center gap-1.5">
-                        <span className="ui-label">Spend</span>
-                        <div className="flex items-center h-8 border border-accent rounded-md bg-white px-2">
-                          <span className="text-[12px] text-secondary/80">$</span>
+                      <>
+                        <span className="text-xs font-semibold text-gray-700">Estimated monthly API spend</span>
+                        <div className="flex items-center h-9 border border-gray-200 rounded-xl bg-gray-50 px-3">
+                          <span className="text-xs text-gray-500 font-semibold mr-1.5">$</span>
                           <input
                             type="number"
                             value={item.customSpend ?? 100}
-                            onChange={(e) =>
-                              changeCustomSpend(item.toolId, Number(e.target.value))
-                            }
-                            className="w-16 bg-transparent border-0 outline-none text-[13px] text-primary text-right tabular-nums"
+                            onChange={(e) => changeCustomSpend(item.toolId, Number(e.target.value))}
+                            className="w-20 bg-transparent border-0 outline-none text-sm text-gray-900 text-right font-bold tabular-nums"
                           />
                         </div>
-                      </div>
+                      </>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        <span className="ui-label">Seats</span>
-                        <div className="inline-flex items-center h-8 border border-accent rounded-md">
+                      <>
+                        <span className="text-xs font-semibold text-gray-700">Seats</span>
+                        <div className="flex items-center gap-2.5">
                           <button
                             type="button"
-                            className="h-8 w-8 flex items-center justify-center text-secondary hover:bg-background hover:text-primary transition-colors"
+                            className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-600 font-bold transition-all disabled:opacity-40"
                             onClick={() => adjustSeats(item.toolId, -1)}
-                            aria-label="Decrease seats"
+                            disabled={item.seats <= 1}
                           >
                             <Minus size={14} />
                           </button>
-                          <span className="w-6 text-center text-[13px] font-medium tabular-nums text-primary">
+                          <span className="w-8 text-center text-sm font-bold text-gray-900 tabular-nums">
                             {item.seats}
                           </span>
                           <button
                             type="button"
-                            className="h-8 w-8 flex items-center justify-center text-secondary hover:bg-background hover:text-primary transition-colors"
+                            className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-600 font-bold transition-all"
                             onClick={() => adjustSeats(item.toolId, 1)}
-                            aria-label="Increase seats"
                           >
                             <Plus size={14} />
                           </button>
                         </div>
-                      </div>
+                      </>
                     )}
+                  </div>
 
-                    <span className="text-[13px] font-medium text-primary tabular-nums w-[72px] text-right">
-                      ${itemPrice}
-                      <span className="text-secondary/80 font-normal">/mo</span>
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() => removeTool(item.toolId)}
-                      className="h-8 w-8 flex items-center justify-center text-secondary/80 hover:text-primary transition-colors"
-                      aria-label={`Remove ${cfg.label}`}
-                    >
-                      <X size={15} />
-                    </button>
+                  {/* Monthly Spend Row */}
+                  <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                    <span className="text-xs font-semibold text-gray-700">Monthly spend</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500 font-semibold w-24 justify-end">
+                      <span>$ {itemPrice}</span>
+                    </div>
                   </div>
                 </div>
               )
             })}
           </div>
         )}
+      </section>
 
-        {available.length > 0 && (
-          <div className="mt-8">
-            <p className="ui-label mb-3">Available Tools (Add to stack)</p>
-            <div className="flex flex-col gap-2">
-              {available.map((tool) => (
-                <button
-                  key={tool.id}
-                  type="button"
-                  onClick={() => addTool(tool.id)}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-accent bg-white hover:bg-background hover:border-secondary hover:shadow-md transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <ToolMark initials={tool.initials} domain={tool.domain} />
-                    <span className="text-[14px] font-bold text-primary">
-                      {tool.label}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-secondary text-white px-3 py-1.5 rounded-md group-hover:bg-[#466878] transition-colors">
-                    <span className="text-[12px] font-semibold hidden sm:inline-block">Add</span>
-                    <Plus size={16} strokeWidth={2.5} />
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </Section>
-
+      {/* Audit Summary & Action Footer */}
       <div className="ui-section p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <p className="ui-label">Estimated monthly spend</p>
-          <p className="mt-1 text-[28px] font-extrabold text-secondary tracking-tight tabular-nums">
+          <p className="mt-1 text-[28px] font-extrabold text-[#567C8D] tracking-tight tabular-nums">
             ${totalMonthly.toLocaleString()}
-            <span className="text-[14px] font-bold text-secondary/70">/mo</span>
+            <span className="text-[14px] font-bold text-[#567C8D]/70">/mo</span>
           </p>
-          <p className="text-[12px] text-secondary mt-0.5">
+          <p className="text-[12px] text-[#567C8D] mt-0.5">
             {selected.length} tool{selected.length === 1 ? '' : 's'} configured
           </p>
         </div>

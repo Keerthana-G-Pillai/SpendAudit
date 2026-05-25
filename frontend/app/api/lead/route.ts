@@ -20,8 +20,10 @@ export async function POST(req: NextRequest) {
       ipSubmissions.set(ip, { count: 1, resetAt: now + ONE_HOUR })
     }
 
-    const parsed = leadSchema.safeParse(await req.json())
+    const body = await req.json()
+    const parsed = leadSchema.safeParse(body)
     if (!parsed.success) {
+      console.warn('Lead validation failed:', parsed.error.flatten())
       return NextResponse.json(
         { error: 'Invalid input', details: parsed.error.flatten() },
         { status: 400 }
@@ -37,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = getServiceClient()
     const { error: dbError } = await supabase.from('leads').insert({
-      audit_id: auditId ?? null,
+      audit_id: auditId ? Number(auditId) : null,
       email,
       company: company ?? null,
       role: role ?? null,
@@ -53,9 +55,9 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json({ success: true })
-  } catch (err) {
+  } catch (err: any) {
     console.error('Lead API error:', err)
-    return NextResponse.json({ error: 'Failed to save lead' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to save lead', details: err?.message || String(err) }, { status: 500 })
   }
 }
 

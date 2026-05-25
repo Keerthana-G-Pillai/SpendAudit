@@ -30,7 +30,7 @@ export const leadSchema = z.object({
   role: z.string().optional(),
   teamSize: z.number().int().min(1).optional(),
   website: z.string().optional(),
-  auditId: z.string().optional(),
+  auditId: z.union([z.string(), z.number()]).optional(),
   auditSlug: z.string().min(1),
   totalSavings: z.number().min(0),
 })

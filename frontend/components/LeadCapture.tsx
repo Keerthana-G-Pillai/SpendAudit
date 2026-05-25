@@ -65,13 +65,13 @@ export default function LeadCapture({
       })
 
       if (!res.ok) {
-        const body = (await res.json().catch(() => ({}))) as { error?: string }
-        throw new Error(body.error ?? 'Request failed')
+        const body = (await res.json().catch(() => ({}))) as { error?: string; details?: string }
+        throw new Error(body.details ?? body.error ?? 'Request failed')
       }
 
       onSuccess()
-    } catch {
-      setError('root', { message: 'Something went wrong. Please try again.' })
+    } catch (err: any) {
+      setError('root', { message: err?.message || 'Something went wrong. Please try again.' })
     }
   }
 
