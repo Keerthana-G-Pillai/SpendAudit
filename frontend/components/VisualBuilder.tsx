@@ -1,37 +1,30 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  Search,
-  Check,
-  Plus,
-  Minus,
-  X,
-} from 'lucide-react'
+import { Check, Plus, Minus, X, ArrowRight, ArrowDown, Layers, CircleDollarSign } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import SubmitProgress from './SubmitProgress'
-import ToolIcon from './ToolIcon'
+import ToolBadge from './ToolBadge'
+import GlassCard from './audit/GlassCard'
 import type { ToolName, UseCase } from '@backend/lib/types'
 
 interface ToolCfg {
   id: ToolName
   label: string
-  initials: string
-  domain: string
 }
 
 const ALL_TOOLS: ToolCfg[] = [
-  { id: 'cursor', label: 'Cursor', initials: 'Cu', domain: 'cursor.com' },
-  { id: 'chatgpt', label: 'ChatGPT', initials: 'GP', domain: 'openai.com' },
-  { id: 'claude', label: 'Claude', initials: 'Cl', domain: 'anthropic.com' },
-  { id: 'gemini', label: 'Gemini', initials: 'Ge', domain: 'google.com' },
-  { id: 'github-copilot', label: 'Copilot', initials: 'CP', domain: 'github.com' },
-  { id: 'windsurf', label: 'Windsurf', initials: 'Ws', domain: 'codeium.com' },
-  { id: 'anthropic-api', label: 'Anthropic API', initials: 'An', domain: 'anthropic.com' },
-  { id: 'openai-api', label: 'OpenAI API', initials: 'OA', domain: 'openai.com' },
-  { id: 'figma', label: 'Figma', initials: 'Fg', domain: 'figma.com' },
-  { id: 'notion', label: 'Notion', initials: 'No', domain: 'notion.so' },
+  { id: 'cursor', label: 'Cursor' },
+  { id: 'chatgpt', label: 'ChatGPT' },
+  { id: 'claude', label: 'Claude' },
+  { id: 'gemini', label: 'Gemini' },
+  { id: 'github-copilot', label: 'Copilot' },
+  { id: 'windsurf', label: 'Windsurf' },
+  { id: 'anthropic-api', label: 'Anthropic API' },
+  { id: 'openai-api', label: 'OpenAI API' },
+  { id: 'figma', label: 'Figma' },
+  { id: 'notion', label: 'Notion' },
 ]
 
 interface PlanOption {
@@ -82,74 +75,13 @@ const TOOL_PLANS: Record<ToolName, PlanOption[]> = {
   ],
 }
 
-const USE_CASES: {
-  id: UseCase
-  label: string
-  renderIcon: () => React.ReactNode
-}[] = [
-    {
-      id: 'coding',
-      label: 'Coding',
-      renderIcon: () => (
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-          <rect x="8" y="12" width="48" height="32" rx="6" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="3" />
-          <path d="M20 44l-4 8h32l-4-8" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M24 52h16" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" />
-          <path d="M16 22l6 6-6 6" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="28" cy="28" r="2" fill="#3b82f6" />
-        </svg>
-      )
-    },
-    {
-      id: 'writing',
-      label: 'Writing',
-      renderIcon: () => (
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-          <path d="M16 48c8-4 12-8 16-16m-4-4l20-20a4.24 4.24 0 016 6L34 50l-12 4 4-12z" stroke="#ec4899" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M42 14l6 6" stroke="#ec4899" strokeWidth="3" />
-          <path d="M12 52c10 0 18-4 24-12" stroke="#f472b6" strokeWidth="2" strokeDasharray="3 3" />
-        </svg>
-      )
-    },
-    {
-      id: 'data',
-      label: 'Data',
-      renderIcon: () => (
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-          <rect x="12" y="32" width="8" height="20" rx="2" fill="#10b981" fillOpacity="0.8" />
-          <rect x="28" y="16" width="8" height="36" rx="2" fill="#ef4444" fillOpacity="0.8" />
-          <rect x="44" y="24" width="8" height="28" rx="2" fill="#3b82f6" fillOpacity="0.8" />
-          <path d="M8 52h48" stroke="#64748b" strokeWidth="3" strokeLinecap="round" />
-        </svg>
-      )
-    },
-    {
-      id: 'research',
-      label: 'Research',
-      renderIcon: () => (
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-          <circle cx="26" cy="26" r="16" stroke="#8b5cf6" strokeWidth="4" />
-          <path d="M38 38l16 16" stroke="#8b5cf6" strokeWidth="5" strokeLinecap="round" />
-          <path d="M20 20a8 8 0 018 0" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      )
-    },
-    {
-      id: 'mixed',
-      label: 'Mixed',
-      renderIcon: () => (
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-          <path d="M36 4L16 32h16v28l20-28H36V4z" fill="url(#bolt-grad)" stroke="#f59e0b" strokeWidth="2" strokeLinejoin="round" />
-          <defs>
-            <linearGradient id="bolt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#fbbf24" />
-              <stop offset="100%" stop-color="#d97706" />
-            </linearGradient>
-          </defs>
-        </svg>
-      )
-    }
-  ]
+const USE_CASES: { id: UseCase; label: string; description: string }[] = [
+  { id: 'coding', label: 'Engineering', description: 'Code, shipping, and dev workflows' },
+  { id: 'writing', label: 'Content', description: 'Marketing, copy, and comms' },
+  { id: 'data', label: 'Data', description: 'Analytics and BI' },
+  { id: 'research', label: 'Research', description: 'Discovery and synthesis' },
+  { id: 'mixed', label: 'Mixed', description: 'Cross-functional teams' },
+]
 
 interface SelectedTool {
   toolId: ToolName
@@ -158,61 +90,98 @@ interface SelectedTool {
   customSpend?: number
 }
 
-function Section({
+function scrollToStep(stepId: string) {
+  const el = document.getElementById(stepId)
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+function planSummary(toolId: ToolName, planId: string): string {
+  const plan = TOOL_PLANS[toolId].find((p) => p.id === planId) ?? TOOL_PLANS[toolId][0]
+  if (!plan) return ''
+  if (toolId === 'anthropic-api' || toolId === 'openai-api') return 'Pay-as-you-go'
+  const tier = plan.label.split(' · ')[0]
+  return `${tier}, $${plan.price}/seat`
+}
+
+function StepHeader({
   step,
   title,
   description,
-  children,
 }: {
   step: number
   title: string
   description: string
-  children: React.ReactNode
 }) {
   return (
-    <section className="ui-section p-5 sm:p-6">
-      <div className="mb-5">
-        <p className="ui-step-badge mb-1.5">Step {step} of 3</p>
-        <h2 className="ui-heading">{title}</h2>
-        <p className="ui-body mt-1">{description}</p>
-      </div>
-      {children}
-    </section>
+    <div className="mb-5">
+      <span className="inline-flex items-center gap-2 rounded-full bg-[#2F4156] px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white mb-3">
+        Step {step} of 3
+      </span>
+      <h3 className="text-[20px] sm:text-[22px] font-black text-[#1d2d3c] tracking-tight">{title}</h3>
+      <p className="mt-1.5 text-[14px] text-[#55697c] font-medium leading-relaxed">{description}</p>
+    </div>
+  )
+}
+
+function ContinueButton({
+  label,
+  onClick,
+}: {
+  label: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="hero-primary-btn mt-6 text-[14px] py-3 px-6 rounded-full"
+    >
+      {label}
+      <ArrowDown size={16} />
+    </button>
   )
 }
 
 export default function VisualBuilder() {
   const router = useRouter()
-
   const [teamSize, setTeamSize] = useState(8)
   const [useCase, setUseCase] = useState<UseCase>('coding')
-  const [selected, setSelected] = useState<SelectedTool[]>([
-    { toolId: 'cursor', plan: 'pro', seats: 4 },
-    { toolId: 'chatgpt', plan: 'business', seats: 4 },
-  ])
-  const [quickAdd, setQuickAdd] = useState('')
+  const [selected, setSelected] = useState<SelectedTool[]>([])
   const [loading, setLoading] = useState(false)
   const [submitErr, setSubmitErr] = useState<string | null>(null)
 
   const totalMonthly = selected.reduce((sum, s) => {
-    if (s.toolId === 'anthropic-api' || s.toolId === 'openai-api') {
-      return sum + (s.customSpend ?? 100)
-    }
     const plans = TOOL_PLANS[s.toolId]
-    const plan = plans.find((p) => p.id === s.plan) ?? plans[0]
-    return sum + (plan?.price ?? 0) * s.seats
+    if (!plans?.length) return sum
+    if (s.toolId === 'anthropic-api' || s.toolId === 'openai-api') {
+      return sum + (s.customSpend ?? 0)
+    }
+    const plan = plans.find((p) => p.id === s.plan)
+    if (!plan) return sum
+    return sum + plan.price * s.seats
   }, 0)
+
+  const estimatedSavings = useMemo(() => {
+    if (selected.length === 0) return 0
+    const overlapFactor = Math.min(0.35, (selected.length - 1) * 0.08)
+    return Math.round(totalMonthly * overlapFactor)
+  }, [selected.length, totalMonthly])
+
+  const savingsPct =
+    totalMonthly > 0 ? Math.min(90, Math.round((estimatedSavings / totalMonthly) * 100)) : 0
+
+  const overlapCount = selected.length >= 2 ? Math.min(3, selected.length - 1) : 0
 
   const addTool = (toolId: ToolName) => {
     if (selected.some((s) => s.toolId === toolId)) return
-    const defaultPlan = TOOL_PLANS[toolId][0]!.id
     setSelected((prev) => [
       ...prev,
       {
         toolId,
-        plan: defaultPlan,
-        seats: 1,
-        customSpend: toolId.includes('-api') ? 100 : undefined,
+        plan: TOOL_PLANS[toolId][0]!.id,
+        seats: Math.min(teamSize, 10),
+        customSpend: toolId.includes('-api') ? 0 : undefined,
       },
     ])
   }
@@ -241,14 +210,15 @@ export default function VisualBuilder() {
     )
   }
 
-  const filteredTools = ALL_TOOLS.filter((t) =>
-    t.label.toLowerCase().includes(quickAdd.toLowerCase()) ||
-    t.id.toLowerCase().includes(quickAdd.toLowerCase())
-  )
+  const showOverspendHint = (toolId: ToolName) =>
+    selected.length >= 2 &&
+    useCase === 'coding' &&
+    ['cursor', 'chatgpt', 'claude', 'github-copilot'].includes(toolId)
 
   const handleSubmit = async () => {
     if (selected.length === 0) {
-      setSubmitErr('Add at least one tool to continue.')
+      setSubmitErr('Add at least one tool to run your audit.')
+      scrollToStep('audit-step-3')
       return
     }
     setLoading(true)
@@ -257,7 +227,7 @@ export default function VisualBuilder() {
       const tools = selected.map((s) => {
         let monthlySpend = 0
         if (s.toolId === 'anthropic-api' || s.toolId === 'openai-api') {
-          monthlySpend = s.customSpend ?? 100
+          monthlySpend = s.customSpend ?? 0
         } else {
           const plans = TOOL_PLANS[s.toolId]
           const plan = plans.find((p) => p.id === s.plan) ?? plans[0]
@@ -281,351 +251,347 @@ export default function VisualBuilder() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Step 1: Team size */}
-      <Section
-        step={1}
-        title="Team size"
-        description="Used to benchmark plan tiers and seat counts against typical team profiles."
-      >
-        <div className="flex items-center justify-between gap-4 mb-5 bg-[#C8D9E6]/10 p-3.5 rounded-xl border border-[#C8D9E6]/30">
-          {/* Left: TEAM SIZE label */}
-          <div className="flex flex-col">
-            <span className="ui-label text-[12px] font-extrabold tracking-wider" style={{ color: '#2F4156' }}>Team Size</span>
-            <span className="text-[10px] text-[#567C8D]/80 font-medium">Organization capacity</span>
-          </div>
-
-          {/* Center: row of dynamic overlapping avatars */}
-          <div className="flex items-center gap-1.5">
-            <div className="flex -space-x-2.5 overflow-hidden py-0.5 px-1.5 bg-white/45 rounded-full border border-[#C8D9E6]/25">
-              {Array.from({ length: Math.min(Math.floor(teamSize / 10) + 1, 8) }).map((_, i) => (
-                <img
-                  key={i}
-                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-[#567C8D] object-cover shadow-sm transition-transform duration-300 hover:scale-110 hover:z-10 relative cursor-pointer"
-                  src={`https://api.dicebear.com/7.x/notionists/svg?seed=${i + 12}&backgroundColor=C8D9E6,F5EFEB,567C8D`}
-                  alt="Avatar"
-                />
-              ))}
-            </div>
-            {teamSize > 70 && (
-              <span className="text-[#567C8D] font-extrabold text-[14px] leading-none animate-pulse px-1" aria-hidden="true">
-                &gt;
-              </span>
-            )}
-          </div>
-
-          {/* Right: numeric size badge */}
-          <div className="px-3.5 py-1.5 rounded-lg bg-[#2F4156] text-[#ffffff] font-extrabold text-[13px] shadow-sm tabular-nums min-w-[3.5rem] text-center">
-            {teamSize}
-            {teamSize >= 100 ? '+' : ''}
-          </div>
-        </div>
-
-        <input
-          type="range"
-          min={1}
-          max={100}
-          value={teamSize}
-          onChange={(e) => setTeamSize(Number(e.target.value))}
-          style={{
-            background: `linear-gradient(to right, #567C8D 0%, #2F4156 ${((teamSize - 1) / (100 - 1)) * 100}%, #C8D9E6 ${((teamSize - 1) / (100 - 1)) * 100}%, #C8D9E6 100%)`
-          }}
-          className="ui-range w-full"
-          aria-label="Team size"
-        />
-        <div className="flex justify-between mt-2.5 text-[11px] font-bold text-secondary/85 tabular-nums">
-          <span>1</span>
-          <span>25</span>
-          <span>50</span>
-          <span>75</span>
-          <span>100+</span>
-        </div>
-      </Section>
-
-      {/* Step 2: Primary use case */}
-      <section className="ui-section p-5 sm:p-6">
-        <div className="flex items-center gap-3 mb-5">
-          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#2F4156] text-white text-sm font-bold shrink-0">
-            2
-          </span>
-          <h2 className="text-lg font-bold" style={{ color: '#2F4156' }}>
-            What does your team primarily use AI for?
+    <div
+      id="run-audit"
+      className="scroll-mt-28 -mx-6 sm:-mx-12 px-6 sm:px-12 py-14 sm:py-16 rounded-none sm:rounded-3xl"
+      style={{
+        background: 'linear-gradient(180deg, #e8f0f6 0%, #eef4f8 40%, #f5efeb 100%)',
+      }}
+    >
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-10 sm:mb-12 max-w-2xl mx-auto">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#567C8D] mb-2">
+            Step-by-step audit
+          </p>
+          <h2 className="text-[28px] sm:text-[32px] font-black text-[#1d2d3c] tracking-tight">
+            Build your AI stack
           </h2>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5">
-          {USE_CASES.map((uc) => {
-            const isSelected = useCase === uc.id
-            return (
-              <button
-                key={uc.id}
-                type="button"
-                onClick={() => setUseCase(uc.id)}
-                className={cn(
-                  'flex flex-col items-center text-center p-5 rounded-2xl border transition-all duration-200 relative group',
-                  isSelected
-                    ? 'border-[#2F4156] bg-gradient-to-br from-[#567C8D]/15 to-[#C8D9E6]/25 shadow-md scale-[1.02]'
-                    : 'border-[#C8D9E6] bg-white hover:border-[#567C8D]/85 hover:bg-[#C8D9E6]/10'
-                )}
-              >
-                <span className="flex h-16 w-16 items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
-                  {uc.renderIcon()}
-                </span>
-                <span className={cn(
-                  'text-sm font-bold tracking-tight transition-colors',
-                  isSelected ? 'text-[#2F4156]' : 'text-[#567C8D]'
-                )}>
-                  {uc.label}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* Step 3: Build your AI stack */}
-      <section className="ui-section p-5 sm:p-6">
-        <div className="flex flex-col gap-1.5 mb-5">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#2F4156] text-white text-sm font-bold shrink-0">
-              3
-            </span>
-            <h2 className="text-lg font-bold" style={{ color: '#2F4156' }}>Build your AI stack</h2>
-          </div>
-          <div className="flex items-center justify-between mt-2.5">
-            <span className="text-sm font-semibold text-[#567C8D]">
-              {selected.length} tool{selected.length === 1 ? '' : 's'} added · ${totalMonthly}/mo total
-            </span>
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#2F4156] bg-[#C8D9E6]/30 border border-[#C8D9E6]">
-              Select plan & seats per tool
-            </span>
-          </div>
+          <p className="mt-2 text-[15px] text-[#55697c] font-medium">
+            Complete each step below. When you finish one, continue — the page scrolls to the
+            next step (nothing is hidden).
+          </p>
         </div>
 
-        {/* Search Input */}
-        <div className="relative mb-5">
-          <Search
-            size={16}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#567C8D]/60 pointer-events-none"
-          />
-          <input
-            value={quickAdd}
-            onChange={(e) => setQuickAdd(e.target.value)}
-            placeholder="Search tools to add to stack…"
-            className="w-full h-11 pl-10 pr-4 text-sm rounded-xl border border-[#C8D9E6] outline-none focus:border-[#2F4156] focus:ring-2 focus:ring-[#567C8D]/20 transition-all bg-white text-[#2F4156] placeholder-[#567C8D]/60"
-            aria-label="Search tools"
-          />
-        </div>
-
-        {/* Selection grid of all tools */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 mb-8">
-          {filteredTools.map((tool) => {
-            const sel = selected.find((s) => s.toolId === tool.id)
-            const isSelected = !!sel
-            return (
-              <button
-                key={tool.id}
-                type="button"
-                onClick={() => {
-                  if (isSelected) {
-                    removeTool(tool.id)
-                  } else {
-                    addTool(tool.id)
-                  }
-                }}
-                className={cn(
-                  'flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all duration-200 group relative',
-                  isSelected
-                    ? 'border-[#2F4156] bg-gradient-to-br from-[#567C8D]/15 to-[#C8D9E6]/25 shadow-md scale-[1.02]'
-                    : 'border-[#C8D9E6] bg-white hover:border-[#567C8D]/60 hover:bg-[#C8D9E6]/10'
-                )}
-              >
-                <div className="w-10 h-10 rounded-xl overflow-hidden mb-2.5 transition-transform duration-300 group-hover:scale-105 shadow-sm bg-white flex items-center justify-center">
-                  <ToolIcon tool={tool.id} size="sm" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-start">
+          {/* Left — all steps stacked */}
+          <div className="lg:col-span-7 flex flex-col gap-20 sm:gap-24 pb-8">
+            {/* Step 1 */}
+            <article id="audit-step-1" className="scroll-mt-28">
+              <StepHeader
+                step={1}
+                title="Team size"
+                description="How many people on your team use AI tools? We use this to benchmark plans and seats."
+              />
+              <GlassCard className="p-5 sm:p-6">
+                <div className="flex items-center justify-between gap-4 mb-5">
+                  <span className="text-[15px] font-bold text-[#1d2d3c]">Team Size</span>
+                  <span className="inline-flex rounded-full bg-[#2F4156] px-3.5 py-1 text-[13px] font-bold text-white tabular-nums">
+                    {teamSize}
+                    {teamSize >= 500 ? '+' : ''} seats
+                  </span>
                 </div>
-                <span className={cn(
-                  'text-xs font-bold truncate max-w-full px-1',
-                  isSelected ? 'text-[#2F4156]' : 'text-[#567C8D]'
-                )}>
-                  {tool.label}
-                </span>
-                {isSelected ? (
-                  <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-[#2F4156] flex items-center justify-center text-white">
-                    <Check size={10} strokeWidth={3} />
-                  </div>
-                ) : (
-                  <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Plus size={10} strokeWidth={3} />
-                  </div>
-                )}
-              </button>
-            )
-          })}
-          {filteredTools.length === 0 && (
-            <div className="col-span-full py-8 text-center text-sm text-gray-400">
-              No tools found matching &quot;{quickAdd}&quot;
-            </div>
-          )}
-        </div>
+                <input
+                  type="range"
+                  min={1}
+                  max={500}
+                  value={teamSize}
+                  onChange={(e) => setTeamSize(Number(e.target.value))}
+                  className="ui-range w-full"
+                  aria-label="Team size"
+                />
+                <div className="flex justify-between mt-2.5 text-[11px] font-medium text-[#697d90]">
+                  <span>1 seat</span>
+                  <span>500+ seats</span>
+                </div>
+              </GlassCard>
+              <ContinueButton
+                label="Continue to use case"
+                onClick={() => scrollToStep('audit-step-2')}
+              />
+            </article>
 
-        {/* Configuration cards of selected tools */}
-        {selected.length > 0 && (
-          <div className="flex flex-col gap-4 border-t border-gray-100 pt-6">
-            {selected.map((item) => {
-              const cfg = ALL_TOOLS.find((t) => t.id === item.toolId)!
-              const plans = TOOL_PLANS[item.toolId]
-              const currentPlan = plans.find((p) => p.id === item.plan) ?? plans[0]!
-              const isApi = item.toolId === 'anthropic-api' || item.toolId === 'openai-api'
-              const itemPrice = isApi
-                ? (item.customSpend ?? 100)
-                : (currentPlan?.price ?? 0) * item.seats
+            {/* Step 2 */}
+            <article id="audit-step-2" className="scroll-mt-28">
+              <StepHeader
+                step={2}
+                title="Primary use case"
+                description="What does your team mainly use AI for? This shapes overlap and savings checks."
+              />
+              <GlassCard className="p-5 sm:p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {USE_CASES.map((uc) => (
+                    <button
+                      key={uc.id}
+                      type="button"
+                      onClick={() => setUseCase(uc.id)}
+                      className={cn(
+                        'text-left p-4 rounded-xl border transition-all',
+                        useCase === uc.id
+                          ? 'border-[#2F4156] bg-[#e8f0f6] ring-1 ring-[#2F4156]'
+                          : 'border-[#C8D9E6] bg-white/60 hover:border-[#567C8D]'
+                      )}
+                    >
+                      <span className="block text-[14px] font-bold text-[#1d2d3c]">{uc.label}</span>
+                      <span className="block text-[12px] text-[#55697c] font-medium mt-0.5">
+                        {uc.description}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </GlassCard>
+              <ContinueButton
+                label="Continue to your stack"
+                onClick={() => scrollToStep('audit-step-3')}
+              />
+            </article>
 
-              return (
-                <div
-                  key={item.toolId}
-                  className="bg-gradient-to-br from-white to-[#C8D9E6]/10 border border-[#C8D9E6] rounded-2xl p-5 shadow-sm hover:border-[#567C8D]/50 transition-colors flex flex-col gap-4 relative text-left"
-                >
-                  {/* Card Header */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3.5">
-                      <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-sm bg-white flex items-center justify-center border border-[#C8D9E6]/40">
-                        <ToolIcon tool={item.toolId} size="md" />
-                      </div>
+            {/* Step 3 */}
+            <article id="audit-step-3" className="scroll-mt-28">
+              <StepHeader
+                step={3}
+                title="Your AI stack"
+                description="Select every tool you pay for, then set plan and seats on each card below the grid."
+              />
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
+                {ALL_TOOLS.map((tool) => {
+                  const isSelected = selected.some((s) => s.toolId === tool.id)
+                  const sel = selected.find((s) => s.toolId === tool.id)
+                  return (
+                    <button
+                      key={tool.id}
+                      type="button"
+                      onClick={() => (isSelected ? removeTool(tool.id) : addTool(tool.id))}
+                      className={cn(
+                        'relative text-left rounded-2xl border p-4 flex flex-col gap-3 min-h-[118px] transition-all',
+                        isSelected
+                          ? 'border-[#2F4156] bg-white/90 premium-stack-shadow'
+                          : 'border-white/70 bg-white/75 backdrop-blur-md premium-stack-shadow hover:border-[#567C8D]'
+                      )}
+                    >
+                      {isSelected && showOverspendHint(tool.id) && (
+                        <span className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-wide text-[#697d90] bg-[#e8eff5] px-1.5 py-0.5 rounded-md">
+                          Overspend
+                        </span>
+                      )}
+                      <ToolBadge tool={tool.id} size={36} />
                       <div>
-                        <h3 className="text-base font-bold text-[#2F4156]">{cfg.label}</h3>
-                        <p className="text-xs text-[#567C8D] font-medium mt-0.5">
-                          {isApi ? 'API Usage' : `${currentPlan.label.split(' · ')[0]} · ${item.seats} seat${item.seats === 1 ? '' : 's'}`}
-                        </p>
+                        <p className="text-[14px] font-bold text-[#1d2d3c]">{tool.label}</p>
+                        {sel && (
+                          <p className="text-[11px] font-medium text-[#55697c] mt-0.5">
+                            {planSummary(sel.toolId, sel.plan)}
+                          </p>
+                        )}
                       </div>
-                    </div>
+                      {isSelected && (
+                        <span className="absolute bottom-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-[#2F4156] text-white">
+                          <Check size={11} strokeWidth={3} />
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
 
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <span className="text-lg font-extrabold text-[#2F4156]">${itemPrice}</span>
-                        <span className="text-xs text-[#567C8D]/70 font-medium ml-1">/month</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeTool(item.toolId)}
-                        className="w-8 h-8 rounded-lg bg-[#C8D9E6]/20 hover:bg-red-50 border border-[#C8D9E6] flex items-center justify-center text-[#567C8D] hover:text-red-600 transition-colors"
-                        aria-label={`Remove ${cfg.label}`}
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  </div>
+              {selected.length > 0 ? (
+                <div className="flex flex-col gap-3">
+                  <p className="text-[12px] font-bold uppercase tracking-wider text-[#567C8D]">
+                    Plans &amp; seats
+                  </p>
+                  {selected.map((item) => {
+                    const cfg = ALL_TOOLS.find((t) => t.id === item.toolId)!
+                    const plans = TOOL_PLANS[item.toolId]
+                    const isApi =
+                      item.toolId === 'anthropic-api' || item.toolId === 'openai-api'
+                    const currentPlan = plans.find((p) => p.id === item.plan) ?? plans[0]!
+                    const itemPrice = isApi
+                      ? (item.customSpend ?? 0)
+                      : (currentPlan?.price ?? 0) * item.seats
 
-                  {/* PLAN Row */}
-                  <div className="border-t border-[#C8D9E6]/40 pt-4 flex flex-col gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#567C8D]/80">PLAN</span>
-                    <div className="flex flex-wrap gap-2">
-                      {plans.map((p) => {
-                        const isActive = item.plan === p.id
-                        return (
-                          <button
-                            key={p.id}
-                            type="button"
-                            onClick={() => changePlan(item.toolId, p.id)}
-                            className={cn(
-                              'px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all',
-                              isActive
-                                ? 'bg-[#2F4156] text-white shadow-sm'
-                                : 'bg-[#C8D9E6]/30 hover:bg-[#C8D9E6]/60 text-[#2F4156] border border-[#C8D9E6]'
-                            )}
-                          >
-                            {p.label}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Seats or Custom Spend Row */}
-                  <div className="flex items-center justify-between border-t border-[#C8D9E6]/40 pt-4">
-                    {isApi ? (
-                      <>
-                        <span className="text-xs font-semibold text-[#2F4156]">Estimated monthly API spend</span>
-                        <div className="flex items-center h-9 border border-[#C8D9E6] rounded-xl bg-[#C8D9E6]/15 px-3">
-                          <span className="text-xs text-[#567C8D]/80 font-semibold mr-1.5">$</span>
-                          <input
-                            type="number"
-                            value={item.customSpend ?? 100}
-                            onChange={(e) => changeCustomSpend(item.toolId, Number(e.target.value))}
-                            className="w-20 bg-transparent border-0 outline-none text-sm text-[#2F4156] text-right font-bold tabular-nums"
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-xs font-semibold text-[#2F4156]">Seats</span>
-                        <div className="flex items-center gap-2.5">
+                    return (
+                      <GlassCard key={item.toolId} className="p-4">
+                        <div className="flex items-center justify-between gap-3 mb-3">
+                          <div className="flex items-center gap-2.5">
+                            <ToolBadge tool={item.toolId} size={32} />
+                            <div>
+                              <p className="text-[14px] font-bold text-[#1d2d3c]">{cfg.label}</p>
+                              <p className="text-[11px] font-medium text-[#55697c]">
+                                ${itemPrice}/mo
+                              </p>
+                            </div>
+                          </div>
                           <button
                             type="button"
-                            className="w-8 h-8 rounded-lg bg-[#C8D9E6]/20 hover:bg-[#C8D9E6]/50 border border-[#C8D9E6] flex items-center justify-center text-[#2F4156] font-bold transition-all disabled:opacity-40"
-                            onClick={() => adjustSeats(item.toolId, -1)}
-                            disabled={item.seats <= 1}
+                            onClick={() => removeTool(item.toolId)}
+                            className="h-8 w-8 rounded-lg border border-[#C8D9E6] flex items-center justify-center text-[#697d90] hover:text-red-600"
+                            aria-label={`Remove ${cfg.label}`}
                           >
-                            <Minus size={14} />
-                          </button>
-                          <span className="w-8 text-center text-sm font-extrabold text-[#2F4156] tabular-nums">
-                            {item.seats}
-                          </span>
-                          <button
-                            type="button"
-                            className="w-8 h-8 rounded-lg bg-[#C8D9E6]/20 hover:bg-[#C8D9E6]/50 border border-[#C8D9E6] flex items-center justify-center text-[#2F4156] font-bold transition-all"
-                            onClick={() => adjustSeats(item.toolId, 1)}
-                          >
-                            <Plus size={14} />
+                            <X size={15} />
                           </button>
                         </div>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Monthly Spend Row */}
-                  <div className="flex items-center justify-between border-t border-[#C8D9E6]/40 pt-4">
-                    <span className="text-xs font-semibold text-[#2F4156]">Monthly spend</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-[#C8D9E6]/25 border border-[#C8D9E6] rounded-lg text-sm text-[#2F4156] font-bold w-24 justify-end">
-                      <span>$ {itemPrice}</span>
-                    </div>
-                  </div>
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {plans.map((p) => (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onClick={() => changePlan(item.toolId, p.id)}
+                              className={cn(
+                                'px-2.5 py-1 rounded-full text-[10px] font-semibold',
+                                item.plan === p.id
+                                  ? 'bg-[#2F4156] text-white'
+                                  : 'bg-[#e8f0f6] text-[#446577]'
+                              )}
+                            >
+                              {p.label}
+                            </button>
+                          ))}
+                        </div>
+                        {!isApi ? (
+                          <div className="flex items-center justify-between">
+                            <span className="text-[12px] font-semibold text-[#55697c]">Seats</span>
+                            <div className="inline-flex items-center rounded-lg border border-[#C8D9E6] bg-white/60">
+                              <button
+                                type="button"
+                                className="h-8 w-8 flex items-center justify-center"
+                                onClick={() => adjustSeats(item.toolId, -1)}
+                                disabled={item.seats <= 1}
+                              >
+                                <Minus size={14} />
+                              </button>
+                              <span className="w-8 text-center text-[13px] font-bold tabular-nums">
+                                {item.seats}
+                              </span>
+                              <button
+                                type="button"
+                                className="h-8 w-8 flex items-center justify-center"
+                                onClick={() => adjustSeats(item.toolId, 1)}
+                              >
+                                <Plus size={14} />
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-between">
+                            <span className="text-[12px] font-semibold text-[#55697c]">
+                              Monthly API spend
+                            </span>
+                            <div className="flex items-center h-8 rounded-lg border border-[#C8D9E6] bg-white/60 px-2">
+                              <span className="text-[12px] text-[#697d90]">$</span>
+                              <input
+                                type="number"
+                                value={item.customSpend ?? 0}
+                                onChange={(e) =>
+                                  changeCustomSpend(item.toolId, Number(e.target.value))
+                                }
+                                className="w-16 bg-transparent outline-none text-[13px] font-bold text-right tabular-nums"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </GlassCard>
+                    )
+                  })}
                 </div>
-              )
-            })}
+              ) : (
+                <GlassCard className="p-6 border-dashed border-[#C8D9E6] bg-white/40 text-center">
+                  <p className="text-[14px] font-medium text-[#55697c]">
+                    Select at least one tool above to configure plans and seats.
+                  </p>
+                </GlassCard>
+              )}
+
+
+            </article>
+
+            <article id="audit-step-submit" className="scroll-mt-28 lg:hidden">
+              <GlassCard className="p-6">
+                {submitErr && (
+                  <p role="alert" className="text-[12px] text-red-600 mb-3">
+                    {submitErr}
+                  </p>
+                )}
+                <SubmitProgress active={loading} />
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={handleSubmit}
+                  className="hero-primary-btn w-full justify-center py-3.5 rounded-xl text-[14px] font-bold mt-3"
+                >
+                  {loading ? 'Running audit…' : 'Run audit — it\'s free'}
+                  <ArrowRight size={16} />
+                </button>
+              </GlassCard>
+            </article>
           </div>
-        )}
-      </section>
 
-      {/* Audit Summary & Action Footer */}
-      <div className="ui-section p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-[#567C8D] bg-gradient-to-r from-white to-[#C8D9E6]/10">
-        <div>
-          <p className="ui-label">Estimated monthly spend</p>
-          <p className="mt-1 text-[28px] font-extrabold text-[#2F4156] tracking-tight tabular-nums">
-            ${totalMonthly.toLocaleString()}
-            <span className="text-[14px] font-bold text-[#567C8D] ml-1">/mo</span>
-          </p>
-          <p className="text-[12px] text-[#567C8D] mt-0.5">
-            {selected.length} tool{selected.length === 1 ? '' : 's'} configured
-          </p>
-        </div>
-
-        <div className="w-full sm:w-[220px] flex flex-col gap-2">
-          {submitErr && (
-            <p
-              role="alert"
-              className="text-[12px] text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2"
-            >
-              {submitErr}
-            </p>
-          )}
-          <SubmitProgress active={loading} />
-          <button
-            type="button"
-            disabled={loading}
-            onClick={handleSubmit}
-            className="ui-btn-primary w-full h-10 hover:scale-[1.02] shadow-md transition-transform duration-200"
-          >
-            {loading ? 'Running audit…' : 'Run audit'}
-          </button>
+          {/* Right — live summary (sticky) */}
+          <aside className="lg:col-span-5 lg:sticky lg:top-28">
+            <GlassCard className="overflow-hidden flex flex-col p-0">
+              <div className="bg-[#2F4156] px-6 py-5">
+                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#C8D9E6]/90">
+                  Total monthly spend
+                </p>
+                <p className="mt-1 text-[34px] font-black text-white tracking-tight tabular-nums leading-none">
+                  ${selected.length === 0 ? '0' : totalMonthly.toLocaleString()}
+                  <span className="text-[15px] font-semibold text-[#C8D9E6]/80"> /mo</span>
+                </p>
+              </div>
+              <div className="p-6 flex flex-col">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[13px] font-semibold text-[#55697c]">
+                    Est. potential savings
+                  </span>
+                  <span className="text-[20px] font-black text-[#2F4156] tabular-nums">
+                    ${estimatedSavings.toLocaleString()}
+                  </span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-[#C8D9E6]/60 overflow-hidden mb-5">
+                  <div
+                    className="h-full rounded-full bg-[#567C8D] transition-all duration-300"
+                    style={{ width: `${savingsPct}%` }}
+                  />
+                </div>
+                <ul className="space-y-2.5 mb-6">
+                  {overlapCount > 0 && (
+                    <li className="flex items-center gap-2.5 text-[13px] font-medium text-[#1d2d3c]">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e8f0f6] text-[#567C8D]">
+                        <Layers size={14} />
+                      </span>
+                      {overlapCount} overlap{overlapCount === 1 ? '' : 's'} may apply
+                    </li>
+                  )}
+                  {teamSize >= 20 && (
+                    <li className="flex items-center gap-2.5 text-[13px] font-medium text-[#1d2d3c]">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e8f0f6] text-[#567C8D]">
+                        <CircleDollarSign size={14} />
+                      </span>
+                      Volume discount may apply
+                    </li>
+                  )}
+                  <li className="text-[12px] text-[#697d90] font-medium">
+                    {selected.length} tool{selected.length === 1 ? '' : 's'} · {USE_CASES.find((u) => u.id === useCase)?.label} · {teamSize} seats
+                  </li>
+                </ul>
+                {submitErr && (
+                  <p role="alert" className="text-[12px] text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
+                    {submitErr}
+                  </p>
+                )}
+                <SubmitProgress active={loading} />
+                <button
+                  type="button"
+                  disabled={loading || selected.length === 0}
+                  onClick={handleSubmit}
+                  className="hero-primary-btn w-full justify-center py-3.5 rounded-xl text-[14px] font-bold mt-2 disabled:opacity-50"
+                >
+                  {loading ? 'Running audit…' : 'Run audit — it\'s free'}
+                  <ArrowRight size={16} strokeWidth={2.5} />
+                </button>
+                <p className="mt-4 text-center text-[11px] font-medium text-[#697d90]">
+                  No credit card required
+                </p>
+              </div>
+            </GlassCard>
+          </aside>
         </div>
       </div>
     </div>

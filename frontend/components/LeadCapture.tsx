@@ -76,8 +76,8 @@ export default function LeadCapture({
   }
 
   return (
-    <section className="ui-section p-5 sm:p-6" aria-labelledby="lead-heading">
-      <h2 id="lead-heading" className="ui-heading">
+    <section className="ui-section p-5 sm:p-6 border-2 border-[#2F4156]" aria-labelledby="lead-heading">
+      <h2 id="lead-heading" className="ui-heading" style={{ color: '#2F4156' }}>
         {isOptimal ? 'Pricing alerts' : 'Email this audit'}
       </h2>
       <p className="ui-body mt-1 mb-5">
@@ -97,7 +97,7 @@ export default function LeadCapture({
         />
 
         <div>
-          <label htmlFor="lead-email" className="ui-label block mb-1.5">
+          <label htmlFor="lead-email" className="ui-label block mb-1.5" style={{ color: '#2F4156' }}>
             Email
           </label>
           <input
@@ -117,7 +117,7 @@ export default function LeadCapture({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="lead-company" className="ui-label block mb-1.5">
+            <label htmlFor="lead-company" className="ui-label block mb-1.5" style={{ color: '#2F4156' }}>
               Company
             </label>
             <input
@@ -128,7 +128,7 @@ export default function LeadCapture({
             />
           </div>
           <div>
-            <label htmlFor="lead-role" className="ui-label block mb-1.5">
+            <label htmlFor="lead-role" className="ui-label block mb-1.5" style={{ color: '#2F4156' }}>
               Role
             </label>
             <input
@@ -141,7 +141,7 @@ export default function LeadCapture({
         </div>
 
         <div>
-          <label htmlFor="lead-team-size" className="ui-label block mb-1.5">
+          <label htmlFor="lead-team-size" className="ui-label block mb-1.5" style={{ color: '#2F4156' }}>
             Team size
           </label>
           <input

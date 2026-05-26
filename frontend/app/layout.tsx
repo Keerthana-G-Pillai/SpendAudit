@@ -1,10 +1,11 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Roboto_Mono } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import { cn } from '@/lib/utils'
 
-const fontSans = Roboto_Mono({
+const fontSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
+  weight: ['500', '600', '700', '800'],
   variable: '--font-sans',
   display: 'swap',
 })
@@ -21,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={cn(fontSans.variable, 'font-sans')}>
-      <body>{children}</body>
+      <body className={cn(fontSans.className, 'antialiased')}>{children}</body>
     </html>
   )
 }

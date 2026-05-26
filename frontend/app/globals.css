@@ -157,6 +157,32 @@
   }
 
   .ui-divider { border-top: 1px solid #C8D9E6; }
+
+  /* ── Hero: creme vignette + premium stack ── */
+  .hero-creme-vignette {
+    background: radial-gradient(circle at 90% 50%, #f6ede2 0%, #eef5fa 45%, #e3edf5 100%);
+  }
+
+  .premium-stack-shadow {
+    box-shadow:
+      0 2px 4px rgba(148, 163, 184, 0.05),
+      0 16px 36px -4px rgba(62, 84, 104, 0.14);
+  }
+
+  .premium-border {
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-bottom-color: rgba(62, 84, 104, 0.08);
+    border-right-color: rgba(62, 84, 104, 0.08);
+  }
+
+  .hero-primary-btn {
+    @apply inline-flex items-center gap-1.5 font-bold text-white transition-all;
+    background-color: #446577;
+    box-shadow: 0 10px 15px -3px rgba(148, 163, 184, 0.2);
+  }
+  .hero-primary-btn:hover {
+    background-color: #354f5e;
+  }
 }
 
 /* ── Range slider — filled gradient track, white circular thumb ── */

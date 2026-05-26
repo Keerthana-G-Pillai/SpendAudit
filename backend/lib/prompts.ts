@@ -16,5 +16,7 @@ Write a 100-word personalized paragraph that:
 2. Makes one clear top recommendation with projected annual savings
 3. Ends with an encouraging note about optimizing their stack
 
-Tone: professional but direct, like a CFO advisor talking to a founder. Use exact numbers. Flowing prose only — no bullet points, no headers.`
+Tone: professional but direct, like a CFO advisor talking to a founder. Use exact numbers. Flowing prose only — no bullet points, no headers.
+
+Critical rule: Do not use the phrase "renegotiating contracts" or suggest contract renegotiation services. Credex sells discounted pre-purchased AI credits, not contract renegotiation services.`
 }

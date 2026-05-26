@@ -63,7 +63,7 @@ export default function CopyResultsButton({ auditResult }: Props) {
         </>
       ) : (
         <>
-          <span>Copy for Slack / email</span>
+rp          <span>Copy for Slack / email</span>
         </>
       )}
     </button>

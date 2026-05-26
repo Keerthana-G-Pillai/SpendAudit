@@ -23,7 +23,7 @@ export default function AuditResults({ data }: Props) {
   const isOptimal = auditResult.totalMonthlySavings === 0
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-between">
+    <div className="min-h-screen hero-creme-vignette flex flex-col justify-between">
       <div>
         {/* ════════════════════════ FLOATING NAVBAR ════════════════════════ */}
         <nav className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 pointer-events-none">
@@ -59,7 +59,7 @@ export default function AuditResults({ data }: Props) {
 
             {/* CTA */}
             <a
-              href="/#audit"
+              href="/#audit-step-1"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold transition-transform hover:scale-105 shadow-md"
               style={{ backgroundColor: '#567C8D', color: '#ffffff' }}
             >
@@ -72,9 +72,19 @@ export default function AuditResults({ data }: Props) {
         {/* ════════════════════════ MAIN CONTENT ════════════════════════ */}
         <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 pt-28 pb-12 space-y-5">
           
+          {/* Page Header */}
+          <header className="py-8 sm:py-10 border-l-[8px] pl-6 mb-6 flex flex-col justify-center" style={{ borderColor: '#2F4156' }}>
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight" style={{ color: '#2F4156' }}>
+              AI Spend Audit Report
+            </h1>
+            <p className="mt-3 text-[14px] sm:text-[15px] font-medium max-w-3xl leading-relaxed" style={{ color: '#567C8D' }}>
+              This page contains the customized audit results for your AI tools. Below you will find your potential monthly and annual savings, a personalized AI summary analysis, and a breakdown of optimization recommendations for each tool in your stack.
+            </p>
+          </header>
+
           {/* Summary Card */}
-          <section className="ui-section p-6 sm:p-8 bg-gradient-to-br from-white to-[#C8D9E6]/20 border border-[#C8D9E6] shadow-sm">
-            <p className="ui-label mb-3" style={{ color: '#567C8D' }}>Summary</p>
+          <section className="ui-section p-6 sm:p-8 bg-gradient-to-br from-white to-[#C8D9E6]/20 border-2 border-[#2F4156] shadow-sm">
+            <p className="ui-label mb-3" style={{ color: '#2F4156' }}>Summary</p>
             {isOptimal ? (
               <>
                 <h1 className="text-[22px] font-bold tracking-[-0.02em]" style={{ color: '#2F4156' }}>
@@ -86,7 +96,7 @@ export default function AuditResults({ data }: Props) {
               </>
             ) : (
               <>
-                <p className="text-[13px] font-bold mb-1" style={{ color: '#567C8D' }}>Potential monthly savings</p>
+                <p className="text-[13px] font-bold mb-1" style={{ color: '#2F4156' }}>Potential monthly savings</p>
                 <p className="text-[36px] sm:text-[40px] font-extrabold tracking-tight tabular-nums leading-none" style={{ color: '#2F4156' }}>
                   <AnimatedCounter
                     target={auditResult.totalMonthlySavings}
@@ -94,7 +104,7 @@ export default function AuditResults({ data }: Props) {
                     duration={1200}
                   />
                 </p>
-                <p className="text-[14px] font-semibold mt-2 tabular-nums" style={{ color: '#567C8D' }}>
+                <p className="text-[14px] font-semibold mt-2 tabular-nums" style={{ color: '#2F4156' }}>
                   <AnimatedCounter
                     target={auditResult.totalAnnualSavings}
                     prefix="$"
@@ -128,8 +138,8 @@ export default function AuditResults({ data }: Props) {
           )}
 
           {/* AI Analysis Section */}
-          <section className="ui-section p-5 sm:p-6 bg-gradient-to-br from-white to-[#C8D9E6]/20 border border-[#C8D9E6] shadow-sm hover:border-[#567C8D]/40 transition-colors">
-            <h2 className="ui-label mb-3" style={{ color: '#567C8D' }}>Analysis</h2>
+          <section className="ui-section p-5 sm:p-6 bg-gradient-to-br from-white to-[#C8D9E6]/20 border-2 border-[#2F4156] shadow-sm hover:border-[#2F4156]/80 transition-colors">
+            <h2 className="ui-label mb-3" style={{ color: '#2F4156' }}>Analysis</h2>
             <p className="text-[14px] font-medium leading-relaxed" style={{ color: '#2F4156' }}>{aiSummary}</p>
           </section>
 
@@ -207,7 +217,7 @@ export default function AuditResults({ data }: Props) {
       {/* ════════════════════════ FOOTER ════════════════════════ */}
       <footer
         className="w-full border-t mt-16"
-        style={{ borderColor: '#C8D9E6', backgroundColor: '#F5EFEB' }}
+        style={{ borderColor: '#C8D9E6' }}
       >
         <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 py-10">
           <p className="mt-10 text-center text-[11px]" style={{ color: '#567C8D' }}>
