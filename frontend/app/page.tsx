@@ -29,7 +29,7 @@ export default function Home() {
         style={{ borderColor: '#C8D9E6', backgroundColor: '#F5EFEB' }}
       >
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-12 py-10">
-          <p className="text-center text-[11px]" style={{ color: '#567C8D' }}>
+          <p className="text-center text-[11px]" style={{ color: '#3E5C6B' }}>
             Email is only requested after you view your results. · Credex © 2025
           </p>
         </div>
