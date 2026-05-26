@@ -1,5 +1,7 @@
 import Link from 'next/link'
-import FloatingHeroBadges from './FloatingHeroBadges'
+import dynamic from 'next/dynamic'
+
+const FloatingHeroBadges = dynamic(() => import('./FloatingHeroBadges'), { ssr: false })
 
 const STATS = [
   { value: '$480', label: 'avg. savings / mo' },

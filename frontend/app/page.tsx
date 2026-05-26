@@ -1,7 +1,11 @@
-import VisualBuilder from '@/components/VisualBuilder'
+import dynamic from 'next/dynamic'
 import GlassNavbar from '@/components/GlassNavbar'
 import HeroSection from '@/components/HeroSection'
 import type { Metadata } from 'next'
+
+const VisualBuilder = dynamic(() => import('@/components/VisualBuilder'), {
+  ssr: true, // Render HTML for SEO, but split JS bundle
+})
 
 export const metadata: Metadata = {
   title: 'AI Spend Audit — Credex',
