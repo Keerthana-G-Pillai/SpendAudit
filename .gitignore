@@ -14,9 +14,9 @@ node_modules/
 .env.production.local
 
 # Next.js build output
-frontend/.next/
-frontend/out/
-frontend/build/
+.next/
+out/
+build/
 
 # misc
 .DS_Store
@@ -30,4 +30,4 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-frontend/next-env.d.ts
+next-env.d.ts
