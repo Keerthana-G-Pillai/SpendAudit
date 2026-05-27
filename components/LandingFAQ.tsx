@@ -1,23 +1,23 @@
 const FAQS = [
   {
     q: 'Is this actually free?',
-    a: 'Yes. No credit card or account. We only ask for an optional email after you see results.',
+    a: 'Yes. No credit card or account. We only ask for an optional email after you see your results.',
   },
   {
     q: 'Do you connect to my tools or store my data?',
-    a: 'No. You manually enter your tool stack. We do not connect to your APIs, we do not require account access, and we do not store your data beyond the shareable audit link.',
+    a: 'No. As one early stage founder told us, "if it threw technical terms or asked to connect to my data I would assume it steals my data." You manually enter your stack. We do not connect to your APIs, we do not require account access, and we do not store your data beyond the shareable audit link.',
   },
   {
     q: 'How accurate are the estimates?',
-    a: 'Every recommendation is backed by exact math using official vendor pricing. You can expand the "Why?" toggle on any recommendation to see the exact calculation behind it.',
+    a: 'Every recommendation is backed by exact math using official vendor pricing. We heard loud and clear from founders: "I would trust if the calculations are transparent and genuinely backed by data." You can expand the "Why?" toggle on any recommendation to see the exact calculation behind it.',
   },
   {
     q: 'Why should I use this instead of doing a manual audit?',
-    a: 'Manual audits often turn into hour-long meetings. This tool takes 2 minutes and generates a shareable link that gives you instant, defensible numbers to take to your team.',
+    a: 'Because manual audits often turn into hour-long meetings. As one engineering manager told us, they regularly audit their stack but it wastes an entire hour of meeting time. This tool takes 2 minutes and generates a shareable link that gives you instant, defensible numbers to take to your team.',
   },
   {
-    q: 'Which tools are covered?',
-    a: 'Cursor, Copilot, Claude, ChatGPT, Anthropic API, OpenAI API, Gemini, Windsurf, Figma, and Notion.',
+    q: 'My team keeps adding tools because of LinkedIn posts with rocket emojis. Can this help?',
+    a: 'Yes! We frequently hear that subscriptions grow faster than headcount because of hype and "rocket emoji" posts. SpendAudit specifically identifies overlapping tools (like paying for both ChatGPT and Claude) so you can cut the redundancy without losing functionality.',
   },
 ]
 

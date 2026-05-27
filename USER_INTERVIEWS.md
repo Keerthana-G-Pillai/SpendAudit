@@ -1,11 +1,11 @@
 ## Interview 1
-**Name/initials:** Pranav
+**Name/initials:** Alex
 **Role:** CEO
 **Company stage:** Early stage startup
 **Date:** 2026-05-25
 
 **Notes:**
-Interview with Pranav was honestly one of the most eye-opening conversations I had while building this. He runs a small startup and is the one paying the bills but has almost no visibility into what
+Interview with Alex was honestly one of the most eye-opening conversations I had while building this. He runs a small startup and is the one paying the bills but has almost no visibility into what
 his team is actually subscribing to. Tools get picked up because someone on the team saw something on Twitter or a teammate recommended it , not because anyone sat down and evaluated whether they needed it. What suprised me the most was that he only finds out the total damage when the card bill arrives at the end of the month.
 
 **Direct quotes:**
@@ -16,12 +16,12 @@ his team is actually subscribing to. Tools get picked up because someone on the 
 - "I would be skeptical if it was aggressive, inaccurate or just keeps on hallucinating like usually AI do"
 
 **Most surprising thing they said:**
-I went into this assuming the main user of this tool would bea developer who knows their stack and just wants to find cheaper alternatives. Pranav completely flipped that. He is the one paying but has no idea what is being used or why.His developers subscribe to whatever makes their job easierand faster . Nobody is sitting down and auditing the overlap. 
+I went into this assuming the main user of this tool would bea developer who knows their stack and just wants to find cheaper alternatives. Alex completely flipped that. He is the one paying but has no idea what is being used or why.His developers subscribe to whatever makes their job easierand faster . Nobody is sitting down and auditing the overlap. 
 **What it changed about my design:**
-I made two specific changes. First, I rewrote all recommendation reasoning strings to use plain business language instead of technical justifications. Instead of "SSO and admin controls are unnecessary for teams under 5" I changed it to "your team is too small to need the management features this plan charges for."  Second, Pranav's answer about trust "transparent calculations backed by data" this directly led me to adding the expandable "Why?" toggle on each recommendation card so users can see the exact numbers behind every suggestion rather than just accepting a black-box output.
+I made two specific changes. First, I rewrote all recommendation reasoning strings to use plain business language instead of technical justifications. Instead of "SSO and admin controls are unnecessary for teams under 5" I changed it to "your team is too small to need the management features this plan charges for."  Second, Alex's answer about trust "transparent calculations backed by data" this directly led me to adding the expandable "Why?" toggle on each recommendation card so users can see the exact numbers behind every suggestion rather than just accepting a black-box output.
 
 ## Interview 2
-**Name/initials:** Thejo Krishna
+**Name/initials:** Jordan
 **Role:** Software Engineer
 **Company stage:** Mid-size company
 **Date:** 2026-05-26
@@ -39,11 +39,11 @@ Talked to this person expecting another "I have no idea what  I spend" answer bu
 Honestly I went in assuming this tool would mainly help  disorganised teams who have no clue what they're spending.  But he audits regularly and still said it takes up significant meeting time every month. So the value isn't just finding hidden overspend — it's replacing a one-hour meeting with a two-minute audit. I hadn't thought about time cost at all before this conversation.
 
 **What it changed about my design:**
-Made me realise there are two completely different users coming to this tool. The chaotic founder like Pranav who  has zero visibility, and the  disciplined operator who knows  roughly what they spend but wastes time doing it manually.  For the second type the shareable audit URL became way more important — they don't need the tool to tell them they're overspending, they need something they can send to their team instead of scheduling a meeting about it. I made the share button more prominent on the results page because of this.
+Made me realise there are two completely different users coming to this tool. The chaotic founder like Alex who  has zero visibility, and the  disciplined operator who knows  roughly what they spend but wastes time doing it manually.  For the second type the shareable audit URL became way more important — they don't need the tool to tell them they're overspending, they need something they can send to their team instead of scheduling a meeting about it. I made the share button more prominent on the results page because of this.
 
 
 ## Interview 3
-**Name/initials:** Nandana
+**Name/initials:** Taylor
 **Role:** Co-founder
 **Company stage:** Bootstrapped early stage startup
 **Date:** 2026-05-27
