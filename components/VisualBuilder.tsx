@@ -257,7 +257,7 @@ export default function VisualBuilder({ isWidget }: { isWidget?: boolean }) {
   return (
     <div
       id="run-audit"
-      className="scroll-mt-28 -mx-6 sm:-mx-12 px-6 sm:px-12 py-14 sm:py-16 rounded-none sm:rounded-3xl"
+      className="scroll-mt-28 px-6 sm:px-8 py-14 sm:py-16 w-full"
       style={{
         background: 'linear-gradient(180deg, #e8f0f6 0%, #eef4f8 40%, #f5efeb 100%)',
       }}
