@@ -18,7 +18,7 @@ A free web app that audits AI tool subscriptions for startup founders and engine
 ## Quick Start
 
 ```bash
-git clone https://github.com/your-username/spend-audit.git
+git clone https://github.com/Keerthana-G-Pillai/SpendAudit.git
 cd spend-audit
 npm install
 cp .env.example .env.local
