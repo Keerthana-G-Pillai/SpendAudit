@@ -8,6 +8,17 @@ A free web app that audits AI tool subscriptions for startup founders and engine
 ## Screenshots
 <!-- Add 3 screenshots or a 30-second Loom link here before submitting -->
 
+## Quick Start
+
+```bash
+git clone https://github.com/your-username/spend-audit.git
+cd spend-audit
+npm install
+cp .env.example .env.local
+# Fill in your environment variables in .env.local
+npm run dev
+```
+
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Structure
