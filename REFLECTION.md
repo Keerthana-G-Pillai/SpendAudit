@@ -20,15 +20,27 @@ I would build a "Team Workspace" feature where users can save their audit by cre
 Additionally, I would implement an automated alert system. By saving their stack profile, Credex could proactively email the user whenever a vendor changes their pricing model or whenever Credex secures a new batch of discounted institutional credits that apply to their specific tools. This creates an ongoing, high-value relationship that drastically lowers the long-term Customer Acquisition Cost.
 
 ### 4. How you used AI tools
-I used AI tools (primarily Claude 3.5 Sonnet and Cursor's Composer) as an aggressive pair-programmer and boilerplate generator. For tasks like initializing the Next.js scaffolding, drafting the Zod schema validation for the `SpendForm`, and generating the layout structures for the `VisualBuilder`, AI dramatically accelerated my velocity. It essentially removed the friction of typing out standard React boilerplate.
+I used AI tools (primarily Claude and Cursor) as an aggressive pair-programmer and boilerplate generator. For tasks like initializing the Next.js scaffolding, drafting the Zod schema validation for the `SpendForm`, and generating the layout structures for the `VisualBuilder`, AI dramatically accelerated my velocity. It essentially removed the friction of typing out standard React boilerplate.
 
 However, I explicitly did not trust the AI with the core business logic or the pricing data. AI models frequently hallucinate pricing tiers or mix up obsolete plans (like hallucinating a "ChatGPT Pro" plan instead of "ChatGPT Plus"). I manually researched every vendor pricing page and strictly hand-coded the `PRICING` constants and threshold rules inside `audit.ts`.
 
 One specific time the AI was wrong and I caught it: I asked Cursor to refactor the frontend directory structure to resolve a module import issue with `nanoid`. The AI confidently suggested modifying the `tsconfig.json` paths array. I applied the change, but the build still failed. The AI failed to account for how Next.js explicitly resolves external modules via Webpack during the production build step. I had to manually discard the AI's suggestion and properly update `config.resolve.modules` in `next.config.mjs` to fix the compilation error. 
 
 ### 5. Self-rating on a 1–10 scale
-- **Discipline: 9/10** — I maintained a strict, daily commit schedule with detailed devlog entries, ensuring steady progress rather than rushing at the deadline.
-- **Code quality: 8/10** — The pure TypeScript audit engine is rigorously separated from the UI and strictly typed, though some React components could be further abstracted for reusability.
-- **Design sense: 9/10** — I deliberately avoided generic dashboard templates and crafted a highly polished, premium visual experience with glassmorphism and semantic typography that builds trust.
-- **Problem-solving: 8/10** — I successfully navigated complex Next.js compilation issues and CI sync errors by stepping back, forming hypotheses, and not blindly relying on AI outputs.
-- **Entrepreneurial thinking: 10/10** — I focused relentlessly on the core value proposition and viral loop (shareability, clear ROI metrics, logical gating), ensuring the product functions as a real, viable lead-generation asset for Credex rather than just a coding exercise.
+Discipline: 7/10 — Maintained daily commits but a few devlog 
+entries were written retrospectively rather than in real time.
+
+Code quality: 7/10 — The audit engine is clean and well tested 
+but some React components grew too large and should be split.
+
+Design sense: 8/10 — Deliberately avoided generic templates 
+but mobile responsiveness needed more attention than I gave it.
+
+Problem-solving: 8/10 — Navigated real Next.js and CI issues 
+by forming hypotheses but leaned on AI more than I should have 
+for debugging.
+
+Entrepreneurial thinking: 8/10 — Grounded the product in a 
+real business model with defensible unit economics but only 
+managed 3 user interviews when more would have sharpened 
+the GTM strategy.

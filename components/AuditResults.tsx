@@ -89,7 +89,7 @@ export default function AuditResults({ data }: Props) {
             {isOptimal ? (
               <>
                 <h1 className="text-[22px] font-bold tracking-[-0.02em]" style={{ color: '#2F4156' }}>
-                  You're spending well.
+                  You&apos;re spending well.
                 </h1>
                 <p className="ui-body mt-2">
                   Your current plan mix looks highly efficient for your team size and use case.
@@ -195,7 +195,21 @@ export default function AuditResults({ data }: Props) {
                   <div className="h-px bg-gradient-to-r from-[#C8D9E6] to-transparent w-full" />
                   <div>
                     <p className="text-[13px] font-bold text-[#2F4156]">{rec.recommendedAction}</p>
-                    <p className="text-[12px] text-[#567C8D] mt-1 leading-relaxed">{rec.reasoning}</p>
+                    {rec.estimatedMonthlySaving > 0 ? (
+                      <details className="mt-2 group">
+                        <summary className="text-[12px] font-bold text-[#567C8D] cursor-pointer hover:text-[#2F4156] select-none list-none flex items-center gap-1">
+                          Why?
+                          <svg className="w-3 h-3 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </summary>
+                        <p className="text-[12px] text-[#567C8D] mt-1.5 leading-relaxed bg-[#f4f7f9] p-2.5 rounded-lg border border-[#C8D9E6]/50">
+                          {rec.reasoning}
+                        </p>
+                      </details>
+                    ) : (
+                      <p className="text-[12px] text-[#567C8D] mt-1 leading-relaxed">{rec.reasoning}</p>
+                    )}
                   </div>
                 </div>
               ))}

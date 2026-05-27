@@ -108,7 +108,7 @@ function analyzeChatGPT(entry: ToolEntry, input: SpendInput): ToolRecommendation
       currentSpend: entry.monthlySpend,
       recommendedAction: `Downgrade ${seats} seat${seats > 1 ? 's' : ''} from ChatGPT Business to ChatGPT Plus`,
       estimatedMonthlySaving: saving,
-      reasoning: `ChatGPT Business ($${PRICING.chatgpt.business}/user/mo) vs Plus ($${PRICING.chatgpt.plus}/user/mo) — Business adds shared workspaces and admin controls, which are unnecessary for teams under ${TEAM_SIZE_THRESHOLDS.chatgptBusinessJustified} with standard prompting usage. Saves $${saving}/mo ($${saving * 12}/yr).`,
+      reasoning: `ChatGPT Business ($${PRICING.chatgpt.business}/user/mo) vs Plus ($${PRICING.chatgpt.plus}/user/mo) — your team is too small to need the management features this plan charges for. Saves $${saving}/mo ($${saving * 12}/yr).`,
     }
   }
 
@@ -151,7 +151,7 @@ function analyzeCursor(entry: ToolEntry, input: SpendInput): ToolRecommendation 
       currentSpend: entry.monthlySpend,
       recommendedAction: `Downgrade ${seats} Cursor seat${seats > 1 ? 's' : ''} from Teams to Pro`,
       estimatedMonthlySaving: saving,
-      reasoning: `Cursor Teams ($${PRICING.cursor.teams}/user/mo) adds centralized billing and admin controls. For teams under ${TEAM_SIZE_THRESHOLDS.cursorTeamsJustified}, Pro ($${PRICING.cursor.pro}/user/mo) has identical AI completion features. Saves $${saving}/mo ($${saving * 12}/yr).`,
+      reasoning: `Cursor Teams ($${PRICING.cursor.teams}/user/mo) vs Pro ($${PRICING.cursor.pro}/user/mo) — your team is too small to need the management features this plan charges for. Saves $${saving}/mo ($${saving * 12}/yr).`,
     }
   }
 
@@ -197,7 +197,7 @@ function analyzeClaude(entry: ToolEntry, input: SpendInput): ToolRecommendation 
         currentSpend: entry.monthlySpend,
         recommendedAction: `Switch ${entry.seats} Claude Team seats to individual Pro plans`,
         estimatedMonthlySaving: saving,
-        reasoning: `Claude Team ($${PRICING.claude.team}/user/mo) adds centralized billing and admin controls. For just ${entry.seats} user${entry.seats > 1 ? 's' : ''}, individual Pro plans ($${PRICING.claude.pro}/user/mo each) provide equivalent AI access. Saves $${saving}/mo ($${saving * 12}/yr).`,
+        reasoning: `Claude Team ($${PRICING.claude.team}/user/mo) vs individual Pro plans ($${PRICING.claude.pro}/user/mo each) — your team is too small to need the management features this plan charges for. Saves $${saving}/mo ($${saving * 12}/yr).`,
       }
     }
   }
@@ -262,7 +262,7 @@ function analyzeWindsurf(entry: ToolEntry, input: SpendInput): ToolRecommendatio
       currentSpend: entry.monthlySpend,
       recommendedAction: `Downgrade ${seats} Windsurf seat${seats > 1 ? 's' : ''} from Teams to Pro`,
       estimatedMonthlySaving: saving,
-      reasoning: `Windsurf Teams ($${PRICING.windsurf.teams}/user/mo) adds team management and centralized billing — not needed for teams under ${TEAM_SIZE_THRESHOLDS.windsurfTeamsJustified}. Pro ($${PRICING.windsurf.pro}/user/mo) provides the same AI coding features. Saves $${saving}/mo ($${saving * 12}/yr).`,
+      reasoning: `Windsurf Teams ($${PRICING.windsurf.teams}/user/mo) vs Pro ($${PRICING.windsurf.pro}/user/mo) — your team is too small to need the management features this plan charges for. Saves $${saving}/mo ($${saving * 12}/yr).`,
     }
   }
 
@@ -426,7 +426,7 @@ function analyzeFigma(entry: ToolEntry, input: SpendInput): ToolRecommendation {
       currentSpend: entry.monthlySpend,
       recommendedAction: `Downgrade ${seats} Figma seat${seats > 1 ? 's' : ''} from Organization to Professional`,
       estimatedMonthlySaving: saving,
-      reasoning: `Figma Organization ($${PRICING.figma.organization}/user/mo) adds custom libraries, SSO, and advanced security. For teams under 10, Figma Professional ($${PRICING.figma.professional}/user/mo) is typically sufficient. Saves $${saving}/mo ($${saving * 12}/yr).`,
+      reasoning: `Figma Organization ($${PRICING.figma.organization}/user/mo) vs Professional ($${PRICING.figma.professional}/user/mo) — your team is too small to need the management features this plan charges for. Saves $${saving}/mo ($${saving * 12}/yr).`,
     }
   }
   return noSavingsFound(entry)
@@ -441,7 +441,7 @@ function analyzeNotion(entry: ToolEntry, input: SpendInput): ToolRecommendation 
       currentSpend: entry.monthlySpend,
       recommendedAction: `Downgrade ${seats} Notion seat${seats > 1 ? 's' : ''} from Business to Plus`,
       estimatedMonthlySaving: saving,
-      reasoning: `Notion Business ($${PRICING.notion.business}/user/mo) vs Plus ($${PRICING.notion.plus}/user/mo) — Business adds SAML SSO and private teamspaces. For small teams under 5, Plus is typically sufficient. Saves $${saving}/mo ($${saving * 12}/yr).`,
+      reasoning: `Notion Business ($${PRICING.notion.business}/user/mo) vs Plus ($${PRICING.notion.plus}/user/mo) — your team is too small to need the management features this plan charges for. Saves $${saving}/mo ($${saving * 12}/yr).`,
     }
   }
   return noSavingsFound(entry)

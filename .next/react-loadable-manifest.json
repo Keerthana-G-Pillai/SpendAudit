@@ -1,28 +1,26 @@
 {
   "components\\PdfExportButton.tsx -> jspdf": {
-    "id": 7501,
+    "id": "components\\PdfExportButton.tsx -> jspdf",
     "files": [
-      "static/chunks/164f4fb6.70e423a2d9cbcb93.js",
-      "static/chunks/729.ca9819afb4a1889c.js"
+      "static/chunks/_app-pages-browser_node_modules_jspdf_dist_jspdf_es_min_js.js"
     ]
   },
   "node_modules\\jspdf\\dist\\jspdf.es.min.js -> canvg": {
-    "id": 2865,
+    "id": "node_modules\\jspdf\\dist\\jspdf.es.min.js -> canvg",
     "files": [
-      "static/chunks/bc98253f.f61b949b49e45b66.js",
-      "static/chunks/124.dbb0a5660f63463d.js"
+      "static/chunks/_app-pages-browser_node_modules_canvg_lib_index_es_js.js"
     ]
   },
   "node_modules\\jspdf\\dist\\jspdf.es.min.js -> dompurify": {
-    "id": 1581,
+    "id": "node_modules\\jspdf\\dist\\jspdf.es.min.js -> dompurify",
     "files": [
-      "static/chunks/581.be1597528c3a26c6.js"
+      "static/chunks/_app-pages-browser_node_modules_dompurify_dist_purify_es_mjs.js"
     ]
   },
   "node_modules\\jspdf\\dist\\jspdf.es.min.js -> html2canvas": {
-    "id": 1173,
+    "id": "node_modules\\jspdf\\dist\\jspdf.es.min.js -> html2canvas",
     "files": [
-      "static/chunks/ad2866b8.989f74a0aef466bf.js"
+      "static/chunks/_app-pages-browser_node_modules_html2canvas_dist_html2canvas_js.js"
     ]
   }
 }

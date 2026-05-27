@@ -1,32 +1,27 @@
 # Unit Economics
 
 ### What is a converted lead worth to Credex?
-Credex operates by selling discounted AI infrastructure credits (primarily OpenAI and Anthropic). A typical Series A/B startup burning through API credits will spend roughly $5,000 to $20,000 per month on inference. 
-If Credex can route that spend through their pre-purchased bulk credits (taking a margin while still offering the user a net 20-30% discount), the Gross Profit per converted customer averages **$1,500/month**. 
-Assuming an average lifespan of 12 months before the startup graduates to a direct enterprise contract, the Lifetime Value (LTV) of a converted lead is roughly **$18,000**.
 
-### What is the Customer Acquisition Cost (CAC)?
-Because the AI Spend Audit is a free, viral diagnostic tool, the marginal cost of distribution is incredibly low.
-- **Hacker News / X Organic:** CAC is $0 (time invested by founders).
-- **VC Network Forwarding:** CAC is $0 (relationship-based).
-- **Targeted Paid Ads (Later Stage):** If we run targeted LinkedIn ads to Engineering Managers offering a "Free AI Spend Audit," assuming a $4 CPC and a 15% completion rate, the cost per completed audit is ~$26. 
+Credex sells discounted AI infrastructure credits sourced from companies that overforecast. A typical Series A or B startup burning through API credits spends roughly $5,000 to $20,000 per month on inference alone. Credex buys bulk credits at around 40% below retail and passes 20 to 30% of that saving to the customer, retaining roughly 10 to 15% gross margin on the routed spend. At the midpoint of that range, gross profit per converted customer averages $1,500 per month. Assuming an average customer lifespan of 12 months before the startup graduates to a direct enterprise contract, the Lifetime Value of a converted lead is approximately $18,000.
 
-### Funnel Conversion Math
-To determine profitability, we must estimate the conversion funnel from "audit completed" to "credit purchase":
-1. **Audits Completed:** 1,000
-2. **High Savings Threshold Met (>$500/mo):** 200 (20% of audits)
-3. **Consultations Booked:** 40 (20% of high-savings users opt-in to talk to sales)
-4. **Closed Won (Credit Purchase):** 10 (25% close rate on consultations)
+### What is the Customer Acquisition Cost at each channel?
 
-Overall Conversion Rate (Audit -> Closed Won) = **1%**.
-If organic CAC per audit is $0, the blended CAC per closed won customer is essentially $0. Even with paid ads at $26 per audit, the CAC per closed customer is **$2,600**. 
-With an LTV of $18,000, an LTV:CAC ratio of nearly 7:1 is highly profitable.
+Because the AI Spend Audit is a free viral diagnostic tool, the marginal cost of distribution is very low across all primary channels.
 
-### The Path to $1M ARR in 18 Months
-To hit $1M in Annual Recurring Revenue, Credex needs approximately **55 active enterprise customers** (assuming $1,500/mo gross profit per customer, which is $18k ARR per customer).
+Hacker News and organic X posts cost nothing beyond founder time. A single Show HN post that hits the front page can drive 300 to 500 completed audits in 48 hours at zero dollar CAC.
 
-What would have to be true to hit 55 customers using *only* this audit tool?
-Using the 1% overall conversion rate from Audit to Closed Won, the tool needs to generate **5,500 completed audits** over 18 months. 
-That equates to just **305 audits per month**, or roughly **10 audits per day**.
+VC network forwarding costs nothing. A partner sharing the tool with their portfolio companies is a warm referral channel that Credex is uniquely positioned to activate given existing investor relationships.
 
-Achieving 10 audits per day is highly realistic for a beautifully designed, free utility that provides instant, tangible monetary value to startups. If the viral coefficient (users sharing their scorecard URL) pushes organic growth, $1M ARR is a highly conservative baseline.
+Targeted LinkedIn ads to Engineering Managers at a later stage assuming a $4 cost per click and a 15% audit completion rate produce a cost per completed audit of roughly $26. At a 1% audit to closed won conversion rate that is a CAC of $2,600 per customer against an $18,000 LTV — an LTV to CAC ratio of nearly 7 to 1 which is comfortably profitable.
+
+### Conversion funnel math
+
+Starting from 1,000 completed audits the funnel looks like this. Around 200 audits or 20% will cross the high savings threshold of $500 per month or more and see the Credex consultation CTA prominently. Of those 40 or 20% will book a consultation. Of those 10 or 25% will close into a credit purchase. That gives an overall audit to closed won conversion rate of 1%.
+
+At zero organic CAC the blended cost per closed customer through organic channels is essentially nothing. Even with paid LinkedIn ads the $2,600 CAC sits well inside the $18,000 LTV envelope.
+
+### What would have to be true to reach $1M ARR in 18 months?
+
+At $1,500 per month gross profit per customer, Credex needs approximately 55 active customers to hit $1M in annualised gross profit. Using the 1% overall conversion rate the tool needs to generate 5,500 completed audits across 18 months. That is 305 audits per month or roughly 10 audits per day.
+
+Ten audits per day is a realistic baseline for a free tool that delivers instant tangible monetary value. One successful Hacker News post alone can produce that volume in a single day. If the shareable audit URL generates even a modest viral coefficient of 0.15 — meaning 15 out of every 100 users share their result and each share brings 2 new visitors — organic compounding makes $1M ARR a conservative floor rather than an optimistic ceiling.

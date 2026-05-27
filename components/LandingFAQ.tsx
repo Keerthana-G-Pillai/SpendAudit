@@ -4,16 +4,16 @@ const FAQS = [
     a: 'Yes. No credit card or account. We only ask for an optional email after you see results.',
   },
   {
+    q: 'Do you connect to my tools or store my data?',
+    a: 'No. You manually enter your tool stack. We do not connect to your APIs, we do not require account access, and we do not store your data beyond the shareable audit link.',
+  },
+  {
     q: 'How accurate are the estimates?',
-    a: 'Pricing is sourced from official vendor pages. Recommendations use published plan features and your team size.',
+    a: 'Every recommendation is backed by exact math using official vendor pricing. You can expand the "Why?" toggle on any recommendation to see the exact calculation behind it.',
   },
   {
-    q: 'Do you store my data?',
-    a: 'Audits are saved for sharing via a unique link. Email is only used to send your summary.',
-  },
-  {
-    q: 'What is Credex?',
-    a: 'Credex sells discounted AI credits. We mention it only when savings are significant.',
+    q: 'Why should I use this instead of doing a manual audit?',
+    a: 'Manual audits often turn into hour-long meetings. This tool takes 2 minutes and generates a shareable link that gives you instant, defensible numbers to take to your team.',
   },
   {
     q: 'Which tools are covered?',
