@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import SubmitProgress from './SubmitProgress'
 import ToolBadge from './ToolBadge'
 import GlassCard from './audit/GlassCard'
-import AuditResults from './AuditResults'
+import { LOCAL_AUDIT_STORAGE_KEY } from './LocalAuditResults'
 import type { ToolName, UseCase, PublicAuditData } from '@/lib/types'
 
 interface ToolCfg {
@@ -151,7 +151,6 @@ export default function VisualBuilder({ isWidget }: { isWidget?: boolean }) {
   const [selected, setSelected] = useState<SelectedTool[]>([])
   const [loading, setLoading] = useState(false)
   const [submitErr, setSubmitErr] = useState<string | null>(null)
-  const [inlineResult, setInlineResult] = useState<PublicAuditData | null>(null)
 
   const totalMonthly = selected.reduce((sum, s) => {
     const plans = TOOL_PLANS[s.toolId]
@@ -250,29 +249,30 @@ export default function VisualBuilder({ isWidget }: { isWidget?: boolean }) {
       }
       await new Promise((r) => setTimeout(r, 1600))
 
-      // If Supabase saved successfully, redirect to the slug page
-      if (data.slug) {
-        if (isWidget) {
-          window.open(`/audit/${data.slug}?ref=widget`, '_blank')
-          setLoading(false)
-        } else {
-          router.push(`/audit/${data.slug}`)
-        }
-      } else if (data.auditResult) {
-        // Supabase unavailable — show results inline
-        setInlineResult({
+      // If Supabase saved successfully, redirect to the slug page; otherwise store locally and navigate to /audit/local
+      let targetSlug = data.slug
+      if (!targetSlug && data.auditResult) {
+        const localData: PublicAuditData = {
           auditId: 'local',
           auditResult: data.auditResult,
           aiSummary: data.aiSummary ?? '',
           useCase: data.spendData?.useCase ?? useCase,
           teamSize: data.spendData?.teamSize ?? teamSize,
           slug: 'local',
-        })
-        setLoading(false)
-        // Scroll to results
-        setTimeout(() => scrollToStep('inline-results'), 100)
-      } else {
+        }
+        localStorage.setItem(LOCAL_AUDIT_STORAGE_KEY, JSON.stringify(localData))
+        targetSlug = 'local'
+      }
+
+      if (!targetSlug) {
         throw new Error('No data returned')
+      }
+
+      if (isWidget) {
+        window.open(`/audit/${targetSlug}?ref=widget`, '_blank')
+        setLoading(false)
+      } else {
+        router.push(`/audit/${targetSlug}`)
       }
     } catch {
       setSubmitErr('Something went wrong. Please try again.')
@@ -624,13 +624,6 @@ export default function VisualBuilder({ isWidget }: { isWidget?: boolean }) {
           </aside>
         </div>
       </div>
-
-      {/* Inline audit results when Supabase is unavailable */}
-      {inlineResult && (
-        <div id="inline-results" className="scroll-mt-28">
-          <AuditResults data={inlineResult} />
-        </div>
-      )}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getSupabase } from '@/lib/supabase'
 import AuditResults from '@/components/AuditResults'
+import LocalAuditResults from '@/components/LocalAuditResults'
 import type { Metadata } from 'next'
 import type { PublicAuditData } from '@/lib/types'
 
@@ -9,6 +10,13 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (params.slug === 'local') {
+    return {
+      title: 'AI Spend Audit Report — Credex',
+      description: 'Your customized AI spend audit report.',
+    }
+  }
+
   const { data } = await getSupabase()
     .from('audits')
     .select('audit_result, spend_data')
@@ -42,6 +50,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function AuditPage({ params }: Props) {
+  if (params.slug === 'local') {
+    return <LocalAuditResults />
+  }
+
   const { data, error } = await getSupabase()
     .from('audits')
     .select('id, audit_result, ai_summary, spend_data')
