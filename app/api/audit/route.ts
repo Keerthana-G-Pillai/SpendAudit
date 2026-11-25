@@ -25,24 +25,39 @@ export async function POST(req: NextRequest) {
     const aiSummary = await generateSummary(body, auditResult)
     console.log('[audit] AI summary done. Length:', aiSummary.length)
 
-    const slug = nanoid(10)
-    const supabase = getServiceClient()
-    console.log('[audit] Inserting to Supabase. Slug:', slug)
+    // Try to persist to Supabase, but don't fail the request if it errors
+    let slug: string | null = null
+    try {
+      slug = nanoid(10)
+      const supabase = getServiceClient()
+      console.log('[audit] Inserting to Supabase. Slug:', slug)
 
-    const { error } = await supabase.from('audits').insert({
-      slug,
-      spend_data: body,
-      audit_result: auditResult,
-      ai_summary: aiSummary,
-    })
+      const { error } = await supabase.from('audits').insert({
+        slug,
+        spend_data: body,
+        audit_result: auditResult,
+        ai_summary: aiSummary,
+      })
 
-    if (error) {
-      console.error('[audit] Supabase insert failed:', error)
-      throw new Error(`Supabase insert failed: ${error.message}`)
+      if (error) {
+        console.error('[audit] Supabase insert failed (non-fatal):', error)
+        slug = null // mark as failed so client knows to show inline
+      } else {
+        console.log('[audit] Supabase success. Slug:', slug)
+      }
+    } catch (dbErr) {
+      console.warn('[audit] Supabase unavailable (non-fatal):', dbErr)
+      slug = null
     }
 
-    console.log('[audit] Success. Slug:', slug)
-    return NextResponse.json({ slug })
+    // Always return the full audit data so the client can display results
+    // even when Supabase is unavailable
+    return NextResponse.json({
+      slug,
+      auditResult,
+      aiSummary,
+      spendData: body,
+    })
   } catch (err) {
     console.error('[audit] FATAL error:', err)
     return NextResponse.json({ error: 'Failed to create audit' }, { status: 500 })

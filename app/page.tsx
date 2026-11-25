@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-x-hidden">
+    <main className="min-h-screen overflow-x-clip">
       <GlassNavbar auditHref="#audit-step-1" />
       <HeroSection />
       <VisualBuilder />

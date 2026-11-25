@@ -7,7 +7,8 @@ import { cn } from '@/lib/utils'
 import SubmitProgress from './SubmitProgress'
 import ToolBadge from './ToolBadge'
 import GlassCard from './audit/GlassCard'
-import type { ToolName, UseCase } from '@/lib/types'
+import AuditResults from './AuditResults'
+import type { ToolName, UseCase, PublicAuditData } from '@/lib/types'
 
 interface ToolCfg {
   id: ToolName
@@ -150,6 +151,7 @@ export default function VisualBuilder({ isWidget }: { isWidget?: boolean }) {
   const [selected, setSelected] = useState<SelectedTool[]>([])
   const [loading, setLoading] = useState(false)
   const [submitErr, setSubmitErr] = useState<string | null>(null)
+  const [inlineResult, setInlineResult] = useState<PublicAuditData | null>(null)
 
   const totalMonthly = selected.reduce((sum, s) => {
     const plans = TOOL_PLANS[s.toolId]
@@ -240,13 +242,37 @@ export default function VisualBuilder({ isWidget }: { isWidget?: boolean }) {
         body: JSON.stringify({ teamSize, useCase, tools }),
       })
       if (!res.ok) throw new Error()
-      const { slug } = (await res.json()) as { slug: string }
+      const data = await res.json() as {
+        slug: string | null
+        auditResult?: import('@/lib/types').AuditResult
+        aiSummary?: string
+        spendData?: import('@/lib/types').SpendInput
+      }
       await new Promise((r) => setTimeout(r, 1600))
-      if (isWidget) {
-        window.open(`/audit/${slug}?ref=widget`, '_blank')
+
+      // If Supabase saved successfully, redirect to the slug page
+      if (data.slug) {
+        if (isWidget) {
+          window.open(`/audit/${data.slug}?ref=widget`, '_blank')
+          setLoading(false)
+        } else {
+          router.push(`/audit/${data.slug}`)
+        }
+      } else if (data.auditResult) {
+        // Supabase unavailable — show results inline
+        setInlineResult({
+          auditId: 'local',
+          auditResult: data.auditResult,
+          aiSummary: data.aiSummary ?? '',
+          useCase: data.spendData?.useCase ?? useCase,
+          teamSize: data.spendData?.teamSize ?? teamSize,
+          slug: 'local',
+        })
         setLoading(false)
+        // Scroll to results
+        setTimeout(() => scrollToStep('inline-results'), 100)
       } else {
-        router.push(`/audit/${slug}`)
+        throw new Error('No data returned')
       }
     } catch {
       setSubmitErr('Something went wrong. Please try again.')
@@ -528,7 +554,7 @@ export default function VisualBuilder({ isWidget }: { isWidget?: boolean }) {
           </div>
 
           {/* Right — live summary (sticky) */}
-          <aside className="lg:col-span-5 lg:sticky lg:top-28">
+          <aside className="lg:col-span-5 lg:sticky lg:top-28 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
             <GlassCard className="overflow-hidden flex flex-col p-0">
               <div className="bg-[#2F4156] px-6 py-5">
                 <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#C8D9E6]/90">
@@ -598,6 +624,13 @@ export default function VisualBuilder({ isWidget }: { isWidget?: boolean }) {
           </aside>
         </div>
       </div>
+
+      {/* Inline audit results when Supabase is unavailable */}
+      {inlineResult && (
+        <div id="inline-results" className="scroll-mt-28">
+          <AuditResults data={inlineResult} />
+        </div>
+      )}
     </div>
   )
 }
